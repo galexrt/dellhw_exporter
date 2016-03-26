@@ -1,1 +1,1 @@
-# dellhw_exporter
+# hardware_exporter
