@@ -75,7 +75,7 @@ func readOmreport(f func([]string), args ...string) {
 		}
 		f(sp)
 		return nil
-	}, "/opt/dell/srvadmin/bin/omreport", args...)
+	}, "omreport", args...)
 }
 
 func add(name string, value string, t prometheus.Labels, desc string) {
