@@ -4,6 +4,8 @@
 
 *Supports Dell OMSA 7.4*
 
+This exporter wraps the "omreport" command from Dell OMSA. If you can't run omreport on your system, the exporter won't export any metrics.
+
 
 	Usage:
 	  hardware_exporter [flags]
