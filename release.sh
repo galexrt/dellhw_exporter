@@ -49,7 +49,7 @@ ${dir}/build.sh
 require_clean_work_tree
 
 cd ${dir}/dist
-tar cvzf hardware_exporter-$version.linux-amd64.tar.gz *
+tar cvzf dellhw_exporter-$version.linux-amd64.tar.gz *
 cd -
 
 git tag $version -a -m "Version $version"
@@ -57,7 +57,7 @@ git push --tags
 
 sleep 5
 
-posturl=$(curl --data "{\"tag_name\": \"$1\",\"target_commitish\": \"master\",\"name\": \"$1\",\"body\": \"Release of version $1\",\"draft\": false,\"prerelease\": false}" https://api.github.com/repos/PrFalken/hardware_exporter/releases?access_token=${access_token} | grep "\"upload_url\"" | sed -ne 's/.*\(http[^"]*\).*/\1/p')
+posturl=$(curl --data "{\"tag_name\": \"$1\",\"target_commitish\": \"master\",\"name\": \"$1\",\"body\": \"Release of version $1\",\"draft\": false,\"prerelease\": false}" https://api.github.com/repos/PrFalken/dellhw_exporter/releases?access_token=${access_token} | grep "\"upload_url\"" | sed -ne 's/.*\(http[^"]*\).*/\1/p')
 
 cd ${dir}/dist/
 for filename in *.tar.gz ; do
