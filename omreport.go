@@ -107,7 +107,7 @@ func omreportChassis() error {
 			return
 		}
 		component := strings.Replace(fields[1], " ", "_", -1)
-		add("chassis", severity(fields[0]), prometheus.Labels{"component": component}, descDellHWChassis)
+		add("chassis_status", severity(fields[0]), prometheus.Labels{"component": component}, descDellHWChassis)
 	}, "chassis")
 	return nil
 }
@@ -118,7 +118,7 @@ func omreportSystem() error {
 			return
 		}
 		component := strings.Replace(fields[1], " ", "_", -1)
-		add("system", severity(fields[0]), prometheus.Labels{"component": component}, descDellHWSystem)
+		add("system_status", severity(fields[0]), prometheus.Labels{"component": component}, descDellHWSystem)
 	}, "system")
 	return nil
 }
@@ -129,7 +129,7 @@ func omreportStorageEnclosure() error {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
-		add("storage_enclosure", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWStorageEnc)
+		add("storage_enclosure_status", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWStorageEnc)
 	}, "storage", "enclosure")
 	return nil
 }
@@ -140,7 +140,7 @@ func omreportStorageVdisk() error {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
-		add("storage_vdisk", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWVDisk)
+		add("storage_vdisk_status", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWVDisk)
 	}, "storage", "vdisk")
 	return nil
 }
@@ -152,7 +152,7 @@ func omreportPs() error {
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
 		ts := prometheus.Labels{"id": id}
-		add("ps", severity(fields[1]), ts, descDellHWPS)
+		add("ps_status", severity(fields[1]), ts, descDellHWPS)
 		if len(fields) < 6 {
 			return
 		}
@@ -203,7 +203,7 @@ func omreportStorageBattery() error {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
-		add("storage_battery", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWStorageBattery)
+		add("storage_battery_status", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWStorageBattery)
 	}, "storage", "battery")
 	return nil
 }
@@ -216,7 +216,7 @@ func omreportStorageController() error {
 		omreportStoragePdisk(fields[0])
 		id := strings.Replace(fields[0], ":", "_", -1)
 		ts := prometheus.Labels{"id": id}
-		add("storage_controller", severity(fields[1]), ts, descDellHWStorageCtl)
+		add("storage_controller_status", severity(fields[1]), ts, descDellHWStorageCtl)
 	}, "storage", "controller")
 	return nil
 }
@@ -230,7 +230,7 @@ func omreportStoragePdisk(id string) {
 		//Need to find out what the various ID formats might be
 		id := strings.Replace(fields[0], ":", "_", -1)
 		ts := prometheus.Labels{"id": id}
-		add("storage_pdisk", severity(fields[1]), ts, descDellHWPDisk)
+		add("storage_pdisk_status", severity(fields[1]), ts, descDellHWPDisk)
 	}, "storage", "pdisk", "controller="+id)
 }
 
@@ -243,7 +243,7 @@ func omreportProcessors() error {
 			return
 		}
 		ts := prometheus.Labels{"name": replace(fields[2])}
-		add("chassis_processor", severity(fields[1]), ts, descDellHWCPU)
+		add("chassis_processor_status", severity(fields[1]), ts, descDellHWCPU)
 	}, "chassis", "processors")
 	return nil
 }
@@ -257,7 +257,7 @@ func omreportFans() error {
 			return
 		}
 		ts := prometheus.Labels{"name": replace(fields[2])}
-		add("chassis_fan", severity(fields[1]), ts, descDellHWFan)
+		add("chassis_fan_status", severity(fields[1]), ts, descDellHWFan)
 		fs := strings.Fields(fields[3])
 		if len(fs) == 2 && fs[1] == "RPM" {
 			add("chassis_fan_reading", fs[0], ts, descDellHWFanSpeed)
@@ -275,7 +275,7 @@ func omreportMemory() error {
 			return
 		}
 		ts := prometheus.Labels{"name": replace(fields[2])}
-		add("chassis_memory", severity(fields[1]), ts, descDellHWMemory)
+		add("chassis_memory_status", severity(fields[1]), ts, descDellHWMemory)
 	}, "chassis", "memory")
 	return nil
 }
@@ -307,7 +307,7 @@ func omreportVolts() error {
 			return
 		}
 		ts := prometheus.Labels{"name": replace(fields[2])}
-		add("chassis_volts", severity(fields[1]), ts, descDellHWVolt)
+		add("chassis_volts_status", severity(fields[1]), ts, descDellHWVolt)
 		if i, err := extract(fields[3], "V"); err == nil {
 			add("chassis_volts_reading", i, ts, descDellHWVoltReadings)
 		}

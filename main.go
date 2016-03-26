@@ -73,6 +73,16 @@ func runMainCommand() {
 		os.Exit(1)
 	}
 
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`<html>
+			<head><title>Dell Hardware Exporter</title></head>
+			<body>
+			<h1>Dell Hardware Exporter</h1>
+			<p><a href="` + metricsPath + `">Metrics</a></p>
+			</body>
+			</html>`))
+	})
+
 	http.Handle(metricsPath, prometheus.Handler())
 	log.Info("listening to ", listenAddress+":"+listenPort)
 	log.Fatal(http.ListenAndServe(listenAddress+":"+listenPort, nil))
