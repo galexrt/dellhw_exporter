@@ -1,5 +1,3 @@
-# hardware_exporter
-
 ## Prometheus exporter for Dell Hardware components
 
 *Supports Dell OMSA 7.4*
