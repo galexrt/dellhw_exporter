@@ -1,9 +1,6 @@
 package main
 
-import "sync"
-
 type metricStorage struct {
-	Lock    sync.RWMutex
 	metrics map[string]interface{}
 }
 
