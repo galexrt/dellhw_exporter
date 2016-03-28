@@ -129,7 +129,7 @@ func omreportStorageEnclosure() error {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
-		add("storage_enclosure_status", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWStorageEnc)
+		add("storage_enclosure_status", severity(fields[1]), prometheus.Labels{"enclosure": id}, descDellHWStorageEnc)
 	}, "storage", "enclosure")
 	return nil
 }
@@ -140,7 +140,7 @@ func omreportStorageVdisk() error {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
-		add("storage_vdisk_status", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWVDisk)
+		add("storage_vdisk_status", severity(fields[1]), prometheus.Labels{"vdisk": id}, descDellHWVDisk)
 	}, "storage", "vdisk")
 	return nil
 }
@@ -181,7 +181,7 @@ func omreportPsAmpsSysboardPwr() error {
 				return
 			}
 			id := strings.Replace(iFields[0], " ", "", -1)
-			add("chassis_current_reading", vFields[0], prometheus.Labels{"id": id}, descDellHWCurrent)
+			add("chassis_current_reading", vFields[0], prometheus.Labels{"pwrsupply": id}, descDellHWCurrent)
 		} else if len(fields) == 6 && (fields[2] == "System Board Pwr Consumption" || fields[2] == "System Board System Level") {
 			vFields := strings.Fields(fields[3])
 			warnFields := strings.Fields(fields[4])
@@ -203,7 +203,7 @@ func omreportStorageBattery() error {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
-		add("storage_battery_status", severity(fields[1]), prometheus.Labels{"id": id}, descDellHWStorageBattery)
+		add("storage_battery_status", severity(fields[1]), prometheus.Labels{"controller": id}, descDellHWStorageBattery)
 	}, "storage", "battery")
 	return nil
 }
@@ -229,7 +229,7 @@ func omreportStoragePdisk(id string) {
 		}
 		//Need to find out what the various ID formats might be
 		id := strings.Replace(fields[0], ":", "_", -1)
-		ts := prometheus.Labels{"id": id}
+		ts := prometheus.Labels{"disk": id}
 		add("storage_pdisk_status", severity(fields[1]), ts, descDellHWPDisk)
 	}, "storage", "pdisk", "controller="+id)
 }
@@ -242,7 +242,7 @@ func omreportProcessors() error {
 		if _, err := strconv.Atoi(fields[0]); err != nil {
 			return
 		}
-		ts := prometheus.Labels{"name": replace(fields[2])}
+		ts := prometheus.Labels{"processor": replace(fields[2])}
 		add("chassis_processor_status", severity(fields[1]), ts, descDellHWCPU)
 	}, "chassis", "processors")
 	return nil
@@ -256,7 +256,7 @@ func omreportFans() error {
 		if _, err := strconv.Atoi(fields[0]); err != nil {
 			return
 		}
-		ts := prometheus.Labels{"name": replace(fields[2])}
+		ts := prometheus.Labels{"fan": replace(fields[2])}
 		add("chassis_fan_status", severity(fields[1]), ts, descDellHWFan)
 		fs := strings.Fields(fields[3])
 		if len(fs) == 2 && fs[1] == "RPM" {
@@ -274,7 +274,7 @@ func omreportMemory() error {
 		if _, err := strconv.Atoi(fields[0]); err != nil {
 			return
 		}
-		ts := prometheus.Labels{"name": replace(fields[2])}
+		ts := prometheus.Labels{"memory": replace(fields[2])}
 		add("chassis_memory_status", severity(fields[1]), ts, descDellHWMemory)
 	}, "chassis", "memory")
 	return nil
@@ -288,7 +288,7 @@ func omreportTemps() error {
 		if _, err := strconv.Atoi(fields[0]); err != nil {
 			return
 		}
-		ts := prometheus.Labels{"name": replace(fields[2])}
+		ts := prometheus.Labels{"component": replace(fields[2])}
 		add("chassis_temps", severity(fields[1]), ts, descDellHWTemp)
 		fs := strings.Fields(fields[3])
 		if len(fs) == 2 && fs[1] == "C" {
@@ -306,7 +306,7 @@ func omreportVolts() error {
 		if _, err := strconv.Atoi(fields[0]); err != nil {
 			return
 		}
-		ts := prometheus.Labels{"name": replace(fields[2])}
+		ts := prometheus.Labels{"component": replace(fields[2])}
 		add("chassis_volts_status", severity(fields[1]), ts, descDellHWVolt)
 		if i, err := extract(fields[3], "V"); err == nil {
 			add("chassis_volts_reading", i, ts, descDellHWVoltReadings)
