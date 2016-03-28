@@ -133,22 +133,3 @@ func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io
 	}
 	return nil
 }
-
-func getFQDN() string {
-	hostName := os.Getenv("HOSTNAME")
-	domainName := os.Getenv("DOMAINNAME")
-	if hostName != "" && domainName != "" {
-		return hostName + "." + domainName
-	}
-
-	cmd := exec.Command("/bin/hostname", "-f")
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err := cmd.Run()
-	if err != nil {
-		log.Error(err)
-	}
-	fqdn := out.String()
-	fqdn = fqdn[:len(fqdn)-1]
-	return fqdn
-}
