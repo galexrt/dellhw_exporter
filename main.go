@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	log "github.com/Sirupsen/logrus"
@@ -24,21 +23,16 @@ var (
 	BuildDate  string
 	logLevel   string
 
-	exporterType      string
-	listenAddress     string
-	listenPort        string
-	metricsPath       string
 	enabledCollectors string
+	pushGateway       string
 
 	cache = newMetricStorage()
 )
 
 func init() {
 	RootCmd.Flags().StringVarP(&logLevel, "loglevel", "L", "info", "Set log level")
-	RootCmd.Flags().StringVarP(&listenAddress, "web.listen", "l", "127.0.0.1", "Address on which to expose metrics and web interface.")
-	RootCmd.Flags().StringVarP(&listenPort, "web.port", "p", "4242", "Port on which to expose metrics.")
-	RootCmd.Flags().StringVarP(&metricsPath, "web.path", "m", "/metrics", "Path under which to expose metrics.")
 	RootCmd.Flags().StringVarP(&enabledCollectors, "collect", "c", "chassis,fans,memory,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_enclosure,storage_controller,storage_vdisk,system,temps,volts", "Comma-separated list of collectors to use.")
+	RootCmd.Flags().StringVarP(&pushGateway, "gateway", "g", "", "Push Gateway in the form of address:port")
 	RootCmd.AddCommand(versionCmd)
 
 }
@@ -73,19 +67,9 @@ func runMainCommand() {
 		os.Exit(1)
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`<html>
-			<head><title>Dell Hardware Exporter</title></head>
-			<body>
-			<h1>Dell Hardware Exporter</h1>
-			<p><a href="` + metricsPath + `">Metrics</a></p>
-			</body>
-			</html>`))
-	})
-
-	http.Handle(metricsPath, prometheus.Handler())
-	log.Info("listening to ", listenAddress+":"+listenPort)
-	log.Fatal(http.ListenAndServe(listenAddress+":"+listenPort, nil))
+	if err := prometheus.Push("dell_hardware", "", pushGateway); err != nil {
+		log.Error("Failed to push to the prometheus gateway : ", err)
+	}
 
 }
 
