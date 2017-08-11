@@ -1,4 +1,5 @@
 PROMU := $(GOPATH)/bin/promu
+PREFIX ?= $(shell pwd)
 
 pkgs = $(shell go list ./... | grep -v /vendor/ | grep -v /test/)
 
