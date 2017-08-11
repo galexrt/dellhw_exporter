@@ -1,10 +1,11 @@
-PROMU := $(GOPATH)/bin/promu
+GO     := go
+PROMU  := $(GOPATH)/bin/promu
 PREFIX ?= $(shell pwd)
 
 pkgs = $(shell go list ./... | grep -v /vendor/ | grep -v /test/)
 
-DOCKER_IMAGE_NAME  ?= dellhw_exporter
-DOCKER_IMAGE_TAG   ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
+DOCKER_IMAGE_NAME ?= dellhw_exporter
+DOCKER_IMAGE_TAG  ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
 
 all: format style vet test build
 
@@ -36,7 +37,7 @@ tarball: $(PROMU)
 	@$(PROMU) tarball --prefix $(PREFIX) $(BIN_DIR)
 
 test:
-	@go test $(pkgs)
+	@$(GO) test $(pkgs)
 
 test-short:
 	@echo ">> running short tests"
