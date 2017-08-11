@@ -1,4 +1,11 @@
+sudo: false
+
 language: go
 
 go:
-  - 1.5
+  - 1.8
+
+go_import_path: github.com/galexrt/dellhw_exporter
+
+script:
+- make test
