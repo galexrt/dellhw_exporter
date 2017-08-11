@@ -1,0 +1,90 @@
+{
+    "memo": "",
+    "projects": [
+        {
+            "name": "github.com/Sirupsen/logrus",
+            "branch": "master",
+            "revision": "10f801ebc38b33738c9d17d50860f484a0988ff5",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/beorn7/perks",
+            "branch": "master",
+            "revision": "4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9",
+            "packages": [
+                "quantile"
+            ]
+        },
+        {
+            "name": "github.com/galexrt/go-rcon",
+            "branch": "master",
+            "revision": "81c7e786f1e55c9650e4c598b634495ce2c9a525",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/golang/protobuf",
+            "branch": "master",
+            "revision": "18c9bb3261723cd5401db4d0c9fbc5c3b6c70fe8",
+            "packages": [
+                "proto"
+            ]
+        },
+        {
+            "name": "github.com/matttproud/golang_protobuf_extensions",
+            "branch": "master",
+            "revision": "c12348ce28de40eed0136aa2b644d0ee0650e56c",
+            "packages": [
+                "pbutil"
+            ]
+        },
+        {
+            "name": "github.com/prometheus/client_golang",
+            "branch": "master",
+            "revision": "08fd2e12372a66e68e30523c7642e0cbc3e4fbde",
+            "packages": [
+                "prometheus",
+                "prometheus/promhttp"
+            ]
+        },
+        {
+            "name": "github.com/prometheus/client_model",
+            "branch": "master",
+            "revision": "6f3806018612930941127f2a7c6c453ba2c527d2",
+            "packages": [
+                "go"
+            ]
+        },
+        {
+            "name": "github.com/prometheus/common",
+            "branch": "master",
+            "revision": "9e0844febd9e2856f839c9cb974fbd676d1755a8",
+            "packages": [
+                "version",
+                "log",
+                "expfmt",
+                "model"
+            ]
+        },
+        {
+            "name": "github.com/prometheus/procfs",
+            "branch": "master",
+            "revision": "332f6238064950a97bc3ed3f5421f6418537e707",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "golang.org/x/sys",
+            "branch": "master",
+            "revision": "b90f89a1e7a9c1f6b918820b3daa7f08488c8594",
+            "packages": [
+                "unix",
+                "windows/svc/eventlog"
+            ]
+        }
+    ]
+}
