@@ -45,7 +45,7 @@ deployment:
       - docker push $QUAY_IMAGE_NAME
   hub_tag:
     tag: /^v[0-9]+(\.[0-9]+){2}(-.+|[^-.]*)$/
-    owner: prometheus
+    owner: galexrt
     commands:
       - promu crossbuild tarballs
       - promu checksum .tarballs
