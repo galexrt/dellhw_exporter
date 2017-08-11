@@ -20,7 +20,6 @@ type Value struct {
 }
 
 func New(opts *Options) *OMReport {
-
 	return &OMReport{
 		Options: opts,
 	}
