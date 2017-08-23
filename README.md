@@ -60,8 +60,24 @@ volts | Overall volts and status of power supply volt readings.
 ```
 
 ## Running in Docker
-The container image is available from [Quay.io](https://quay.io/):
+The container image is available from [Docker Hub](https://hub.docker.com/) and [Quay.io](https://quay.io/):
+
+### Pull the Docker image
+#### Docker Hub
+```
+docker pull galexrt/dellhw_exporter
+```
+
+#### Quay.io
 ```
 docker pull quay.io/galexrt/dellhw_exporter
+```
+
+## Run the Docker image
+> **NOTE** The privileged is required as the OSMA needs to access the host devices.
+
+```
+docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_exporter
+# or for quay.io
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
 ```
