@@ -17,6 +17,7 @@ Which collectors are enabled is controlled by the `--colectors.enabled` flag.
 
 ### Enabled by default
 All collectors are enabled by default right now.
+
 Name     | Description
 ---------|-------------
 chassis | Overall status of chassis components.
