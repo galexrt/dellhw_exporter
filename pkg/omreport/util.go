@@ -74,7 +74,7 @@ func Replace(s, replacement string) (string, error) {
 	return c, nil
 }
 
-// exit within timeout, it is sent SIGINT (if supported by Go). After
+// Command exit within timeout, it is sent SIGINT (if supported by Go). After
 // another timeout, it is killed.
 func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string) (io.Reader, error) {
 	if _, err := exec.LookPath(name); err != nil {
