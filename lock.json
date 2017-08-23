@@ -1,5 +1,5 @@
 {
-    "memo": "",
+    "memo": "66522d7e218ec4a138f5d5b48b2b1af2f249bc5ba48481e93bf9b3ee328d1fc5",
     "projects": [
         {
             "name": "github.com/Sirupsen/logrus",
@@ -23,6 +23,14 @@
             "revision": "81c7e786f1e55c9650e4c598b634495ce2c9a525",
             "packages": [
                 "."
+            ]
+        },
+        {
+            "name": "github.com/galexrt/pkg",
+            "branch": "master",
+            "revision": "7deecf5634b44eecc078b22b78a875f5de318c26",
+            "packages": [
+                "flagutil"
             ]
         },
         {
@@ -63,10 +71,11 @@
             "branch": "master",
             "revision": "9e0844febd9e2856f839c9cb974fbd676d1755a8",
             "packages": [
-                "version",
-                "log",
                 "expfmt",
-                "model"
+                "internal/bitbucket.org/ww/goautoneg",
+                "log",
+                "model",
+                "version"
             ]
         },
         {
@@ -74,7 +83,8 @@
             "branch": "master",
             "revision": "332f6238064950a97bc3ed3f5421f6418537e707",
             "packages": [
-                "."
+                ".",
+                "xfs"
             ]
         },
         {
@@ -83,6 +93,8 @@
             "revision": "b90f89a1e7a9c1f6b918820b3daa7f08488c8594",
             "packages": [
                 "unix",
+                "windows",
+                "windows/registry",
                 "windows/svc/eventlog"
             ]
         }

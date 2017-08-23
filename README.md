@@ -34,7 +34,8 @@ system | Overall status of system components.
 temps | Overall temperatures and status of system temperature readings.
 volts | Overall volts and status of power supply volt readings.
 
-## Help Menu
+## Configuration
+### Flags
 ```
 ./dellhw_exporter [FLAGS]
   -collectors.enabled string
@@ -57,6 +58,19 @@ volts | Overall volts and status of power supply volt readings.
     	The address to listen on for HTTP requests (default ":9137")
   -web.telemetry-path string
     	Path the metrics will be exposed under (default "/metrics")
+```
+
+### Environment variables
+For the description of the env vars, see the above equivalent flag.
+```
+DELLHW_EXPORTER_COLLECTORS_ENABLED
+DELLHW_EXPORTER_COLLECTORS_OMR_REPORT
+DELLHW_EXPORTER_COLLECTORS_PRINT
+DELLHW_EXPORTER_DEBUG
+DELLHW_EXPORTER_HELP
+DELLHW_EXPORTER_VERSION
+DELLHW_EXPORTER_WEB_LISTEN_ADDRESS
+DELLHW_EXPORTER_WEB_TELEMETRY_PATH
 ```
 
 ## Running in Docker
