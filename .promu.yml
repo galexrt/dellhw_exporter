@@ -10,7 +10,7 @@ build:
         -X {{repoPath}}/vendor/github.com/prometheus/common/version.BuildDate={{date "20060102-15:04:05"}}
     binaries:
         - name: dellhw_exporter
-          path: .
+          path: ./cmd/dellhw_exporter
 
 tarball:
     files:
