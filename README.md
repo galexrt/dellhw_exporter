@@ -2,7 +2,7 @@
 [![CircleCI branch](https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser/master.svg)]() [![Docker Repository on Quay](https://quay.io/repository/galexrt/dellhw_exporter/status "Docker Repository on Quay")](https://quay.io/repository/galexrt/dellhw_exporter) [![Go Report Card](https://goreportcard.com/badge/github.com/galexrt/dellhw_exporter)](https://goreportcard.com/report/github.com/galexrt/dellhw_exporter) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 Prometheus exporter for Dell Hardware components using OMSA.
 
-The exporter was originally made by [PrFalken](https://github.com/PrFalken). Due to some issues in the code, I rewrote the whole exporter using the "node_exporter" pattern and therefore moved it from being a fork out, to a standalone repository.
+The exporter was originally made by [PrFalken](https://github.com/PrFalken). Due to some issues in the code, I rewrote the whole exporter using the ["node_exporter"](https://github.com/prometheus/node_exporter) pattern and therefore moved it from being a fork out, to a standalone repository.
 
 Omreport parsing functions were borrowed from the [Bosun project](https://github.com/bosun-monitor/bosun/blob/master/cmd/scollector/collectors/dell_hw.go), thank you very much for that, they are the most tedious part of the job.
 
@@ -57,4 +57,11 @@ volts | Overall volts and status of power supply volt readings.
     	The address to listen on for HTTP requests (default ":9137")
   -web.telemetry-path string
     	Path the metrics will be exposed under (default "/metrics")
+```
+
+## Running in Docker
+The container image is available from [Quay.io](https://quay.io/):
+```
+docker pull quay.io/galexrt/dellhw_exporter
+docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
 ```
