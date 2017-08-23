@@ -23,5 +23,6 @@ _testmain.go
 *.test
 *.prof
 
-dist/
+.build/
+.tarballs
 /dellhw_exporter
