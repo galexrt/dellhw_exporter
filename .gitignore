@@ -24,4 +24,4 @@ _testmain.go
 *.prof
 
 dist/
-dellhw_exporter
+/dellhw_exporter
