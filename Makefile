@@ -22,7 +22,7 @@ DOCKER_IMAGE_TAG  ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
 all: format style vet test build
 
 build: promu
-	@$(PROMU) build --prefix $(BIN_DIR)
+	@$(PROMU) build --prefix $(PREFIX)
 
 crossbuild: promu
 	@$(PROMU) crossbuild
@@ -63,7 +63,7 @@ style:
 
 tarball: promu
 	@echo ">> building release tarball"
-	@$(PROMU) tarball --prefix $(TARBALL_DIR) $(BIN_DIR)
+	@$(PROMU) tarball --prefix $(PREFIX) $(BIN_DIR)
 
 test:
 	@$(GO) test $(pkgs)
