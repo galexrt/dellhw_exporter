@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-type TestResult struct {
+type TestResultOMReport struct {
 	Input  string
 	Values []Value
 }
@@ -25,8 +25,8 @@ func getOMReport(input *string) *OMReport {
 	}
 }
 
-var chassisTests = []TestResult{
-	TestResult{
+var chassisTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Health
 
 Main System Chassis
@@ -68,8 +68,8 @@ func TestChassis(t *testing.T) {
 	}
 }
 
-var fansTests = []TestResult{
-	TestResult{
+var fansTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Fan Probes Information
 
 Fan Redundancy
@@ -126,8 +126,8 @@ func TestFans(t *testing.T) {
 	}
 }
 
-var memoryTests = []TestResult{
-	TestResult{
+var memoryTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Memory Information
 
 Health;Ok
@@ -178,8 +178,8 @@ func TestMemory(t *testing.T) {
 	}
 }
 
-var systemTests = []TestResult{
-	TestResult{
+var systemTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Health
 
 SEVERITY;COMPONENT
@@ -211,8 +211,8 @@ func TestSystem(t *testing.T) {
 	}
 }
 
-var storageBatteryTests = []TestResult{
-	TestResult{
+var storageBatteryTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `List of Batteries in the System
 
 Controller PERC H730 Mini (Slot Embedded)
@@ -244,8 +244,8 @@ func TestStorageBattery(t *testing.T) {
 	}
 }
 
-var storageControllerTests = []TestResult{
-	TestResult{
+var storageControllerTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: ` Controller  PERC H730 Mini(Embedded)
 
 Controller
@@ -277,8 +277,8 @@ func TestStorageController(t *testing.T) {
 	}
 }
 
-var storageEnclosureTests = []TestResult{
-	TestResult{
+var storageEnclosureTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `List of Enclosures in the System
 
 Enclosure(s) on Controller PERC H730 Mini (Embedded)
@@ -311,8 +311,8 @@ func TestStorageEnclosure(t *testing.T) {
 	}
 }
 
-var storagePdiskTests = []TestResult{
-	TestResult{
+var storagePdiskTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `List of Physical Disks on Controller PERC H730 Mini (Embedded)
 
 Controller PERC H730 Mini (Embedded)
@@ -354,8 +354,8 @@ func TestStoragePdisk(t *testing.T) {
 	}
 }
 
-var storageVdiskTests = []TestResult{
-	TestResult{
+var storageVdiskTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `List of Virtual Disks in the System
 
 Controller PERC H730 Mini (Embedded)
@@ -387,8 +387,8 @@ func TestStorageVdisk(t *testing.T) {
 	}
 }
 
-var psTests = []TestResult{
-	TestResult{
+var psTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Power Supplies Information
 
 Power Supply Redundancy
@@ -459,8 +459,8 @@ func TestPs(t *testing.T) {
 	}
 }
 
-var psAmpsSysboardPwrTests = []TestResult{
-	TestResult{
+var psAmpsSysboardPwrTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Power Consumption Information
 
 Power Consumption
@@ -532,8 +532,8 @@ func TestPsAmpsSysboardPwr(t *testing.T) {
 	}
 }
 
-var processorsTests = []TestResult{
-	TestResult{
+var processorsTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Processors Information
 
 Health;Ok
@@ -566,8 +566,8 @@ func TestProcessors(t *testing.T) {
 	}
 }
 
-var tempsTests = []TestResult{
-	TestResult{
+var tempsTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Temperature Probes Information
 
 Main System Chassis Temperatures : Ok
@@ -621,8 +621,8 @@ func TestTemps(t *testing.T) {
 	}
 }
 
-var voltsTests = []TestResult{
-	TestResult{
+var voltsTests = []TestResultOMReport{
+	TestResultOMReport{
 		Input: `Voltage Probes Information
 
 Health : Ok
