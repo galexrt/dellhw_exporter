@@ -17,7 +17,7 @@ RUN yum -y update && \
     yum clean all
 
 
-ADD dellhw_exporter /bin/dellhw_exporter
+ADD .build/linux-amd64/dellhw_exporter /bin/dellhw_exporter
 
 ENTRYPOINT ["/bin/dellhw_exporter"]
 
