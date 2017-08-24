@@ -4,7 +4,7 @@ Description=DellHW Exporter
 [Service]
 User=node_exporter
 EnvironmentFile=/etc/sysconfig/dellhw_exporter
-ExecStart=/usr/sbin/node_exporter $OPTIONS
+ExecStart=/usr/sbin/dellhw_exporter $OPTIONS
 
 [Install]
 WantedBy=multi-user.target
