@@ -15,6 +15,8 @@ build:
 tarball:
     files:
         - NOTICE
+        - systemd/dellhw_exporter.service
+        - systemd/sysconfig.dellhw_exporter
 crossbuild:
     platforms:
         - linux/amd64
