@@ -24,5 +24,6 @@ _testmain.go
 *.prof
 
 .build/
-.tarballs
+.tarballs/
+.package/
 /dellhw_exporter
