@@ -1,6 +1,18 @@
-GO     := go
-PROMU  := $(GOPATH)/bin/promu
-PREFIX ?= $(shell pwd)
+PROJECTNAME ?= dellhw_exporter
+DESCRIPTION ?= dellhw_exporter - Prometheus exporter for Dell Hardware components using OMSA.
+MAINTAINER  ?= Alexander Trost <galexrt@googlemail.com>
+HOMEPAGE    ?= https://github.com/galexrt/dellhw_exporter
+
+GO           := go
+FPM          ?= fpm
+PROMU        := $(GOPATH)/bin/promu
+PREFIX       ?= $(shell pwd)
+BIN_DIR      ?= $(PREFIX)/.build
+TARBALL_DIR  ?= $(PREFIX)/.tarball
+PACKAGE_DIR  ?= $(PREFIX)/.package
+ARCH         ?= amd64
+PACKAGE_ARCH ?= linux-amd64
+VERSION      ?= $(shell cat VERSION)
 
 pkgs = $(shell go list ./... | grep -v /vendor/ | grep -v /test/)
 
@@ -10,7 +22,7 @@ DOCKER_IMAGE_TAG  ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
 all: format style vet test build
 
 build: promu
-	@$(PROMU) build --prefix $(PREFIX)
+	@$(PROMU) build --prefix $(BIN_DIR)
 
 crossbuild: promu
 	@$(PROMU) crossbuild
@@ -21,6 +33,23 @@ docker:
 
 format:
 	go fmt $(pkgs)
+
+.PHONY: package
+package-%: build
+	mkdir -p -m0755 $(PACKAGE_DIR)/lib/systemd/system $(PACKAGE_DIR)/usr/bin
+	mkdir -p $(PACKAGE_DIR)/etc/sysconfig
+	cp .build/dellhw_exporter $(PACKAGE_DIR)/usr/bin
+	cp systemd/dellhw_exporter.service $(PACKAGE_DIR)/lib/systemd/system
+	cp systemd/sysconfig.dellhw_exporter $(PACKAGE_DIR)/etc/sysconfig/dellhw_exporter
+	cd $(PACKAGE_DIR) && $(FPM) -s dir -t $(patsubst package-%, %, $@) \
+	--deb-user root --deb-group root \
+	--name $(PROJECTNAME) \
+	--version $(VERSION) \
+	--architecture $(PACKAGE_ARCH) \
+	--description "$(DESCRIPTION)" \
+	--maintainer "$(MAINTAINER)" \
+	--url $(HOMEPAGE) \
+	usr/ etc/
 
 promu:
 	@echo ">> fetching promu"
@@ -34,7 +63,7 @@ style:
 
 tarball: promu
 	@echo ">> building release tarball"
-	@$(PROMU) tarball --prefix $(PREFIX) $(BIN_DIR)
+	@$(PROMU) tarball --prefix $(TARBALL_DIR) $(BIN_DIR)
 
 test:
 	@$(GO) test $(pkgs)
