@@ -10,7 +10,7 @@ ENV DSU_VERSION="DSU_17.07.00" \
 
 # Do overall update and install missing packages needed for OpenManage
 RUN yum -y update && \
-    yum -y install gcc wget perl passwd which tar libstdc++.so.6 compat-libstdc++-33.i686 glibc.i686 && \
+    yum -y install sysvinit-tools wget perl passwd gcc which tar libstdc++.so.6 compat-libstdc++-33.i686 glibc.i686 && \
     echo "$USER:$PASS" | chpasswd && \
     wget -q -O - "http://linux.dell.com/repo/hardware/${DSU_VERSION}/bootstrap.cgi" | bash && \
     yum -y install srvadmin-base srvadmin-storageservices && \
