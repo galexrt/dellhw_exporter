@@ -21,4 +21,4 @@ ADD .build/linux-amd64/dellhw_exporter /bin/dellhw_exporter
 
 ENTRYPOINT ["/bin/dellhw_exporter"]
 
-#CMD srvadmin-services.sh restart && tail -f /opt/dell/srvadmin/var/log/openmanage/dcsys64.xml
+CMD ["-container"]
