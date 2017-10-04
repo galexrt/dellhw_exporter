@@ -191,7 +191,7 @@ func main() {
 	log.Infoln("Build context", version.BuildContext())
 
 	if opts.container {
-		log.Infoln("Starting srvadmin-services")
+		log.Infoln("Starting srvadmin-services ...")
 		cmd := exec.Command("/opt/dell/srvadmin/sbin/srvadmin-services.sh", "start")
 		if err := cmd.Start(); err != nil {
 			log.Fatal(err)
@@ -204,6 +204,7 @@ func main() {
 			log.Fatal(err)
 		}
 		timer.Stop()
+		log.Infoln("Started srvadmin-services.")
 	}
 
 	omrOpts := &omreport.Options{
@@ -242,8 +243,8 @@ func main() {
 			</body>
 			</html>`))
 	})
-	err = http.ListenAndServe(opts.metricsAddr, nil)
-	if err != nil {
+
+	if err := http.ListenAndServe(opts.metricsAddr, nil); err != nil {
 		log.Fatal(err)
 	}
 }
