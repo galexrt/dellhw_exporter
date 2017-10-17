@@ -41,10 +41,13 @@ func extract(s, suffix string) (string, error) {
 	return strings.TrimSpace(s), nil
 }
 
-// severity returns 0 if s is not "Ok" or "Non-Critical", else 1.
+// severity returns 1 if s is not "Ok" or "Non-Critical", elif is "Non-Critical" 2 else 0.
 func severity(s string) string {
 	if s != "Ok" && s != "Non-Critical" {
 		return "1"
+	}
+	if s == "Non-Critical" {
+		return "2"
 	}
 	return "0"
 }
