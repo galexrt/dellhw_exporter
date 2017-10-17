@@ -21,7 +21,7 @@ var severityTests = []SeverityTestResult{
 	},
 	{
 		Input:  "Non-Critical",
-		Output: "0",
+		Output: "2",
 	},
 }
 
