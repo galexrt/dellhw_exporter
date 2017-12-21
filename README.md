@@ -97,3 +97,7 @@ docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_ex
 # or for quay.io
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
 ```
+
+## Development
+### Dependencies
+`dep` is used for vendoring the dependencies.
