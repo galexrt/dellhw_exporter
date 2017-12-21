@@ -15,7 +15,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/galexrt/dellhw_exporter/collector"
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
-	rcon "github.com/galexrt/go-rcon"
 	"github.com/galexrt/pkg/flagutil"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -186,7 +185,6 @@ func main() {
 	if opts.debugMode {
 		log.Level = logrus.DebugLevel
 	}
-	rcon.SetLog(log)
 	log.Infoln("Starting srcds_exporter", version.Info())
 	log.Infoln("Build context", version.BuildContext())
 
