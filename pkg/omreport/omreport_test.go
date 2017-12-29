@@ -592,6 +592,35 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 				},
 			},
 			Value{
+				Name:  "chassis_temps_min_warning",
+				Value: "3.0",
+				Labels: map[string]string{
+					"component": "System_Board_Inlet_Temp",
+				},
+			},
+			Value{
+				Name:  "chassis_temps_max_warning",
+				Value: "42.0",
+				Labels: map[string]string{
+					"component": "System_Board_Inlet_Temp",
+				},
+			},
+			Value{
+				Name:  "chassis_temps_min_failure",
+				Value: "-7.0",
+				Labels: map[string]string{
+					"component": "System_Board_Inlet_Temp",
+				},
+			},
+			Value{
+				Name:  "chassis_temps_max_failure",
+				Value: "47.0",
+				Labels: map[string]string{
+					"component": "System_Board_Inlet_Temp",
+				},
+			},
+
+			Value{
 				Name:  "chassis_temps",
 				Value: "0",
 				Labels: map[string]string{
@@ -601,6 +630,34 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 			Value{
 				Name:  "chassis_temps_reading",
 				Value: "34.0",
+				Labels: map[string]string{
+					"component": "CPU1_Temp",
+				},
+			},
+			Value{
+				Name:  "chassis_temps_min_warning",
+				Value: "8.0",
+				Labels: map[string]string{
+					"component": "CPU1_Temp",
+				},
+			},
+			Value{
+				Name:  "chassis_temps_max_warning",
+				Value: "82.0",
+				Labels: map[string]string{
+					"component": "CPU1_Temp",
+				},
+			},
+			Value{
+				Name:  "chassis_temps_min_failure",
+				Value: "3.0",
+				Labels: map[string]string{
+					"component": "CPU1_Temp",
+				},
+			},
+			Value{
+				Name:  "chassis_temps_max_failure",
+				Value: "87.0",
 				Labels: map[string]string{
 					"component": "CPU1_Temp",
 				},
