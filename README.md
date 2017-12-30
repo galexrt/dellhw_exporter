@@ -21,9 +21,11 @@ All collectors are enabled by default right now.
 
 Name     | Description
 ---------|-------------
+chassis_batteries | Overall status of chassis CMOS batteries.
 chassis | Overall status of chassis components.
 fans | Overall status of system fans.
 memory | System RAM DIMM status.
+nics | NICs connection status.
 processors | Overall status of CPUs.
 ps_amps_sysboard_pwr | System board power usage.
 ps | Overall status of power supplies.
