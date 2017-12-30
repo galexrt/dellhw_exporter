@@ -7,7 +7,7 @@ import (
 )
 
 type chassisBatteriesCollector struct {
-	current []*prometheus.Desc
+	current *prometheus.Desc
 }
 
 func init() {
@@ -28,12 +28,12 @@ func (c *chassisBatteriesCollector) Update(ch chan<- prometheus.Metric) error {
 		if err != nil {
 			return err
 		}
-		current := prometheus.NewDesc(
+		c.current = prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, "", value.Name),
-			"Status of cmos battery",
+			"Overall status of chassis batteries",
 			nil, value.Labels)
 		ch <- prometheus.MustNewConstMetric(
-			current, prometheus.GaugeValue, float)
+			c.current, prometheus.GaugeValue, float)
 	}
 
 	return nil

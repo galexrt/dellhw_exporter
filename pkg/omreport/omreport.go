@@ -20,7 +20,11 @@ type Value struct {
 	Labels map[string]string
 }
 
-const DefaultOMReportExecutable = "/opt/dell/srvadmin/bin/omreport"
+const (
+	DefaultOMReportExecutable = "/opt/dell/srvadmin/bin/omreport"
+
+	indexField = "Index"
+)
 
 func New(opts *Options) *OMReport {
 	if opts.OMReportExecutable == "" {
@@ -221,7 +225,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 func (or *OMReport) Ps() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
-		if len(fields) < 3 || fields[0] == "Index" {
+		if len(fields) < 3 || fields[0] == indexField {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
@@ -258,11 +262,10 @@ func (or *OMReport) Ps() ([]Value, error) {
 	return values, nil
 }
 
-//wjj 获取网卡状态
 func (or *OMReport) Nics() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
-		if len(fields) < 6 || fields[0] == "Index" {
+		if len(fields) < 6 || fields[0] == indexField {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
@@ -324,7 +327,6 @@ func (or *OMReport) PsAmpsSysboardPwr() ([]Value, error) {
 	return values, nil
 }
 
-//cpu信息
 func (or *OMReport) Processors() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -343,7 +345,6 @@ func (or *OMReport) Processors() ([]Value, error) {
 	return values, nil
 }
 
-//机器温度信息
 func (or *OMReport) Temps() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -367,7 +368,6 @@ func (or *OMReport) Temps() ([]Value, error) {
 				Labels: ts,
 			})
 		}
-		//wjj add
 		minWarningThreshold := strings.Fields(fields[4])
 		if len(minWarningThreshold) == 2 && minWarningThreshold[1] == "C" {
 			values = append(values, Value{
@@ -400,12 +400,10 @@ func (or *OMReport) Temps() ([]Value, error) {
 				Labels: ts,
 			})
 		}
-		//wjj add end
 	}, or.getOMReportExecutable(), "chassis", "temps")
 	return values, nil
 }
 
-//电压信息
 func (or *OMReport) Volts() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -432,11 +430,10 @@ func (or *OMReport) Volts() ([]Value, error) {
 	return values, nil
 }
 
-//wjj 获取CMOS battery 状态
 func (or *OMReport) ChassisBatteries() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
-		if len(fields) < 4 || fields[0] == "Index" {
+		if len(fields) < 4 || fields[0] == indexField {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)

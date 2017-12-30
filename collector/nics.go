@@ -7,7 +7,7 @@ import (
 )
 
 type nicsCollector struct {
-	current []*prometheus.Desc
+	current *prometheus.Desc
 }
 
 func init() {
@@ -28,12 +28,12 @@ func (c *nicsCollector) Update(ch chan<- prometheus.Metric) error {
 		if err != nil {
 			return err
 		}
-		current := prometheus.NewDesc(
+		c.current = prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, "", value.Name),
-			"Status of network card",
+			"Connection status of network cards.",
 			nil, value.Labels)
 		ch <- prometheus.MustNewConstMetric(
-			current, prometheus.GaugeValue, float)
+			c.current, prometheus.GaugeValue, float)
 	}
 
 	return nil
