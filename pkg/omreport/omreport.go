@@ -20,7 +20,11 @@ type Value struct {
 	Labels map[string]string
 }
 
-const DefaultOMReportExecutable = "/opt/dell/srvadmin/bin/omreport"
+const (
+	DefaultOMReportExecutable = "/opt/dell/srvadmin/bin/omreport"
+
+	indexField = "Index"
+)
 
 func New(opts *Options) *OMReport {
 	if opts.OMReportExecutable == "" {
@@ -221,7 +225,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 func (or *OMReport) Ps() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
-		if len(fields) < 3 || fields[0] == "Index" {
+		if len(fields) < 3 || fields[0] == indexField {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
@@ -255,6 +259,29 @@ func (or *OMReport) Ps() ([]Value, error) {
 			}
 		}
 	}, or.getOMReportExecutable(), "chassis", "pwrsupplies")
+	return values, nil
+}
+
+func (or *OMReport) Nics() ([]Value, error) {
+	values := []Value{}
+	or.readReport(func(fields []string) {
+		if len(fields) < 6 || fields[0] == indexField {
+			return
+		}
+		id := strings.Replace(fields[0], ":", "_", -1)
+		ts := map[string]string{"id": id, "device": fields[1]}
+		var ret string
+		if fields[4] == "Connected" {
+			ret = "0"
+		} else {
+			ret = "1"
+		}
+		values = append(values, Value{
+			Name:   "nic_status",
+			Value:  ret,
+			Labels: ts,
+		})
+	}, or.getOMReportExecutable(), "chassis", "nics")
 	return values, nil
 }
 
@@ -341,6 +368,38 @@ func (or *OMReport) Temps() ([]Value, error) {
 				Labels: ts,
 			})
 		}
+		minWarningThreshold := strings.Fields(fields[4])
+		if len(minWarningThreshold) == 2 && minWarningThreshold[1] == "C" {
+			values = append(values, Value{
+				Name:   "chassis_temps_min_warning",
+				Value:  minWarningThreshold[0],
+				Labels: ts,
+			})
+		}
+		maxWarningThreshold := strings.Fields(fields[5])
+		if len(maxWarningThreshold) == 2 && maxWarningThreshold[1] == "C" {
+			values = append(values, Value{
+				Name:   "chassis_temps_max_warning",
+				Value:  maxWarningThreshold[0],
+				Labels: ts,
+			})
+		}
+		minFailureThreshold := strings.Fields(fields[6])
+		if len(minFailureThreshold) == 2 && minFailureThreshold[1] == "C" {
+			values = append(values, Value{
+				Name:   "chassis_temps_min_failure",
+				Value:  minFailureThreshold[0],
+				Labels: ts,
+			})
+		}
+		maxFailureThreshold := strings.Fields(fields[7])
+		if len(maxFailureThreshold) == 2 && maxFailureThreshold[1] == "C" {
+			values = append(values, Value{
+				Name:   "chassis_temps_max_failure",
+				Value:  maxFailureThreshold[0],
+				Labels: ts,
+			})
+		}
 	}, or.getOMReportExecutable(), "chassis", "temps")
 	return values, nil
 }
@@ -368,5 +427,23 @@ func (or *OMReport) Volts() ([]Value, error) {
 			})
 		}
 	}, or.getOMReportExecutable(), "chassis", "volts")
+	return values, nil
+}
+
+func (or *OMReport) ChassisBatteries() ([]Value, error) {
+	values := []Value{}
+	or.readReport(func(fields []string) {
+		if len(fields) < 4 || fields[0] == indexField {
+			return
+		}
+		id := strings.Replace(fields[0], ":", "_", -1)
+		ts := map[string]string{"id": id}
+
+		values = append(values, Value{
+			Name:   "cmos_batteries_status",
+			Value:  severity(fields[1]),
+			Labels: ts,
+		})
+	}, or.getOMReportExecutable(), "chassis", "batteries")
 	return values, nil
 }

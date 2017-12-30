@@ -7,7 +7,7 @@ import (
 )
 
 type tempsCollector struct {
-	current []*prometheus.Desc
+	current *prometheus.Desc
 }
 
 func init() {
@@ -28,12 +28,12 @@ func (c *tempsCollector) Update(ch chan<- prometheus.Metric) error {
 		if err != nil {
 			return err
 		}
-		current := prometheus.NewDesc(
+		c.current = prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, "", value.Name),
 			"Overall temperatures and status of system temperature readings.",
 			nil, value.Labels)
 		ch <- prometheus.MustNewConstMetric(
-			current, prometheus.GaugeValue, float)
+			c.current, prometheus.GaugeValue, float)
 	}
 
 	return nil

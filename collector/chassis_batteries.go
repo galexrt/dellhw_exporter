@@ -6,31 +6,31 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-type fansCollector struct {
+type chassisBatteriesCollector struct {
 	current *prometheus.Desc
 }
 
 func init() {
-	Factories["fans"] = NewFansCollector
+	Factories["chassis_batteries"] = NewChassisBatteriesCollector
 }
 
-func NewFansCollector() (Collector, error) {
-	return &fansCollector{}, nil
+func NewChassisBatteriesCollector() (Collector, error) {
+	return &chassisBatteriesCollector{}, nil
 }
 
-func (c *fansCollector) Update(ch chan<- prometheus.Metric) error {
-	fans, err := or.Fans()
+func (c *chassisBatteriesCollector) Update(ch chan<- prometheus.Metric) error {
+	chassisBatteries, err := or.ChassisBatteries()
 	if err != nil {
 		return err
 	}
-	for _, value := range fans {
+	for _, value := range chassisBatteries {
 		float, err := strconv.ParseFloat(value.Value, 64)
 		if err != nil {
 			return err
 		}
 		c.current = prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, "", value.Name),
-			"Overall status of system fans.",
+			"Overall status of chassis batteries",
 			nil, value.Labels)
 		ch <- prometheus.MustNewConstMetric(
 			c.current, prometheus.GaugeValue, float)

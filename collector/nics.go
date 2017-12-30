@@ -6,31 +6,31 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-type fansCollector struct {
+type nicsCollector struct {
 	current *prometheus.Desc
 }
 
 func init() {
-	Factories["fans"] = NewFansCollector
+	Factories["nics"] = NewNicsCollector
 }
 
-func NewFansCollector() (Collector, error) {
-	return &fansCollector{}, nil
+func NewNicsCollector() (Collector, error) {
+	return &nicsCollector{}, nil
 }
 
-func (c *fansCollector) Update(ch chan<- prometheus.Metric) error {
-	fans, err := or.Fans()
+func (c *nicsCollector) Update(ch chan<- prometheus.Metric) error {
+	nics, err := or.Nics()
 	if err != nil {
 		return err
 	}
-	for _, value := range fans {
+	for _, value := range nics {
 		float, err := strconv.ParseFloat(value.Value, 64)
 		if err != nil {
 			return err
 		}
 		c.current = prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, "", value.Name),
-			"Overall status of system fans.",
+			"Connection status of network cards.",
 			nil, value.Labels)
 		ch <- prometheus.MustNewConstMetric(
 			c.current, prometheus.GaugeValue, float)

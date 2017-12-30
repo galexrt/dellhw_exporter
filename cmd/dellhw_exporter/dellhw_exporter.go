@@ -22,22 +22,10 @@ import (
 )
 
 const (
-	defaultCollectors = "chassis,fans,memory,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_enclosure,storage_controller,storage_pdisk,storage_vdisk,system,temps,volts"
+	defaultCollectors = "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts"
 )
 
 var (
-	connectionDurationDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(collector.Namespace, "scrape", "connection_duration_seconds"),
-		"srcds_exporter: Duration of the server connection.",
-		[]string{"connection"},
-		nil,
-	)
-	connectionSucessDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(collector.Namespace, "scrape", "connection_success"),
-		"srcds_exporter: Whether the server connection succeeded.",
-		[]string{"connection"},
-		nil,
-	)
 	scrapeDurationDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(collector.Namespace, "scrape", "collector_duration_seconds"),
 		"srcds_exporter: Duration of a collector scrape.",
@@ -91,7 +79,9 @@ func init() {
 	// Define the usage function
 	dellhwExporterFlags.Usage = usage
 
-	dellhwExporterFlags.Parse(os.Args[1:])
+	if err := dellhwExporterFlags.Parse(os.Args[1:]); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // Describe implements the prometheus.Collector interface.
@@ -113,17 +103,6 @@ func (n DellHWCollector) Collect(ch chan<- prometheus.Metric) {
 	wg.Wait()
 }
 
-func filterAvailableCollectors(collectors string) string {
-	var availableCollectors []string
-	for _, c := range strings.Split(collectors, ",") {
-		_, ok := collector.Factories[c]
-		if ok {
-			availableCollectors = append(availableCollectors, c)
-		}
-	}
-	return strings.Join(availableCollectors, ",")
-}
-
 func execute(name string, c collector.Collector, ch chan<- prometheus.Metric) {
 	begin := time.Now()
 	err := c.Update(ch)
@@ -131,10 +110,10 @@ func execute(name string, c collector.Collector, ch chan<- prometheus.Metric) {
 	var success float64
 
 	if err != nil {
-		log.Errorf("ERROR: %s collector failed after %fs: %s", name, duration.Seconds(), err)
+		log.Errorf("%s collector failed after %fs: %s", name, duration.Seconds(), err)
 		success = 0
 	} else {
-		log.Debugf("OK: %s collector succeeded after %fs.", name, duration.Seconds())
+		log.Debugf("%s collector succeeded after %fs.", name, duration.Seconds())
 		success = 1
 	}
 	ch <- prometheus.MustNewConstMetric(scrapeDurationDesc, prometheus.GaugeValue, duration.Seconds(), name)
@@ -164,7 +143,12 @@ func usage() {
 }
 
 func main() {
-	flagutil.SetFlagsFromEnv(dellhwExporterFlags, "DELLHW_EXPORTER")
+	if err := flagutil.SetFlagsFromEnv(dellhwExporterFlags, "DELLHW_EXPORTER"); err != nil {
+		log.Fatal(err)
+	}
+	if opts.help {
+		usage()
+	}
 	if opts.version {
 		fmt.Fprintln(os.Stdout, version.Print("srcds_exporter"))
 		os.Exit(0)
