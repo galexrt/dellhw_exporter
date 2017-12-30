@@ -146,6 +146,9 @@ func main() {
 	if err := flagutil.SetFlagsFromEnv(dellhwExporterFlags, "DELLHW_EXPORTER"); err != nil {
 		log.Fatal(err)
 	}
+	if opts.help {
+		usage()
+	}
 	if opts.version {
 		fmt.Fprintln(os.Stdout, version.Print("srcds_exporter"))
 		os.Exit(0)
