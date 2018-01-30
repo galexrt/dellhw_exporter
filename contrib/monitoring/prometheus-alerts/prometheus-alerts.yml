@@ -1,0 +1,47 @@
+groups:
+- name: dellhw_exporter-prom-alerts.yaml
+  rules:
+  - alert: fan_broken
+    expr: dell_hw_chassis_fan_status == 1
+    for: 5m
+    labels:
+      severity: Warning
+      severity_id: "4"
+      type: basic
+    annotations:
+      description: dell_hw_chassis_fan_status == 1
+      summary: On Host {{ .Labels.instance }} fan in slot {{ .Lables.name }} is broken
+  - alert: lost_hard_drive
+    expr: (count(dell_hw_storage_pdisk_status OFFSET 1w) BY (instance)) - (count(dell_hw_storage_pdisk_status)
+      BY (instance)) > 0
+    for: 5m
+    labels:
+      severity: Warning
+      severity_id: "4"
+      type: basic
+    annotations:
+      description: (count  by (instance) (dell_hw_storage_pdisk_status offset 7d))
+        - (count  by (instance) (dell_hw_storage_pdisk_status)) > 0
+      summary: On Host {{ .Labels.instance }} {{ .Value }} hard drive(s) lost
+  - alert: lost_power_supply
+    expr: dell_hw_ps_status == 1
+    for: 5m
+    labels:
+      severity: Warning
+      severity_id: "4"
+      type: basic
+    annotations:
+      description: dell_hw_ps_status == 1 FOR 5m
+      summary: On Host {{ .Labels.instance }} power supply with id {{ .Labels.id
+        }} is lost
+  - alert: storage_controller_broken
+    expr: dell_hw_storage_controller_status == 1
+    for: 5m
+    labels:
+      severity: Warning
+      severity_id: "4"
+      type: basic
+    annotations:
+      description: dell_hw_storage_controller_status == 1
+      summary: On Host {{ .Labels.instance }} storage controller with id {{ .Lables.id
+        }} is broken. Check omreport storage controller command

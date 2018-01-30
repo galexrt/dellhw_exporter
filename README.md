@@ -99,6 +99,8 @@ docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_ex
 # or for quay.io
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
 ```
+## Monitoring
+Checkout the files in the [`contrib/monitoring/`](contrib/monitoring/) directory.
 
 ## Development
 ### Dependencies
