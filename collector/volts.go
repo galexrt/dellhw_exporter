@@ -14,10 +14,12 @@ func init() {
 	Factories["volts"] = NewVoltsCollector
 }
 
+// NewVoltsCollector returns a new voltsCollector
 func NewVoltsCollector() (Collector, error) {
 	return &voltsCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *voltsCollector) Update(ch chan<- prometheus.Metric) error {
 	volts, err := or.Volts()
 	if err != nil {

@@ -14,10 +14,12 @@ func init() {
 	Factories["storage_enclosure"] = NewStorageEnclosureCollector
 }
 
+// NewStorageEnclosureCollector returns a new storageEnclosureCollector
 func NewStorageEnclosureCollector() (Collector, error) {
 	return &storageEnclosureCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *storageEnclosureCollector) Update(ch chan<- prometheus.Metric) error {
 	storageEnclosure, err := or.StorageEnclosure()
 	if err != nil {

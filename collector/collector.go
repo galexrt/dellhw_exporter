@@ -5,6 +5,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+// Namespace holds the metrics namespace/first part
 const Namespace = "dell_hw"
 
 var or *omreport.OMReport

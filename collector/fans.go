@@ -14,10 +14,12 @@ func init() {
 	Factories["fans"] = NewFansCollector
 }
 
+// NewFansCollector returns a new fansCollector
 func NewFansCollector() (Collector, error) {
 	return &fansCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *fansCollector) Update(ch chan<- prometheus.Metric) error {
 	fans, err := or.Fans()
 	if err != nil {

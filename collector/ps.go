@@ -14,10 +14,12 @@ func init() {
 	Factories["ps"] = NewPsCollector
 }
 
+// NewPsCollector returns new psCollector
 func NewPsCollector() (Collector, error) {
 	return &psCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *psCollector) Update(ch chan<- prometheus.Metric) error {
 	ps, err := or.Ps()
 	if err != nil {

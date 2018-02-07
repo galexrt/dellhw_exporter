@@ -14,10 +14,12 @@ func init() {
 	Factories["chassis_batteries"] = NewChassisBatteriesCollector
 }
 
+// NewChassisBatteriesCollector returns a new chassisBatteriesCollector
 func NewChassisBatteriesCollector() (Collector, error) {
 	return &chassisBatteriesCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *chassisBatteriesCollector) Update(ch chan<- prometheus.Metric) error {
 	chassisBatteries, err := or.ChassisBatteries()
 	if err != nil {

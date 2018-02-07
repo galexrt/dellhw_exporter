@@ -5,15 +5,18 @@ import (
 	"strings"
 )
 
+// Options allow to set options for the OMReport package
 type Options struct {
 	OMReportExecutable string
 }
 
+// OMReport contains the Options and a Reader to mock outputs during development
 type OMReport struct {
 	Options *Options
 	Reader  func(func([]string), string, ...string)
 }
 
+// Value contains a metrics name, value and labels
 type Value struct {
 	Name   string
 	Value  string
@@ -21,11 +24,13 @@ type Value struct {
 }
 
 const (
+	// DefaultOMReportExecutable the default path of the omreport binary
 	DefaultOMReportExecutable = "/opt/dell/srvadmin/bin/omreport"
 
 	indexField = "Index"
 )
 
+// New returns a new *OMReport
 func New(opts *Options) *OMReport {
 	if opts.OMReportExecutable == "" {
 		opts.OMReportExecutable = DefaultOMReportExecutable
@@ -59,6 +64,7 @@ func (or *OMReport) readReport(f func([]string), omreportExecutable string, args
 	or.Reader(f, omreportExecutable, args...)
 }
 
+// Chassis returns the chassis status
 func (or *OMReport) Chassis() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -75,6 +81,7 @@ func (or *OMReport) Chassis() ([]Value, error) {
 	return values, nil
 }
 
+// Fans returns the fan status and if supported RPM reading
 func (or *OMReport) Fans() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -102,6 +109,7 @@ func (or *OMReport) Fans() ([]Value, error) {
 	return values, nil
 }
 
+// Memory returns the memory status
 func (or *OMReport) Memory() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -120,6 +128,7 @@ func (or *OMReport) Memory() ([]Value, error) {
 	return values, nil
 }
 
+// System returns the system status
 func (or *OMReport) System() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -136,6 +145,7 @@ func (or *OMReport) System() ([]Value, error) {
 	return values, nil
 }
 
+// StorageBattery returns the storage battery ("RAID batteries")
 func (or *OMReport) StorageBattery() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -152,6 +162,7 @@ func (or *OMReport) StorageBattery() ([]Value, error) {
 	return values, nil
 }
 
+// StorageController returns the storage controller status
 func (or *OMReport) StorageController() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -169,6 +180,7 @@ func (or *OMReport) StorageController() ([]Value, error) {
 	return values, nil
 }
 
+// StorageEnclosure returns the storage enclosure status
 func (or *OMReport) StorageEnclosure() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -185,7 +197,7 @@ func (or *OMReport) StorageEnclosure() ([]Value, error) {
 	return values, nil
 }
 
-// StoragePdisk is called from the controller func, since it needs the encapsulating id.
+// StoragePdisk is called from the controller func, since it needs the encapsulating IDs.
 func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -206,6 +218,7 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 	return values, nil
 }
 
+// StorageVdisk returns the storage vdisk status
 func (or *OMReport) StorageVdisk() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -222,6 +235,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 	return values, nil
 }
 
+// Ps returns the power supply state and if supported input/output wattage
 func (or *OMReport) Ps() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -262,6 +276,7 @@ func (or *OMReport) Ps() ([]Value, error) {
 	return values, nil
 }
 
+// Nics returns the connection status of the NICs
 func (or *OMReport) Nics() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -285,6 +300,7 @@ func (or *OMReport) Nics() ([]Value, error) {
 	return values, nil
 }
 
+// PsAmpsSysboardPwr returns the power supply system board amps power consumption
 func (or *OMReport) PsAmpsSysboardPwr() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -327,6 +343,7 @@ func (or *OMReport) PsAmpsSysboardPwr() ([]Value, error) {
 	return values, nil
 }
 
+// Processors returns the processors status
 func (or *OMReport) Processors() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -345,6 +362,8 @@ func (or *OMReport) Processors() ([]Value, error) {
 	return values, nil
 }
 
+// Temps returns the temperatures for the chassis including the min and max,
+// for the max value, warning and failure thresholds are returned
 func (or *OMReport) Temps() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -404,6 +423,7 @@ func (or *OMReport) Temps() ([]Value, error) {
 	return values, nil
 }
 
+// Volts returns the chassis volts statud and if support reading
 func (or *OMReport) Volts() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
@@ -430,6 +450,7 @@ func (or *OMReport) Volts() ([]Value, error) {
 	return values, nil
 }
 
+// ChassisBatteries retursn the chassis batteries status
 func (or *OMReport) ChassisBatteries() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {

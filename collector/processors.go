@@ -14,10 +14,12 @@ func init() {
 	Factories["processors"] = NewProcessorsCollector
 }
 
+// NewProcessorsCollector returns a new processorsCollector
 func NewProcessorsCollector() (Collector, error) {
 	return &processorsCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *processorsCollector) Update(ch chan<- prometheus.Metric) error {
 	chassis, err := or.Processors()
 	if err != nil {

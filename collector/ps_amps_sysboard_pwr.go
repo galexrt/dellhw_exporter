@@ -6,7 +6,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-type psampssysboardpwrCollector struct {
+type psAmpsSysboardPwrCollector struct {
 	current *prometheus.Desc
 }
 
@@ -14,11 +14,13 @@ func init() {
 	Factories["ps_amps_sysboard_pwr"] = NewPsAmpsSysboardPwrCollector
 }
 
+// NewPsAmpsSysboardPwrCollector returns a new psAmpsSysboardPwrCollector
 func NewPsAmpsSysboardPwrCollector() (Collector, error) {
-	return &psampssysboardpwrCollector{}, nil
+	return &psAmpsSysboardPwrCollector{}, nil
 }
 
-func (c *psampssysboardpwrCollector) Update(ch chan<- prometheus.Metric) error {
+// Update Prometheus metrics
+func (c *psAmpsSysboardPwrCollector) Update(ch chan<- prometheus.Metric) error {
 	psampssysboardpwr, err := or.PsAmpsSysboardPwr()
 	if err != nil {
 		return err

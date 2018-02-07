@@ -14,10 +14,12 @@ func init() {
 	Factories["system"] = NewSystemCollector
 }
 
+// NewSystemCollector returns a new systemCollector
 func NewSystemCollector() (Collector, error) {
 	return &systemCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *systemCollector) Update(ch chan<- prometheus.Metric) error {
 	system, err := or.System()
 	if err != nil {

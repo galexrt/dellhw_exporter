@@ -14,10 +14,12 @@ func init() {
 	Factories["storage_vdisk"] = NewStorageVdiskCollector
 }
 
+// NewStorageVdiskCollector returns a new storageVdiskCollector
 func NewStorageVdiskCollector() (Collector, error) {
 	return &storageVdiskCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *storageVdiskCollector) Update(ch chan<- prometheus.Metric) error {
 	storageVdisk, err := or.StorageVdisk()
 	if err != nil {

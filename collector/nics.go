@@ -14,10 +14,12 @@ func init() {
 	Factories["nics"] = NewNicsCollector
 }
 
+// NewNicsCollector returns a new nicsCollector
 func NewNicsCollector() (Collector, error) {
 	return &nicsCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *nicsCollector) Update(ch chan<- prometheus.Metric) error {
 	nics, err := or.Nics()
 	if err != nil {

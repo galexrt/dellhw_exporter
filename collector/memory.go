@@ -14,10 +14,12 @@ func init() {
 	Factories["memory"] = NewMemoryCollector
 }
 
+// NewMemoryCollector returns a new memoryCollector
 func NewMemoryCollector() (Collector, error) {
 	return &memoryCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *memoryCollector) Update(ch chan<- prometheus.Metric) error {
 	memory, err := or.Memory()
 	if err != nil {

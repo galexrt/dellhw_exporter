@@ -57,6 +57,7 @@ func replace(name string) string {
 	return r
 }
 
+// Replace certain chars in a string
 func Replace(s, replacement string) (string, error) {
 	var c string
 	replaced := false

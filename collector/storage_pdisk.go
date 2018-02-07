@@ -14,10 +14,12 @@ func init() {
 	Factories["storage_pdisk"] = NewStoragePdiskCollector
 }
 
+// NewStoragePdiskCollector returns a new storagePdiskCollector
 func NewStoragePdiskCollector() (Collector, error) {
 	return &storagePdiskCollector{}, nil
 }
 
+// Update Prometheus metrics
 func (c *storagePdiskCollector) Update(ch chan<- prometheus.Metric) error {
 	controllers, err := or.StorageController()
 	if err != nil {
