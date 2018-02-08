@@ -9,7 +9,8 @@ Omreport parsing functions were borrowed from the [Bosun project](https://github
 
 This exporter wraps the "omreport" command from Dell OMSA. If you can't run omreport on your system, the exporter won't export any metrics.
 
-## Dell OMSA Compatibility
+## Tested Dell OMSA Compatibility
+The dellhw_exporter has been tested with the following OMSA versions:
 * `7.4`
 * `8.4`
 
@@ -92,7 +93,7 @@ docker pull quay.io/galexrt/dellhw_exporter
 ```
 
 ## Run the Docker image
-> **NOTE** The privileged is required as the OSMA needs to access the host devices.
+> **NOTE** The `--privileged` flag is required as the OMSA needs to access the host devices.
 
 ```
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_exporter
