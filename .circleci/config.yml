@@ -18,7 +18,7 @@ jobs:
       DOCKER_IMAGE_NAME: galexrt/dellhw_exporter
       QUAY_IMAGE_NAME: quay.io/galexrt/dellhw_exporter
       DOCKER_TEST_IMAGE_NAME: quay.io/prometheus/golang-builder:1.10-base
-      PROMU_REPO_PATH: github.com/galexrt/dellhw_exporter
+      REPO_PATH: github.com/galexrt/dellhw_exporter
     docker:
     - image: circleci/golang:1.10
     steps:
@@ -29,15 +29,30 @@ jobs:
         - v1-dep-
     - checkout
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
-    - run: sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.1-circleci'
-    - run: sudo chmod 0755 /usr/bin/docker
+    - run:
+        name: Install Docker client
+        command: |
+          set -x
+          VER="17.03.0-ce"
+          curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+          tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+          sudo mv /tmp/docker/* /usr/bin
     - run: sudo curl -L 'https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2' | sudo tar xvjf - --strip-components 3 -C /usr/local/bin
     - run: echo -e "export DOCKER_IMAGE_NAME=galexrt/dellhw_exporter\nexport QUAY_IMAGE_NAME=quay.io/galexrt/dellhw_exporter\nexport DOCKER_TEST_IMAGE_NAME=quay.io/prometheus/golang-builder:1.8-base\nexport REPO_PATH=github.com/galexrt/dellhw_exporter\nexport PATH=$PATH:/usr/local/go/bin:/go/bin" >> $BASH_ENV
     - run: make promu
     - setup_remote_docker:
         docker_layer_caching: true
     - run: docker info
+    - run:
+        name: Copy data files
+        command: |
+          docker create -v "$(pwd)":"$(pwd)" --name app alpine:3.4 /bin/true
+          docker cp . app:"$(pwd)"
     - run: promu crossbuild
+    - run:
+        name: Copy built binaries back
+        command:
+          docker cp app:"$(pwd)/.build" .
     - run: ln -s .build/linux-amd64/dellhw_exporter dellhw_exporter
     - run: |
         if [ -n "$CIRCLE_TAG" ]; then
