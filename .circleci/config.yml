@@ -24,10 +24,10 @@ jobs:
     - image: circleci/golang:1.10-stretch
     steps:
     - restore_cache:
-      keys:
-      - v1-dep-{{ .Branch }}-
-      - v1-dep-master-
-      - v1-dep-
+        keys:
+        - v1-dep-{{ .Branch }}-
+        - v1-dep-master-
+        - v1-dep-
     - checkout
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     - run: sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.1-circleci'
