@@ -37,7 +37,8 @@ jobs:
     - setup_remote_docker:
         docker_layer_caching: true
     - run: docker info
-    - run: promu crossbuild
+    - run: |
+        pwd && promu crossbuild
     - run: ln -s .build/linux-amd64/dellhw_exporter dellhw_exporter
     - run: |
         if [ -n "$CIRCLE_TAG" ]; then
