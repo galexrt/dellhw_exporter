@@ -38,7 +38,7 @@ jobs:
           tar -xz -C /tmp -f /tmp/docker-$VER.tgz
           sudo mv /tmp/docker/* /usr/bin
     - run: sudo curl -L 'https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2' | sudo tar xvjf - --strip-components 3 -C /usr/local/bin
-    - run: echo -e "export DOCKER_IMAGE_NAME=galexrt/dellhw_exporter\nexport QUAY_IMAGE_NAME=quay.io/galexrt/dellhw_exporter\nexport DOCKER_TEST_IMAGE_NAME=quay.io/prometheus/golang-builder:1.8-base\nexport REPO_PATH=github.com/galexrt/dellhw_exporter\nexport PATH=$PATH:/usr/local/go/bin:/go/bin" >> $BASH_ENV
+    - run: echo -e "export PATH=$PATH:/usr/local/go/bin:/go/bin" >> $BASH_ENV
     - run: make promu
     - setup_remote_docker:
         docker_layer_caching: true
@@ -53,25 +53,25 @@ jobs:
         name: Copy built binaries back
         command:
           docker cp app:"$(pwd)/.build" .
-    - run: ln -s .build/linux-amd64/dellhw_exporter dellhw_exporter
+          mkdir $CIRCLE_ARTIFACTS/binaries/ && cp -a .build/* $CIRCLE_ARTIFACTS/binaries/
+          ln -s .build/linux-amd64/dellhw_exporter dellhw_exporter
     - run: |
         if [ -n "$CIRCLE_TAG" ]; then
           make docker DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME DOCKER_IMAGE_TAG=$CIRCLE_TAG
           make docker DOCKER_IMAGE_NAME=$QUAY_IMAGE_NAME DOCKER_IMAGE_TAG=$CIRCLE_TAG
+          promu crossbuild tarballs
+          promu checksum .tarballs
+          promu release .tarballs
+          mkdir $CIRCLE_ARTIFACTS/releases/ && cp -a .tarballs/* $CIRCLE_ARTIFACTS/releases/
         else
           make docker DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME
           make docker DOCKER_IMAGE_NAME=$QUAY_IMAGE_NAME
         fi
-    - run: mkdir $CIRCLE_ARTIFACTS/binaries/ && cp -a .build/* $CIRCLE_ARTIFACTS/binaries/
     - run: docker images
     - save_cache:
         key: v1-dep-{{ .Branch }}-{{ epoch }}
         paths:
         - /go
-    - run: promu crossbuild tarballs
-    - run: promu checksum .tarballs
-    - run: promu release .tarballs
-    - run: mkdir $CIRCLE_ARTIFACTS/releases/ && cp -a .tarballs/* $CIRCLE_ARTIFACTS/releases/
     - run: docker login -e $DOCKER_EMAIL -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
     - run: docker login -e $QUAY_EMAIL -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
     - run: |
