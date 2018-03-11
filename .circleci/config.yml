@@ -21,7 +21,7 @@ jobs:
       REPO_PATH: github.com/galexrt/dellhw_exporter
     # https://circleci.com/docs/2.0/circleci-images/
     docker:
-    - image: circleci/golang:1.10-stretch
+    - image: circleci/golang:1.10
     steps:
     - restore_cache:
         keys:
