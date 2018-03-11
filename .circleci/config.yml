@@ -71,7 +71,7 @@ jobs:
     - save_cache:
         key: v1-dep-{{ .Branch }}-{{ epoch }}
         paths:
-        - /go
+        - /go/src
     - run: docker login -e $DOCKER_EMAIL -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
     - run: docker login -e $QUAY_EMAIL -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
     - run: |
