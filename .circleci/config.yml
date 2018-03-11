@@ -22,6 +22,8 @@ jobs:
     docker:
     - image: circleci/golang:1.10
     steps:
+    - run: |
+        sudo chown circleci:circleci -R /go
     - restore_cache:
         keys:
         - v2-dep-{{ .Branch }}-
