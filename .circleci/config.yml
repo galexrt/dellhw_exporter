@@ -56,7 +56,8 @@ jobs:
         command: |
           docker cp app:"$(pwd)/.build" .
           mkdir $CIRCLE_ARTIFACTS/binaries/ && cp -a .build/* $CIRCLE_ARTIFACTS/binaries/
-          ln -s .build/linux-amd64/dellhw_exporter dellhw_exporter
+          [ -e dellhw_exporter ] && rm dellhw_exporter
+          ln -sfn .build/linux-amd64/dellhw_exporter dellhw_exporter
     - run:
         name: Build Docker images
         command: |
