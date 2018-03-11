@@ -24,9 +24,9 @@ jobs:
     steps:
     - restore_cache:
         keys:
-        - v1-dep-{{ .Branch }}-
-        - v1-dep-master-
-        - v1-dep-
+        - v2-dep-{{ .Branch }}-
+        - v2-dep-master-
+        - v2-dep-
     - checkout
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     - run:
@@ -71,7 +71,7 @@ jobs:
           fi
           docker images
     - save_cache:
-        key: v1-dep-{{ .Branch }}-{{ epoch }}
+        key: v2-dep-{{ .Branch }}-{{ epoch }}
         paths:
         - /go/src
     - run:
