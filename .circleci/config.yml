@@ -38,7 +38,7 @@ jobs:
         docker_layer_caching: true
     - run: docker info
     - run: |
-        pwd && promu crossbuild
+        pwd && ls -ahl && make crossbuild
     - run: ln -s .build/linux-amd64/dellhw_exporter dellhw_exporter
     - run: |
         if [ -n "$CIRCLE_TAG" ]; then
