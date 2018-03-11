@@ -1,7 +1,8 @@
 dellhw_exporter
-Copyright 2017 Alexander Trost
+Copyright 2017-2018 Alexander Trost
 
 
+For the components used in this product, please refer to the `vendor/` directory.
 The following components were used in this product as inspiration:
 
 Bosun

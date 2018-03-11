@@ -1,5 +1,5 @@
 FROM centos:7
-MAINTAINER Alexander Trost <galexrt@googlemail.com>
+LABEL maintainer="Alexander Trost <galexrt@googlemail.com>"
 
 # Environment variables
 ENV DSU_VERSION="DSU_17.07.00" \
