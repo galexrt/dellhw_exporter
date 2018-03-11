@@ -32,7 +32,7 @@ jobs:
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     - run: sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.1-circleci'
     - run: sudo chmod 0755 /usr/bin/docker
-    - run: sudo curl -L 'https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2' | tar xvjf - --strip-components 3 -C $HOME/bin
+    - run: sudo curl -L 'https://github.com/aktau/github-release/releases/download/v0.7.2/linux-amd64-github-release.tar.bz2' | sudo tar xvjf - --strip-components 3 -C /usr/local/bin
     - run: echo -e "export DOCKER_IMAGE_NAME=galexrt/dellhw_exporter\nexport QUAY_IMAGE_NAME=quay.io/galexrt/dellhw_exporter\nexport DOCKER_TEST_IMAGE_NAME=quay.io/prometheus/golang-builder:1.8-base\nexport REPO_PATH=github.com/galexrt/dellhw_exporter" >> $BASH_ENV
     - run: make promu
     - setup_remote_docker:
