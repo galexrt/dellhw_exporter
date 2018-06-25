@@ -12,7 +12,8 @@ ENV DSU_VERSION="DSU_18.06.00" \
 RUN yum -y update && \
     yum -y install sysvinit-tools wget perl passwd gcc which tar libstdc++.so.6 compat-libstdc++-33.i686 glibc.i686 && \
     echo "$USER:$PASS" | chpasswd && \
-    wget -q -O - "http://linux.dell.com/repo/hardware/${DSU_VERSION}/bootstrap.cgi" | bash && \
+    wget -q -O - "https://linux.dell.com/repo/hardware/${DSU_VERSION}/bootstrap.cgi" | bash && \
+    rpm --import "https://linux.dell.com/repo/pgp_pubkeys/0x1285491434D8786F.asc" && \
     yum -y install srvadmin-base srvadmin-storageservices && \
     yum clean all
 
