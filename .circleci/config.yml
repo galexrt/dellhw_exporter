@@ -29,6 +29,7 @@ jobs:
         - v2-dep-{{ .Branch }}-
         - v2-dep-master-
         - v2-dep-
+    - run: rm -rf /go/src/github.com/galexrt/dellhw_exporter
     - checkout
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     - run:
