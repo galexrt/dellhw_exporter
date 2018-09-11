@@ -2,7 +2,7 @@ FROM centos:7
 LABEL maintainer="Alexander Trost <galexrt@googlemail.com>"
 
 # Environment variables
-ENV DSU_VERSION="DSU_18.06.00" \
+ENV DSU_VERSION="DSU_18.08.00" \
     PATH="$PATH:/opt/dell/srvadmin/bin:/opt/dell/srvadmin/sbin" \
     USER="root" \
     PASS="password" \
