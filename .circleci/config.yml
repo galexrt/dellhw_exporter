@@ -81,8 +81,8 @@ jobs:
     - run:
         name: docker login to Docker Hub and Quay.io
         command: |
-          docker login -e $DOCKER_EMAIL -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-          docker login -e $QUAY_EMAIL -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
+          docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+          docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
     - run:
         name: docker push to Docker Hub and Quay.io
         command: |
