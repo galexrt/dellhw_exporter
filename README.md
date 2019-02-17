@@ -13,6 +13,7 @@ This exporter wraps the "omreport" command from Dell OMSA. If you can't run omre
 The dellhw_exporter has been tested with the following OMSA versions:
 * `7.4`
 * `8.4`
+* `9.1`
 
 ## Collectors
 Which collectors are enabled is controlled by the `--colectors.enabled` flag.
