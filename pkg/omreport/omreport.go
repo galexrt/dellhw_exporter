@@ -280,13 +280,13 @@ func (or *OMReport) Ps() ([]Value, error) {
 func (or *OMReport) Nics() ([]Value, error) {
 	values := []Value{}
 	or.readReport(func(fields []string) {
-		if len(fields) < 6 || fields[0] == indexField {
+		if len(fields) < 5 || fields[0] == indexField {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
 		ts := map[string]string{"id": id, "device": fields[1]}
 		var ret string
-		if fields[4] == "Connected" {
+		if fields[4] == "Connected" || fields[4] == "Full" {
 			ret = "0"
 		} else {
 			ret = "1"
