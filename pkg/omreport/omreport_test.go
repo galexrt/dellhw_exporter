@@ -13,7 +13,7 @@ type TestResultOMReport struct {
 
 func getOMReport(input *string) *OMReport {
 	return &OMReport{
-		Reader: func(f func([]string), _ string, args ...string) {
+		Reader: func(f func([]string), _ string, args ...string) error {
 			for _, line := range strings.Split(*input, "\n") {
 				sp := strings.Split(line, ";")
 				for i, s := range sp {
@@ -21,6 +21,7 @@ func getOMReport(input *string) *OMReport {
 				}
 				f(sp)
 			}
+			return nil
 		},
 	}
 }

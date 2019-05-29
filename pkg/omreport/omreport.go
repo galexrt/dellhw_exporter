@@ -13,7 +13,7 @@ type Options struct {
 // OMReport contains the Options and a Reader to mock outputs during development
 type OMReport struct {
 	Options *Options
-	Reader  func(func([]string), string, ...string)
+	Reader  func(func([]string), string, ...string) error
 }
 
 // Value contains a metrics name, value and labels
@@ -41,9 +41,9 @@ func New(opts *Options) *OMReport {
 	}
 }
 
-func readOmreport(f func([]string), omreportExecutable string, args ...string) {
+func readOmreport(f func([]string), omreportExecutable string, args ...string) error {
 	args = append(args, "-fmt", "ssv")
-	_ = readCommand(func(line string) error {
+	return readCommand(func(line string) error {
 		sp := strings.Split(line, ";")
 		for i, s := range sp {
 			sp[i] = clean(s)
@@ -60,14 +60,14 @@ func (or *OMReport) getOMReportExecutable() string {
 	return DefaultOMReportExecutable
 }
 
-func (or *OMReport) readReport(f func([]string), omreportExecutable string, args ...string) {
-	or.Reader(f, omreportExecutable, args...)
+func (or *OMReport) readReport(f func([]string), omreportExecutable string, args ...string) error {
+	return or.Reader(f, omreportExecutable, args...)
 }
 
 // Chassis returns the chassis status
 func (or *OMReport) Chassis() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) != 2 || fields[0] == "SEVERITY" {
 			return
 		}
@@ -78,13 +78,13 @@ func (or *OMReport) Chassis() ([]Value, error) {
 			Labels: map[string]string{"component": component},
 		})
 	}, or.getOMReportExecutable(), "chassis")
-	return values, nil
+	return values, err
 }
 
 // Fans returns the fan status and if supported RPM reading
 func (or *OMReport) Fans() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) != 8 {
 			return
 		}
@@ -106,13 +106,13 @@ func (or *OMReport) Fans() ([]Value, error) {
 			})
 		}
 	}, or.getOMReportExecutable(), "chassis", "fans")
-	return values, nil
+	return values, err
 }
 
 // Memory returns the memory status
 func (or *OMReport) Memory() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) != 5 {
 			return
 		}
@@ -125,13 +125,13 @@ func (or *OMReport) Memory() ([]Value, error) {
 			Labels: map[string]string{"memory": replace(fields[2])},
 		})
 	}, or.getOMReportExecutable(), "chassis", "memory")
-	return values, nil
+	return values, err
 }
 
 // System returns the system status
 func (or *OMReport) System() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) != 2 || fields[0] == "SEVERITY" {
 			return
 		}
@@ -142,13 +142,13 @@ func (or *OMReport) System() ([]Value, error) {
 			Labels: map[string]string{"component": component},
 		})
 	}, or.getOMReportExecutable(), "system")
-	return values, nil
+	return values, err
 }
 
 // StorageBattery returns the storage battery ("RAID batteries")
 func (or *OMReport) StorageBattery() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
@@ -159,13 +159,13 @@ func (or *OMReport) StorageBattery() ([]Value, error) {
 			Labels: map[string]string{"controller": id},
 		})
 	}, or.getOMReportExecutable(), "storage", "battery")
-	return values, nil
+	return values, err
 }
 
 // StorageController returns the storage controller status
 func (or *OMReport) StorageController() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
@@ -177,13 +177,13 @@ func (or *OMReport) StorageController() ([]Value, error) {
 			Labels: map[string]string{"id": id},
 		})
 	}, or.getOMReportExecutable(), "storage", "controller")
-	return values, nil
+	return values, err
 }
 
 // StorageEnclosure returns the storage enclosure status
 func (or *OMReport) StorageEnclosure() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
@@ -194,13 +194,13 @@ func (or *OMReport) StorageEnclosure() ([]Value, error) {
 			Labels: map[string]string{"enclosure": id},
 		})
 	}, or.getOMReportExecutable(), "storage", "enclosure")
-	return values, nil
+	return values, err
 }
 
 // StoragePdisk is called from the controller func, since it needs the encapsulating IDs.
 func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
@@ -215,13 +215,13 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 			},
 		})
 	}, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
-	return values, nil
+	return values, err
 }
 
 // StorageVdisk returns the storage vdisk status
 func (or *OMReport) StorageVdisk() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
@@ -232,13 +232,13 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 			Labels: map[string]string{"vdisk": id},
 		})
 	}, or.getOMReportExecutable(), "storage", "vdisk")
-	return values, nil
+	return values, err
 }
 
 // Ps returns the power supply state and if supported input/output wattage
 func (or *OMReport) Ps() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 3 || fields[0] == indexField {
 			return
 		}
@@ -273,13 +273,13 @@ func (or *OMReport) Ps() ([]Value, error) {
 			}
 		}
 	}, or.getOMReportExecutable(), "chassis", "pwrsupplies")
-	return values, nil
+	return values, err
 }
 
 // Nics returns the connection status of the NICs
 func (or *OMReport) Nics() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 6 || fields[0] == indexField {
 			return
 		}
@@ -297,13 +297,13 @@ func (or *OMReport) Nics() ([]Value, error) {
 			Labels: ts,
 		})
 	}, or.getOMReportExecutable(), "chassis", "nics")
-	return values, nil
+	return values, err
 }
 
 // PsAmpsSysboardPwr returns the power supply system board amps power consumption
 func (or *OMReport) PsAmpsSysboardPwr() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) == 2 && strings.Contains(fields[0], "Current") {
 			iFields := strings.Split(fields[0], "Current")
 			vFields := strings.Fields(fields[1])
@@ -340,13 +340,13 @@ func (or *OMReport) PsAmpsSysboardPwr() ([]Value, error) {
 			})
 		}
 	}, or.getOMReportExecutable(), "chassis", "pwrmonitoring")
-	return values, nil
+	return values, err
 }
 
 // Processors returns the processors status
 func (or *OMReport) Processors() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) != 8 {
 			return
 		}
@@ -359,14 +359,14 @@ func (or *OMReport) Processors() ([]Value, error) {
 			Labels: map[string]string{"processor": replace(fields[2])},
 		})
 	}, or.getOMReportExecutable(), "chassis", "processors")
-	return values, nil
+	return values, err
 }
 
 // Temps returns the temperatures for the chassis including the min and max,
 // for the max value, warning and failure thresholds are returned
 func (or *OMReport) Temps() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) != 8 {
 			return
 		}
@@ -420,13 +420,13 @@ func (or *OMReport) Temps() ([]Value, error) {
 			})
 		}
 	}, or.getOMReportExecutable(), "chassis", "temps")
-	return values, nil
+	return values, err
 }
 
 // Volts returns the chassis volts statud and if support reading
 func (or *OMReport) Volts() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) != 8 {
 			return
 		}
@@ -447,13 +447,13 @@ func (or *OMReport) Volts() ([]Value, error) {
 			})
 		}
 	}, or.getOMReportExecutable(), "chassis", "volts")
-	return values, nil
+	return values, err
 }
 
 // ChassisBatteries retursn the chassis batteries status
 func (or *OMReport) ChassisBatteries() ([]Value, error) {
 	values := []Value{}
-	or.readReport(func(fields []string) {
+	err := or.readReport(func(fields []string) {
 		if len(fields) < 4 || fields[0] == indexField {
 			return
 		}
@@ -466,5 +466,5 @@ func (or *OMReport) ChassisBatteries() ([]Value, error) {
 			Labels: ts,
 		})
 	}, or.getOMReportExecutable(), "chassis", "batteries")
-	return values, nil
+	return values, err
 }
