@@ -177,27 +177,7 @@ func main() {
 	log.Infoln("Build context", version.BuildContext())
 
 	if opts.container {
-		log.Infoln("Starting srvadmin-services ...")
-		cmd := exec.Command("/opt/dell/srvadmin/sbin/srvadmin-services.sh", "start")
-		if err := cmd.Start(); err != nil {
-			if !opts.containerIgnoreOMSAServiceExit {
-				log.Fatal(err)
-			} else {
-				log.Warnf("error occured during srvadmin-services start command, continuing. %+v", err)
-			}
-		}
-		timer := time.AfterFunc(30*time.Second, func() {
-			cmd.Process.Kill()
-		})
-		if err := cmd.Wait(); err != nil {
-			if !opts.containerIgnoreOMSAServiceExit {
-				log.Fatal(err)
-			} else {
-				log.Warnf("error occured during srvadmin-services start command wait, continuing. %+v", err)
-			}
-		}
-		timer.Stop()
-		log.Infoln("Started srvadmin-services.")
+		startSrvadminServices()
 	}
 
 	omrOpts := &omreport.Options{
@@ -240,4 +220,28 @@ func main() {
 	if err := http.ListenAndServe(opts.metricsAddr, nil); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func startSrvadminServices() {
+	log.Infoln("Starting srvadmin-services ...")
+	cmd := exec.Command("/opt/dell/srvadmin/sbin/srvadmin-services.sh", "start")
+	if err := cmd.Start(); err != nil {
+		if !opts.containerIgnoreOMSAServiceExit {
+			log.Fatal(err)
+		} else {
+			log.Warnf("error occured during srvadmin-services start command, continuing. %+v", err)
+		}
+	}
+	timer := time.AfterFunc(30*time.Second, func() {
+		cmd.Process.Kill()
+	})
+	if err := cmd.Wait(); err != nil {
+		if !opts.containerIgnoreOMSAServiceExit {
+			log.Fatal(err)
+		} else {
+			log.Warnf("error occured during srvadmin-services start command wait, continuing. %+v", err)
+		}
+	}
+	timer.Stop()
+	log.Infoln("Started srvadmin-services.")
 }
