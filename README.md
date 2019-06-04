@@ -19,45 +19,45 @@ The dellhw_exporter has been tested with the following OMSA versions:
 Which collectors are enabled is controlled by the `--colectors.enabled` flag.
 
 ### Enabled by default
-All collectors are enabled by default right now.
+All collectors are enabled by default. You can disable collectors by specifying the whole list of collectors through the `--collectors.enabled` flag.
 
-Name     | Description
----------|-------------
-chassis_batteries | Overall status of chassis CMOS batteries.
-chassis | Overall status of chassis components.
-fans | Overall status of system fans.
-memory | System RAM DIMM status.
-nics | NICs connection status.
-processors | Overall status of CPUs.
-ps_amps_sysboard_pwr | System board power usage.
-ps | Overall status of power supplies.
-storage_battery | Status of storage controller backup batteries.
-storage_controller | Overall status of storage controllers.
-storage_enclosure | Overall status of storage enclosures.
-storage_pdisk | Overall status of physical disks.
-storage_vdisk | Overall status of virtual disks.
-system | Overall status of system components.
-temps | Overall temperatures and status of system temperature readings.
-volts | Overall volts and status of power supply volt readings.
+| Name                 | Description                                                     |
+| -------------------- | --------------------------------------------------------------- |
+| chassis              | Overall status of chassis components.                           |
+| chassis_batteries    | Overall status of chassis CMOS batteries.                       |
+| fans                 | Overall status of system fans.                                  |
+| memory               | System RAM DIMM status.                                         |
+| nics                 | NICs connection status.                                         |
+| processors           | Overall status of CPUs.                                         |
+| ps                   | Overall status of power supplies.                               |
+| ps_amps_sysboard_pwr | System board power usage.                                       |
+| storage_battery      | Status of storage controller backup batteries.                  |
+| storage_controller   | Overall status of storage controllers.                          |
+| storage_enclosure    | Overall status of storage enclosures.                           |
+| storage_pdisk        | Overall status of physical disks.                               |
+| storage_vdisk        | Overall status of virtual disks.                                |
+| system               | Overall status of system components.                            |
+| temps                | Overall temperatures and status of system temperature readings. |
+| volts                | Overall volts and status of power supply volt readings.         |
 
 ## Configuration
 ### Flags
+
 ```
-./dellhw_exporter [FLAGS]
+$ dellhw_exporter --help
+Usage: dellhw_exporter [OPTION]...
   -collectors.enabled string
-    	Comma separated list of active collectors (default "chassis,fans,memory,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_enclosure,storage_controller,storage_vdisk,system,temps,volts")
+    	Comma separated list of active collectors (default "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
   -collectors.omr-report string
     	Path to the omReport executable (default "/opt/dell/srvadmin/bin/omreport")
   -collectors.print
     	If true, print available collectors and exit.
+  -container
+    	!! DEPRECATED !! Starts the Dell OpenManage start script !! DEPRECATED !!
   -debug
     	Enable debug output
   -help
     	Show help menu
-  -log.format value
-    	Set the log target and format. Example: "logger:syslog?appname=bob&local=7" or "logger:stdout?json=true" (default "logger:stderr")
-  -log.level value
-    	Only log messages with the given severity or above. Valid levels: [debug, info, warn, error, fatal] (default "info")
   -version
     	Show version information
   -web.listen-address string
@@ -67,7 +67,8 @@ volts | Overall volts and status of power supply volt readings.
 ```
 
 ### Environment variables
-For the description of the env vars, see the above equivalent flag.
+For the description of the env vars, see the above equivalent flags.
+
 ```
 DELLHW_EXPORTER_COLLECTORS_ENABLED
 DELLHW_EXPORTER_COLLECTORS_OMR_REPORT
@@ -84,11 +85,13 @@ The container image is available from [Docker Hub](https://hub.docker.com/) and 
 
 ### Pull the Docker image
 #### Docker Hub
+
 ```
 docker pull galexrt/dellhw_exporter
 ```
 
 #### Quay.io
+
 ```
 docker pull quay.io/galexrt/dellhw_exporter
 ```
@@ -106,4 +109,5 @@ Checkout the files in the [`contrib/monitoring/`](contrib/monitoring/) directory
 
 ## Development
 ### Dependencies
+
 `dep` is used for vendoring the dependencies.

@@ -14,8 +14,10 @@ RUN yum -y update && \
     yum -y install srvadmin-base srvadmin-storageservices && \
     yum clean all
 
+ADD docker/entrypoint.sh /bin/entrypoint
+
+RUN chmod +x /bin/entrypoint
+
 ADD .build/linux-amd64/dellhw_exporter /bin/dellhw_exporter
 
-ENTRYPOINT ["/bin/dellhw_exporter"]
-
-CMD ["-container"]
+ENTRYPOINT ["/bin/entrypoint"]

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"os/exec"
 	"sort"
 	"strings"
 	"sync"
@@ -12,13 +11,13 @@ import (
 
 	"flag"
 
-	"github.com/sirupsen/logrus"
 	"github.com/galexrt/dellhw_exporter/collector"
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
 	"github.com/galexrt/pkg/flagutil"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/version"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -51,9 +50,6 @@ type CmdLineOpts struct {
 	metricsPath        string
 	enabledCollectors  string
 	omReportExecutable string
-	// Long vars club
-	// TODO Make var names shorter / Implement actual config struct in the future
-	containerIgnoreOMSAServiceExit bool
 }
 
 var (
@@ -71,8 +67,7 @@ type DellHWCollector struct {
 func init() {
 	dellhwExporterFlags.BoolVar(&opts.help, "help", false, "Show help menu")
 	dellhwExporterFlags.BoolVar(&opts.version, "version", false, "Show version information")
-	dellhwExporterFlags.BoolVar(&opts.container, "container", false, "Start the Dell OpenManage service")
-	dellhwExporterFlags.BoolVar(&opts.containerIgnoreOMSAServiceExit, "container.ignore-omsa-service-exit", false, "If dellhw_exporter should ignore errors from the Dell OpenManage service start command and just continue")
+	dellhwExporterFlags.BoolVar(&opts.container, "container", false, "!! DEPRECATED !! Starts the Dell OpenManage start script !! DEPRECATED !!")
 	dellhwExporterFlags.BoolVar(&opts.showCollectors, "collectors.print", false, "If true, print available collectors and exit.")
 	dellhwExporterFlags.BoolVar(&opts.debugMode, "debug", false, "Enable debug output")
 	dellhwExporterFlags.StringVar(&opts.metricsAddr, "web.listen-address", ":9137", "The address to listen on for HTTP requests")
@@ -150,6 +145,9 @@ func main() {
 	if err := flagutil.SetFlagsFromEnv(dellhwExporterFlags, "DELLHW_EXPORTER"); err != nil {
 		log.Fatal(err)
 	}
+	if opts.container {
+		log.Warn("--container flag and functionality is deprecated, and will soon be removed. remove the flag now")
+	}
 	if opts.help {
 		usage()
 	}
@@ -175,10 +173,6 @@ func main() {
 	}
 	log.Infoln("Starting srcds_exporter", version.Info())
 	log.Infoln("Build context", version.BuildContext())
-
-	if opts.container {
-		startSrvadminServices()
-	}
 
 	omrOpts := &omreport.Options{
 		OMReportExecutable: opts.omReportExecutable,
@@ -220,28 +214,4 @@ func main() {
 	if err := http.ListenAndServe(opts.metricsAddr, nil); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func startSrvadminServices() {
-	log.Infoln("Starting srvadmin-services ...")
-	cmd := exec.Command("/opt/dell/srvadmin/sbin/srvadmin-services.sh", "start")
-	if err := cmd.Start(); err != nil {
-		if !opts.containerIgnoreOMSAServiceExit {
-			log.Fatal(err)
-		} else {
-			log.Warnf("error occured during srvadmin-services start command, continuing. %+v", err)
-		}
-	}
-	timer := time.AfterFunc(30*time.Second, func() {
-		cmd.Process.Kill()
-	})
-	if err := cmd.Wait(); err != nil {
-		if !opts.containerIgnoreOMSAServiceExit {
-			log.Fatal(err)
-		} else {
-			log.Warnf("error occured during srvadmin-services start command wait, continuing. %+v", err)
-		}
-	}
-	timer.Stop()
-	log.Infoln("Started srvadmin-services.")
 }
