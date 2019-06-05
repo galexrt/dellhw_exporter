@@ -80,6 +80,12 @@ DELLHW_EXPORTER_WEB_LISTEN_ADDRESS
 DELLHW_EXPORTER_WEB_TELEMETRY_PATH
 ```
 
+#### Docker specific environment variables
+
+```
+START_DELL_SRVADMIN_SERVICES # Defaults to `true`, toggle if the srvadmin services are started inside the container
+```
+
 ## Running in Docker
 The container image is available from [Docker Hub](https://hub.docker.com/) and [Quay.io](https://quay.io/):
 
@@ -104,10 +110,12 @@ docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_ex
 # or for quay.io
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
 ```
+
 ## Monitoring
 Checkout the files in the [`contrib/monitoring/`](contrib/monitoring/) directory.
 
 ## Development
+
 ### Dependencies
 
 `dep` is used for vendoring the dependencies.
