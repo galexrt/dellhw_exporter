@@ -52,6 +52,8 @@ All collectors are enabled by default. You can disable collectors by specifying 
 ```cosnole
 $ dellhw_exporter --help
 Usage: dellhw_exporter [OPTION]...
+  -collectors.cmd-timeout int
+    	Command execution timeout for omreport (default 15)
   -collectors.enabled string
     	Comma separated list of active collectors (default "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
   -collectors.omr-report string
@@ -77,6 +79,7 @@ Usage: dellhw_exporter [OPTION]...
 For the description of the env vars, see the above equivalent flags.
 
 ```console
+DELLHW_EXPORTER_COLLECTORS_CMD_TIMEOUT
 DELLHW_EXPORTER_COLLECTORS_ENABLED
 DELLHW_EXPORTER_COLLECTORS_OMR_REPORT
 DELLHW_EXPORTER_COLLECTORS_PRINT

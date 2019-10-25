@@ -12,8 +12,8 @@ import (
 	"flag"
 
 	"github.com/galexrt/dellhw_exporter/collector"
+	"github.com/galexrt/dellhw_exporter/pkg/flagutil"
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
-	"github.com/galexrt/pkg/flagutil"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/version"
