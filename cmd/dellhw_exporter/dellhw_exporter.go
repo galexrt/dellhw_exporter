@@ -27,13 +27,13 @@ const (
 var (
 	scrapeDurationDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(collector.Namespace, "scrape", "collector_duration_seconds"),
-		"srcds_exporter: Duration of a collector scrape.",
+		"dellhw_exporter: Duration of a collector scrape.",
 		[]string{"collector"},
 		nil,
 	)
 	scrapeSuccessDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(collector.Namespace, "scrape", "collector_success"),
-		"srcds_exporter: Whether a collector succeeded.",
+		"dellhw_exporter: Whether a collector succeeded.",
 		[]string{"collector"},
 		nil,
 	)
@@ -152,7 +152,7 @@ func main() {
 		usage()
 	}
 	if opts.version {
-		fmt.Fprintln(os.Stdout, version.Print("srcds_exporter"))
+		fmt.Fprintln(os.Stdout, version.Print("dellhw_exporter"))
 		os.Exit(0)
 	}
 	if opts.showCollectors {
@@ -171,7 +171,7 @@ func main() {
 	if opts.debugMode {
 		log.Level = logrus.DebugLevel
 	}
-	log.Infoln("Starting srcds_exporter", version.Info())
+	log.Infoln("Starting dellhw_exporter", version.Info())
 	log.Infoln("Build context", version.BuildContext())
 
 	omrOpts := &omreport.Options{

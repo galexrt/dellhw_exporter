@@ -2,8 +2,7 @@ FROM centos:7
 LABEL maintainer="Alexander Trost <galexrt@googlemail.com>"
 
 # Environment variables
-ENV DSU_VERSION="DSU_19.05.00" \
-    PATH="$PATH:/opt/dell/srvadmin/bin:/opt/dell/srvadmin/sbin" \
+ENV PATH="$PATH:/opt/dell/srvadmin/bin:/opt/dell/srvadmin/sbin" \
     SYSTEMCTL_SKIP_REDIRECT="1" \
     START_DELL_SRVADMIN_SERVICES="true"
 
