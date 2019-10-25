@@ -44,7 +44,7 @@ jobs:
           echo -e "export PATH=$PATH:/usr/local/go/bin:/go/bin" >> $BASH_ENV
     - run: make promu
     - setup_remote_docker:
-        docker_layer_caching: true
+        docker_layer_caching: false
     - run: docker info
     - run:
         name: Copy data files

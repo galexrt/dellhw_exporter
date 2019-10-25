@@ -2,7 +2,7 @@
 
 START_DELL_SRVADMIN_SERVICES="${START_DELL_SRVADMIN_SERVICES:-true}"
 
-if [ "${START_DELL_SRVADMIN_SERVICES}" = "true" ]; then
+if [ "${START_DELL_SRVADMIN_SERVICES}" = "true" ] || [ "${START_DELL_SRVADMIN_SERVICES}" = "True" ]; then
     echo "Starting dell srvadmin services ..."
     /opt/dell/srvadmin/sbin/dsm_sa_datamgrd &
     /opt/dell/srvadmin/sbin/dsm_sa_eventmgrd &

@@ -1,4 +1,5 @@
 # dellhw_exporter
+
 [![CircleCI branch](https://img.shields.io/circleci/project/github/galexrt/dellhw_exporter/master.svg)]() [![Docker Repository on Quay](https://quay.io/repository/galexrt/dellhw_exporter/status "Docker Repository on Quay")](https://quay.io/repository/galexrt/dellhw_exporter) [![Go Report Card](https://goreportcard.com/badge/github.com/galexrt/dellhw_exporter)](https://goreportcard.com/report/github.com/galexrt/dellhw_exporter)
 
 Prometheus exporter for Dell Hardware components using OMSA.
@@ -10,7 +11,9 @@ Omreport parsing functions were borrowed from the [Bosun project](https://github
 This exporter wraps the "omreport" command from Dell OMSA. If you can't run omreport on your system, the exporter won't export any metrics.
 
 ## Tested Dell OMSA Compatibility
+
 The dellhw_exporter has been tested with the following OMSA versions:
+
 * `7.4`
 * `8.4`
 * `9.1`
@@ -24,9 +27,11 @@ The dellhw_exporter has been tested with the following OMSA versions:
 Should you run into issues when using the Docker image, please follow the [Troubleshooting - No metrics being exported](#no-metrics-being-exported).
 
 ## Collectors
+
 Which collectors are enabled is controlled by the `--colectors.enabled` flag.
 
 ### Enabled by default
+
 All collectors are enabled by default. You can disable collectors by specifying the whole list of collectors through the `--collectors.enabled` flag.
 
 | Name                 | Description                                                                      |
@@ -57,11 +62,14 @@ Most metrics returned besides temperature, volts, fans RPM count and others, are
 * `2` - `Non-Critical`, the component is not okay, but not critical.
 
 ## Configuration
+
 ### Flags
 
-```
+```cosnole
 $ dellhw_exporter --help
 Usage: dellhw_exporter [OPTION]...
+  -collectors.cmd-timeout int
+    	Command execution timeout for omreport (default 15)
   -collectors.enabled string
     	Comma separated list of active collectors (default "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
   -collectors.omr-report string
@@ -83,9 +91,11 @@ Usage: dellhw_exporter [OPTION]...
 ```
 
 ### Environment variables
+
 For the description of the env vars, see the above equivalent flags.
 
-```
+```console
+DELLHW_EXPORTER_COLLECTORS_CMD_TIMEOUT
 DELLHW_EXPORTER_COLLECTORS_ENABLED
 DELLHW_EXPORTER_COLLECTORS_OMR_REPORT
 DELLHW_EXPORTER_COLLECTORS_PRINT
@@ -98,23 +108,25 @@ DELLHW_EXPORTER_WEB_TELEMETRY_PATH
 
 #### Docker specific environment variables
 
-```
+```console
 START_DELL_SRVADMIN_SERVICES # Defaults to `true`, toggle if the srvadmin services are started inside the container
 ```
 
 ## Running in Docker
+
 The container image is available from [Docker Hub](https://hub.docker.com/) and [Quay.io](https://quay.io/):
 
 ### Pull the Docker image
+
 #### Docker Hub
 
-```
+```console
 docker pull galexrt/dellhw_exporter
 ```
 
 #### Quay.io
 
-```
+```console
 docker pull quay.io/galexrt/dellhw_exporter
 ```
 
@@ -122,7 +134,7 @@ docker pull quay.io/galexrt/dellhw_exporter
 
 > **NOTE** The `--privileged` flag is required as the OMSA needs to access the host devices.
 
-```
+```console
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_exporter
 # or for quay.io
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter

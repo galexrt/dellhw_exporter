@@ -12,8 +12,8 @@ import (
 	"flag"
 
 	"github.com/galexrt/dellhw_exporter/collector"
+	"github.com/galexrt/dellhw_exporter/pkg/flagutil"
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
-	"github.com/galexrt/pkg/flagutil"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/version"
@@ -27,13 +27,13 @@ const (
 var (
 	scrapeDurationDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(collector.Namespace, "scrape", "collector_duration_seconds"),
-		"srcds_exporter: Duration of a collector scrape.",
+		"dellhw_exporter: Duration of a collector scrape.",
 		[]string{"collector"},
 		nil,
 	)
 	scrapeSuccessDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(collector.Namespace, "scrape", "collector_success"),
-		"srcds_exporter: Whether a collector succeeded.",
+		"dellhw_exporter: Whether a collector succeeded.",
 		[]string{"collector"},
 		nil,
 	)
@@ -50,6 +50,7 @@ type CmdLineOpts struct {
 	metricsPath        string
 	enabledCollectors  string
 	omReportExecutable string
+	cmdTimeout         int64
 }
 
 var (
@@ -74,6 +75,7 @@ func init() {
 	dellhwExporterFlags.StringVar(&opts.metricsPath, "web.telemetry-path", "/metrics", "Path the metrics will be exposed under")
 	dellhwExporterFlags.StringVar(&opts.enabledCollectors, "collectors.enabled", defaultCollectors, "Comma separated list of active collectors")
 	dellhwExporterFlags.StringVar(&opts.omReportExecutable, "collectors.omr-report", "/opt/dell/srvadmin/bin/omreport", "Path to the omReport executable")
+	dellhwExporterFlags.Int64Var(&opts.cmdTimeout, "collectors.cmd-timeout", 15, "Command execution timeout for omreport")
 
 	// Define the usage function
 	dellhwExporterFlags.Usage = usage
@@ -152,7 +154,7 @@ func main() {
 		usage()
 	}
 	if opts.version {
-		fmt.Fprintln(os.Stdout, version.Print("srcds_exporter"))
+		fmt.Fprintln(os.Stdout, version.Print("dellhw_exporter"))
 		os.Exit(0)
 	}
 	if opts.showCollectors {
@@ -171,8 +173,15 @@ func main() {
 	if opts.debugMode {
 		log.Level = logrus.DebugLevel
 	}
-	log.Infoln("Starting srcds_exporter", version.Info())
+	log.Infoln("Starting dellhw_exporter", version.Info())
 	log.Infoln("Build context", version.BuildContext())
+
+	if opts.cmdTimeout > 0 {
+		log.Infof("Setting command timeout to %d", opts.cmdTimeout)
+		omreport.SetCommandTimeout(opts.cmdTimeout)
+	} else {
+		log.Warnf("Not setting command timeout because it is zero")
+	}
 
 	omrOpts := &omreport.Options{
 		OMReportExecutable: opts.omReportExecutable,

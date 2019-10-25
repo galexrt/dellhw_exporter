@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"sync/atomic"
 	"time"
 	"unicode"
 	"unicode/utf8"
@@ -22,6 +23,8 @@ var (
 	ErrPath = errors.New("program not in PATH")
 	// ErrTimeout is returned by Command if the program timed out.
 	ErrTimeout = errors.New("program killed after timeout")
+	// cmdTimeout configurable timeout for commands.
+	cmdTimeout int64 = 10
 )
 
 // clean concatenates arguments with a space and removes extra whitespace.
@@ -117,7 +120,8 @@ func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string)
 // stdout. Command is interrupted (if supported by Go) after 10 seconds and
 // killed after 20 seconds.
 func readCommand(line func(string) error, name string, arg ...string) error {
-	return readCommandTimeout(time.Second*10, line, nil, name, arg...)
+	timeout := time.Duration(int(atomic.LoadInt64(&cmdTimeout)))
+	return readCommandTimeout(timeout*time.Second, line, nil, name, arg...)
 }
 
 // ReadCommandTimeout is the same as ReadCommand with a specifiable timeout.
@@ -137,4 +141,9 @@ func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io
 		log.Error(name, " : ", err)
 	}
 	return nil
+}
+
+// SetCommandTimeout this function can be used to atomically set the command execution timeout
+func SetCommandTimeout(timeout int64) {
+	atomic.StoreInt64(&cmdTimeout, timeout)
 }
