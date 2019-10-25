@@ -50,6 +50,7 @@ type CmdLineOpts struct {
 	metricsPath        string
 	enabledCollectors  string
 	omReportExecutable string
+	cmdTimeout         int64
 }
 
 var (
@@ -74,6 +75,7 @@ func init() {
 	dellhwExporterFlags.StringVar(&opts.metricsPath, "web.telemetry-path", "/metrics", "Path the metrics will be exposed under")
 	dellhwExporterFlags.StringVar(&opts.enabledCollectors, "collectors.enabled", defaultCollectors, "Comma separated list of active collectors")
 	dellhwExporterFlags.StringVar(&opts.omReportExecutable, "collectors.omr-report", "/opt/dell/srvadmin/bin/omreport", "Path to the omReport executable")
+	dellhwExporterFlags.Int64Var(&opts.cmdTimeout, "collectors.cmd-timeout", 15, "Command execution timeout for omreport")
 
 	// Define the usage function
 	dellhwExporterFlags.Usage = usage
@@ -173,6 +175,13 @@ func main() {
 	}
 	log.Infoln("Starting dellhw_exporter", version.Info())
 	log.Infoln("Build context", version.BuildContext())
+
+	if opts.cmdTimeout > 0 {
+		log.Infof("Setting command timeout to %d", opts.cmdTimeout)
+		omreport.SetCommandTimeout(opts.cmdTimeout)
+	} else {
+		log.Warnf("Not setting command timeout because it is zero")
+	}
 
 	omrOpts := &omreport.Options{
 		OMReportExecutable: opts.omReportExecutable,
