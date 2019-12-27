@@ -17,10 +17,10 @@ jobs:
       CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
       DOCKER_IMAGE_NAME: galexrt/dellhw_exporter
       QUAY_IMAGE_NAME: quay.io/galexrt/dellhw_exporter
-      DOCKER_TEST_IMAGE_NAME: quay.io/prometheus/golang-builder:1.10-base
+      DOCKER_TEST_IMAGE_NAME: quay.io/prometheus/golang-builder:1.13-base
       REPO_PATH: github.com/galexrt/dellhw_exporter
     docker:
-    - image: circleci/golang:1.10
+    - image: circleci/golang:1.13
     steps:
     - run: |
         sudo chown circleci:circleci -R /go
@@ -36,7 +36,7 @@ jobs:
         name: Install Docker client and github-release, and set PATH
         command: |
           set -x
-          VER="18.09.2"
+          VER="19.03.5"
           curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
           tar -xz -C /tmp -f /tmp/docker-$VER.tgz
           sudo mv /tmp/docker/* /usr/bin

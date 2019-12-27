@@ -1,3 +1,5 @@
+go:
+  version: 1.13
 repository:
     path: github.com/galexrt/dellhw_exporter
 build:
@@ -11,7 +13,6 @@ build:
     binaries:
         - name: dellhw_exporter
           path: ./cmd/dellhw_exporter
-
 tarball:
     files:
         - NOTICE
