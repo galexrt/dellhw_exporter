@@ -40,7 +40,7 @@ jobs:
           curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
           tar -xz -C /tmp -f /tmp/docker-$VER.tgz
           sudo mv /tmp/docker/* /usr/bin
-          sudo curl -L 'https://github.com/meterup/github-release/releases/download/v0.7.5/linux-amd64-github-release.bz2' | sudo tar xvjf - -C /usr/local/bin
+          go get github.com/meterup/github-release
           echo -e "export PATH=$PATH:/usr/local/go/bin:/go/bin" >> $BASH_ENV
     - run: make promu
     - setup_remote_docker:
