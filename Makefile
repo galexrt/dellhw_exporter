@@ -7,7 +7,7 @@ GO           := go
 FPM          ?= fpm
 PROMU        := $(GOPATH)/bin/promu
 PREFIX       ?= $(shell pwd)
-BIN_DIR      ?= $(PREFIX)/.build
+BIN_DIR      ?= $(PREFIX)/.bin
 TARBALL_DIR  ?= $(PREFIX)/.tarball
 PACKAGE_DIR  ?= $(PREFIX)/.package
 ARCH         ?= amd64
@@ -22,10 +22,7 @@ DOCKER_IMAGE_TAG  ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
 all: format style vet test build
 
 build: promu
-	@$(PROMU) build --prefix $(PREFIX)
-
-crossbuild: promu
-	@$(PROMU) crossbuild
+	@$(PROMU) build --prefix $(BIN_DIR)
 
 docker:
 	@echo ">> building docker image"
@@ -61,9 +58,9 @@ style:
 	@echo ">> checking code style"
 	@! gofmt -d $(shell find . -path ./vendor -prune -o -name '*.go' -print) | grep '^'
 
-tarball: promu
+tarball:
 	@echo ">> building release tarball"
-	@$(PROMU) tarball --prefix $(PREFIX) $(BIN_DIR)
+	@$(PROMU) tarball --prefix $(TARBALL_DIR) $(BIN_DIR)
 
 test:
 	@$(GO) test $(pkgs)

@@ -24,11 +24,6 @@ jobs:
     steps:
     - run: |
         sudo chown circleci:circleci -R /go
-    - restore_cache:
-        keys:
-        - v2-dep-{{ .Branch }}-
-        - v2-dep-master-
-        - v2-dep-
     - run: rm -rf /go/src/github.com/galexrt/dellhw_exporter
     - checkout
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
@@ -72,10 +67,6 @@ jobs:
               make docker DOCKER_IMAGE_NAME=$QUAY_IMAGE_NAME
           fi
           docker images
-    - save_cache:
-        key: v2-dep-{{ .Branch }}-{{ epoch }}
-        paths:
-        - /go/src
     - run:
         name: docker login to Docker Hub and Quay.io
         command: |
