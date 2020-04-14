@@ -130,14 +130,45 @@ docker pull galexrt/dellhw_exporter
 docker pull quay.io/galexrt/dellhw_exporter
 ```
 
-## Run the Docker image
+### Run the Docker image
 
-> **NOTE** The `--privileged` flag is required as the OMSA needs to access the host devices.
+> **NOTE** The `--privileged` flag is required as the OMSA needs to access the host's devices and other components.
 
 ```console
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_exporter
 # or for quay.io
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
+```
+
+## Running without Docker
+
+To run without Docker either download a [release binary](https://github.com/galexrt/dellhw_exporter/releases) or build it (using `make build`):
+
+```console
+./dellhw_exporter
+./dellhw_exporter --help
+./dellhw_exporter YOUR_FLAGS
+```
+
+**The DELL OMSA services must already be running for the exporter to be able to collect metrics!**
+
+E.g., run `/opt/dell/srvadmin/sbin/srvadmin-services.sh start` and / or `systemctl start SERVICE_NAME` (to enable autostart use `systemctl enable SERVICE_NAME`; where `SERVICE_NAME` [are the DELL OMSA service(s) you installed](http://linux.dell.com/repo/hardware/omsa.html)).
+
+## Prometheus
+
+The exporter runs on TCP port `9137`.
+
+Example static Prometheus Job config:
+
+```yaml
+[...]
+  - job_name: 'dellhw_exporter'
+    # Override the global default and scrape targets from this job every 60 seconds.
+    scrape_interval: 60s
+    static_configs:
+      - targets:
+        - 'YOUR_SERVER_HERE:9137'
+[...]
 ```
 
 ## Monitoring
@@ -149,7 +180,8 @@ Checkout the files in the [`contrib/monitoring/`](contrib/monitoring/) directory
 ### No metrics being exported
 
 If you are not running the Docker container, it is probably that your OMSA / srvadmin services are not running. Start them using the following commands:
-```
+
+```console
 /opt/dell/srvadmin/sbin/srvadmin-services.sh status
 /opt/dell/srvadmin/sbin/srvadmin-services.sh start
 echo "return code: $?"
@@ -159,7 +191,7 @@ Please note that the return code should be `0`, if not please investigate the lo
 When running inside the container this most of the time means
 Be sure to enter the container and run the following commands to verify if the kernel modules have been loaded:
 
-```
+```console
 /usr/libexec/instsvcdrv-helper status
 lsmod | grep -iE 'dell|dsu'
 ```
