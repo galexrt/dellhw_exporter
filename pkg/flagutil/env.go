@@ -5,10 +5,11 @@
 package flagutil
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
+
+	flag "github.com/spf13/pflag"
 )
 
 // SetFlagsFromEnv parses all registered flags in the given flagset,

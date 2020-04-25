@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"flag"
+	flag "github.com/spf13/pflag"
 
 	"github.com/galexrt/dellhw_exporter/collector"
 	"github.com/galexrt/dellhw_exporter/pkg/flagutil"
@@ -41,11 +41,12 @@ var (
 
 // CmdLineOpts holds possible command line options/flags
 type CmdLineOpts struct {
-	version            bool
-	help               bool
-	container          bool
-	showCollectors     bool
-	debugMode          bool
+	version        bool
+	container      bool
+	showCollectors bool
+	debugMode      bool
+	logLevel       string
+
 	metricsAddr        string
 	metricsPath        string
 	enabledCollectors  string
@@ -66,19 +67,20 @@ type DellHWCollector struct {
 }
 
 func init() {
-	dellhwExporterFlags.BoolVar(&opts.help, "help", false, "Show help menu")
 	dellhwExporterFlags.BoolVar(&opts.version, "version", false, "Show version information")
-	dellhwExporterFlags.BoolVar(&opts.container, "container", false, "!! DEPRECATED !! Starts the Dell OpenManage start script !! DEPRECATED !!")
+	dellhwExporterFlags.BoolVar(&opts.container, "container", false, "Starts the Dell OpenManage start script")
 	dellhwExporterFlags.BoolVar(&opts.showCollectors, "collectors.print", false, "If true, print available collectors and exit.")
 	dellhwExporterFlags.BoolVar(&opts.debugMode, "debug", false, "Enable debug output")
+	dellhwExporterFlags.StringVar(&opts.logLevel, "debug", "INFO", "Enable debug output")
+
 	dellhwExporterFlags.StringVar(&opts.metricsAddr, "web.listen-address", ":9137", "The address to listen on for HTTP requests")
 	dellhwExporterFlags.StringVar(&opts.metricsPath, "web.telemetry-path", "/metrics", "Path the metrics will be exposed under")
 	dellhwExporterFlags.StringVar(&opts.enabledCollectors, "collectors.enabled", defaultCollectors, "Comma separated list of active collectors")
 	dellhwExporterFlags.StringVar(&opts.omReportExecutable, "collectors.omr-report", "/opt/dell/srvadmin/bin/omreport", "Path to the omReport executable")
 	dellhwExporterFlags.Int64Var(&opts.cmdTimeout, "collectors.cmd-timeout", 15, "Command execution timeout for omreport")
 
-	// Define the usage function
-	dellhwExporterFlags.Usage = usage
+	dellhwExporterFlags.MarkDeprecated("container", "DEPRECATED the dellhw_exporter will no logner start the Dell OpenManage services / scripts")
+	dellhwExporterFlags.MarkDeprecated("debug", "DEPRECATED in favor of the --log-level=INFO flag")
 
 	if err := dellhwExporterFlags.Parse(os.Args[1:]); err != nil {
 		log.Fatal(err)
@@ -137,26 +139,15 @@ func loadCollectors(list string) (map[string]collector.Collector, error) {
 	return collectors, nil
 }
 
-func usage() {
-	fmt.Fprintf(os.Stderr, "Usage: %s [OPTION]...\n", os.Args[0])
-	dellhwExporterFlags.PrintDefaults()
-	os.Exit(0)
-}
-
 func main() {
 	if err := flagutil.SetFlagsFromEnv(dellhwExporterFlags, "DELLHW_EXPORTER"); err != nil {
 		log.Fatal(err)
 	}
-	if opts.container {
-		log.Warn("--container flag and functionality is deprecated, and will soon be removed. remove the flag now")
-	}
-	if opts.help {
-		usage()
-	}
 	if opts.version {
 		fmt.Fprintln(os.Stdout, version.Print("dellhw_exporter"))
-		os.Exit(0)
+		return
 	}
+
 	if opts.showCollectors {
 		collectorNames := make(sort.StringSlice, 0, len(collector.Factories))
 		for n := range collector.Factories {
@@ -167,12 +158,17 @@ func main() {
 		for _, n := range collectorNames {
 			fmt.Printf(" - %s\n", n)
 		}
-		os.Exit(0)
+		return
 	}
+
 	log.Out = os.Stdout
-	if opts.debugMode {
-		log.Level = logrus.DebugLevel
+
+	l, err := logrus.ParseLevel(opts.logLevel)
+	if err != nil {
+		log.Fatal(err)
 	}
+	log.SetLevel(l)
+
 	log.Infoln("Starting dellhw_exporter", version.Info())
 	log.Infoln("Build context", version.BuildContext())
 
