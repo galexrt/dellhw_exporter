@@ -1,12 +1,13 @@
 package omreport
 
 import (
-	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-type TestResultOMReport struct {
+type testResultOMReport struct {
 	Input  string
 	Values []Value
 }
@@ -26,8 +27,8 @@ func getOMReport(input *string) *OMReport {
 	}
 }
 
-var chassisTests = []TestResultOMReport{
-	TestResultOMReport{
+var chassisTests = []testResultOMReport{
+	{
 		Input: `Health
 
 Main System Chassis
@@ -39,14 +40,14 @@ Ok;Intrusion
 For further help, type the command followed by -?
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "chassis_status",
 				Value: "0",
 				Labels: map[string]string{
 					"component": "Fans",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_status",
 				Value: "0",
 				Labels: map[string]string{
@@ -63,14 +64,12 @@ func TestChassis(t *testing.T) {
 	for _, result := range chassisTests {
 		input = result.Input
 		values, _ := report.Chassis()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("chassis result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var fansTests = []TestResultOMReport{
-	TestResultOMReport{
+var fansTests = []testResultOMReport{
+	{
 		Input: `Fan Probes Information
 
 Fan Redundancy
@@ -83,28 +82,28 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 1;Ok;System Board Fan2A;5160 RPM;840 RPM;[N/A];600 RPM;[N/A]
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "chassis_fan_status",
 				Value: "0",
 				Labels: map[string]string{
 					"fan": "System_Board_Fan1A",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_fan_reading",
 				Value: "5040",
 				Labels: map[string]string{
 					"fan": "System_Board_Fan1A",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_fan_status",
 				Value: "0",
 				Labels: map[string]string{
 					"fan": "System_Board_Fan2A",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_fan_reading",
 				Value: "5160",
 				Labels: map[string]string{
@@ -121,14 +120,12 @@ func TestFans(t *testing.T) {
 	for _, result := range fansTests {
 		input = result.Input
 		values, _ := report.Fans()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("fans result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var memoryTests = []TestResultOMReport{
-	TestResultOMReport{
+var memoryTests = []testResultOMReport{
+	{
 		Input: `Memory Information
 
 Health;Ok
@@ -156,7 +153,7 @@ Index;Status;Connector Name;Type;Size
 ;Unknown;A9;[Not Occupied];
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "chassis_memory_status",
 				Value: "0",
 				Labels: map[string]string{
@@ -173,14 +170,12 @@ func TestMemory(t *testing.T) {
 	for _, result := range memoryTests {
 		input = result.Input
 		values, _ := report.Memory()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("memory result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var systemTests = []TestResultOMReport{
-	TestResultOMReport{
+var systemTests = []testResultOMReport{
+	{
 		Input: `Health
 
 SEVERITY;COMPONENT
@@ -189,7 +184,7 @@ Ok;Main System Chassis
 For further help, type the command followed by -?
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "system_status",
 				Value: "0",
 				Labels: map[string]string{
@@ -206,14 +201,12 @@ func TestSystem(t *testing.T) {
 	for _, result := range systemTests {
 		input = result.Input
 		values, _ := report.System()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("system result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var storageBatteryTests = []TestResultOMReport{
-	TestResultOMReport{
+var storageBatteryTests = []testResultOMReport{
+	{
 		Input: `List of Batteries in the System
 
 Controller PERC H730 Mini (Slot Embedded)
@@ -222,11 +215,44 @@ ID;Status;Name;State;Recharge Count;Max Recharge Count;Learn State;Next Learn Ti
 0;Ok;Battery ;Ready;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "storage_battery_status",
 				Value: "0",
 				Labels: map[string]string{
-					"controller": "0",
+					"controller":        "0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+		},
+	},
+	{
+		Input: `List of Batteries in the System
+
+Controller PERC H840 Adapter  (Slot 1)
+
+ID;Status;Name;State;Recharge Count;Max Recharge Count;Learn State;Next Learn Time;Maximum Learn Delay
+0;Ok;Battery ;Ready;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable
+
+Controller PERC H740P Mini  (Slot Embedded)
+
+ID;Status;Name;State;Recharge Count;Max Recharge Count;Learn State;Next Learn Time;Maximum Learn Delay
+0;Ok;Battery ;Ready;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable
+`,
+		Values: []Value{
+			{
+				Name:  "storage_battery_status",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					controllerNameLabel: "PERC H840 Adapter (Slot 1)",
+				},
+			},
+			{
+				Name:  "storage_battery_status",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					controllerNameLabel: "PERC H740P Mini (Slot Embedded)",
 				},
 			},
 		},
@@ -239,15 +265,13 @@ func TestStorageBattery(t *testing.T) {
 	for _, result := range storageBatteryTests {
 		input = result.Input
 		values, _ := report.StorageBattery()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("storageBattery result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var storageControllerTests = []TestResultOMReport{
-	TestResultOMReport{
-		Input: ` Controller  PERC H730 Mini(Embedded)
+var storageControllerTests = []testResultOMReport{
+	{
+		Input: `Controller  PERC H730 Mini (Slot Embedded)
 
 Controller
 
@@ -255,11 +279,12 @@ ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;
 0;Ok;PERC H730 Mini;Embedded;Ready;25.5.0.0018;Not Applicable;06.811.02.00-rc1;Not Applicable;Not Applicable;Not Applicable;1;30%;30%;30%;30%;Not Applicable;Not Applicable;Not Applicable;1024 MB;Auto;Stopped;30%;0;Disabled;Disabled;Not Applicable;Disabled;Not Applicable;Not Applicable;Disabled;Yes;No;None;Not Applicable;Enabled;Disabled;Disabled;Disabled;30;Not Applicable;Not Applicable;Yes;Unchanged;RAID
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "storage_controller_status",
 				Value: "0",
 				Labels: map[string]string{
-					"id": "0",
+					"id":                "0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
 				},
 			},
 		},
@@ -272,28 +297,27 @@ func TestStorageController(t *testing.T) {
 	for _, result := range storageControllerTests {
 		input = result.Input
 		values, _ := report.StorageController()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("storageController result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var storageEnclosureTests = []TestResultOMReport{
-	TestResultOMReport{
+var storageEnclosureTests = []testResultOMReport{
+	{
 		Input: `List of Enclosures in the System
 
-Enclosure(s) on Controller PERC H730 Mini (Embedded)
+Enclosure(s) on Controller PERC H730 Mini (Slot Embedded)
 
 
 ID;Status;Name;State;Connector;Target ID;Configuration;Firmware Version;Downstream Firmware Version;Service Tag;Express Service Code;Asset Tag;Asset Name;Backplane Part Number;Split Bus Part Number;Enclosure Part Number;SAS Address;Enclosure Alarm
 0:1;Ok;Backplane;Ready;0;Not Applicable;Not Applicable;3.31;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;500056B3B43B8CFD;Not Applicable
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "storage_enclosure_status",
 				Value: "0",
 				Labels: map[string]string{
-					"enclosure": "0_1",
+					"enclosure":         "0_1",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
 				},
 			},
 		},
@@ -306,37 +330,37 @@ func TestStorageEnclosure(t *testing.T) {
 	for _, result := range storageEnclosureTests {
 		input = result.Input
 		values, _ := report.StorageEnclosure()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("storageEnclosure result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var storagePdiskTests = []TestResultOMReport{
-	TestResultOMReport{
-		Input: `List of Physical Disks on Controller PERC H730 Mini (Embedded)
+var storagePdiskTests = []testResultOMReport{
+	{
+		Input: `List of Physical Disks on Controller PERC H730 Mini (Slot Embedded)
 
-Controller PERC H730 Mini (Embedded)
+Controller PERC H730 Mini (Slot Embedded)
 
 ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remaining Rated Write Endurance;Failure Predicted;Revision;Driver Version;Model Number;T10 PI Capable;Certified;Encryption Capable;Encrypted;Progress;Mirror Set ID;Capacity;Used RAID Disk Space;Available RAID Disk Space;Hot Spare;Vendor ID;Product ID;Serial No.;Part Number;Negotiated Speed;Capable Speed;PCIe Negotiated Link Width;PCIe Maximum Link Width;Sector Size;Device Write Cache;Manufacture Day;Manufacture Week;Manufacture Year;SAS Address;Non-RAID HDD Disk Cache Policy;Disk Cache Policy;Form Factor ;Sub Vendor;ISE Capable
 0:1:0;Ok;Physical Disk 0:1:0;Ready;Not Applicable;SATA;SSD;Not Applicable;100%;No;G201DL2B;Not Applicable;Not Applicable;No;Yes;No;Not Applicable;Not Applicable;Not Applicable;185.75 GB (199447543808 bytes);185.75 GB (199447543808 bytes);0.00 GB (0 bytes);Dedicated;DELL(tm);INTEL SSDSC2BX200G4R;BTHC643503A2200TGN;CN03481GIT2006AT00P3A0;6.00 Gbps;6.00 Gbps;Not Applicable;Not Applicable;512B;Not Applicable;Not Available;Not Available;Not Available;500056B3B43B8CC0;Not Applicable;Not Applicable;Not Available;Not Available;No
 0:1:1;Ok;Physical Disk 0:1:1;Online;Not Applicable;SATA;SSD;Not Applicable;100%;No;G201DL2B;Not Applicable;Not Applicable;No;Yes;No;Not Applicable;Not Applicable;Not Applicable;185.75 GB (199447543808 bytes);185.75 GB (199447543808 bytes);0.00 GB (0 bytes);No;DELL(tm);INTEL SSDSC2BX200G4R;BTHC643503BX200TGN;CN03481GIT2006AT00PGA0;6.00 Gbps;6.00 Gbps;Not Applicable;Not Applicable;512B;Not Applicable;Not Available;Not Available;Not Available;500056B3B43B8CC1;Not Applicable;Not Applicable;Not Available;Not Available;No
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "storage_pdisk_status",
 				Value: "0",
 				Labels: map[string]string{
-					"controller": "0",
-					"disk":       "0_1_0",
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
 				},
 			},
-			Value{
+			{
 				Name:  "storage_pdisk_status",
 				Value: "0",
 				Labels: map[string]string{
-					"controller": "0",
-					"disk":       "0_1_1",
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
 				},
 			},
 		},
@@ -349,27 +373,26 @@ func TestStoragePdisk(t *testing.T) {
 	for _, result := range storagePdiskTests {
 		input = result.Input
 		values, _ := report.StoragePdisk("0")
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("storagePdisk result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var storageVdiskTests = []TestResultOMReport{
-	TestResultOMReport{
+var storageVdiskTests = []testResultOMReport{
+	{
 		Input: `List of Virtual Disks in the System
 
-Controller PERC H730 Mini (Embedded)
+Controller PERC H730 Mini (Slot Embedded)
 
 ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Stripe Element Size;Disk Cache Policy
 0;Ok;GenericR5_0;Ready;Not Assigned;No;RAID-5;743.00 GB (797790175232 bytes);No;Not Applicable;/dev/sda;SATA;SSD;No Read Ahead;Write Through;Not Applicable;64 KB;Unchanged
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "storage_vdisk_status",
 				Value: "0",
 				Labels: map[string]string{
-					"vdisk": "0",
+					"vdisk":             "0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
 				},
 			},
 		},
@@ -382,14 +405,12 @@ func TestStorageVdisk(t *testing.T) {
 	for _, result := range storageVdiskTests {
 		input = result.Input
 		values, _ := report.StorageVdisk()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("storageVdisk result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var psTests = []TestResultOMReport{
-	TestResultOMReport{
+var psTests = []testResultOMReport{
+	{
 		Input: `Power Supplies Information
 
 Power Supply Redundancy
@@ -402,42 +423,42 @@ Index;Status;Location;Type;Rated Input Wattage;Maximum Output Wattage;Firmware V
 1;Ok;PS2 Status;AC;900 W;750 W;00.14.4B;Presence Detected;Yes
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "ps_status",
 				Value: "0",
 				Labels: map[string]string{
 					"id": "0",
 				},
 			},
-			Value{
+			{
 				Name:  "ps_rated_input_wattage",
 				Value: "900",
 				Labels: map[string]string{
 					"id": "0",
 				},
 			},
-			Value{
+			{
 				Name:  "ps_rated_output_wattage",
 				Value: "750",
 				Labels: map[string]string{
 					"id": "0",
 				},
 			},
-			Value{
+			{
 				Name:  "ps_status",
 				Value: "0",
 				Labels: map[string]string{
 					"id": "1",
 				},
 			},
-			Value{
+			{
 				Name:  "ps_rated_input_wattage",
 				Value: "900",
 				Labels: map[string]string{
 					"id": "1",
 				},
 			},
-			Value{
+			{
 				Name:  "ps_rated_output_wattage",
 				Value: "750",
 				Labels: map[string]string{
@@ -454,14 +475,12 @@ func TestPs(t *testing.T) {
 	for _, result := range psTests {
 		input = result.Input
 		values, _ := report.Ps()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("ps result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var psAmpsSysboardPwrTests = []TestResultOMReport{
-	TestResultOMReport{
+var psAmpsSysboardPwrTests = []testResultOMReport{
+	{
 		Input: `Power Consumption Information
 
 Power Consumption
@@ -488,29 +507,29 @@ System Peak Amperage;Wed Dec 14 21:57:41 2016;Wed Dec 28 08:41:13 2016;1.3 A
 `,
 		Values: []Value{
 			//{Name:chassis_power_reading Value:84 Labels:map[]}
-			Value{
+			{
 				Name:   "chassis_power_reading",
 				Value:  "84",
 				Labels: nil,
 			},
-			Value{
+			{
 				Name:   "chassis_power_warn_level",
 				Value:  "896",
 				Labels: nil,
 			},
-			Value{
+			{
 				Name:   "chassis_power_fail_level",
 				Value:  "980",
 				Labels: nil,
 			},
-			Value{
+			{
 				Name:  "chassis_current_reading",
 				Value: "0.2",
 				Labels: map[string]string{
 					"pwrsupply": "PS1",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_current_reading",
 				Value: "0.2",
 				Labels: map[string]string{
@@ -527,14 +546,12 @@ func TestPsAmpsSysboardPwr(t *testing.T) {
 	for _, result := range psAmpsSysboardPwrTests {
 		input = result.Input
 		values, _ := report.PsAmpsSysboardPwr()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("psAmpsSysboardPwr result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var processorsTests = []TestResultOMReport{
-	TestResultOMReport{
+var processorsTests = []testResultOMReport{
+	{
 		Input: `Processors Information
 
 Health;Ok
@@ -544,7 +561,7 @@ Index;Status;Connector Name;Processor Brand;Processor Version;Current Speed;Stat
 1;Unknown;CPU2;[Not Occupied];NA;NA;NA;NA;
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "chassis_processor_status",
 				Value: "0",
 				Labels: map[string]string{
@@ -561,14 +578,12 @@ func TestProcessors(t *testing.T) {
 	for _, result := range processorsTests {
 		input = result.Input
 		values, _ := report.Processors()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("processors result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var tempsTests = []TestResultOMReport{
-	TestResultOMReport{
+var tempsTests = []testResultOMReport{
+	{
 		Input: `Temperature Probes Information
 
 Main System Chassis Temperatures : Ok
@@ -578,42 +593,42 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 2;Ok;CPU1 Temp;34.0 C;8.0 C;82.0 C;3.0 C;87.0 C
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "chassis_temps",
 				Value: "0",
 				Labels: map[string]string{
 					"component": "System_Board_Inlet_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_reading",
 				Value: "17.0",
 				Labels: map[string]string{
 					"component": "System_Board_Inlet_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_min_warning",
 				Value: "3.0",
 				Labels: map[string]string{
 					"component": "System_Board_Inlet_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_max_warning",
 				Value: "42.0",
 				Labels: map[string]string{
 					"component": "System_Board_Inlet_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_min_failure",
 				Value: "-7.0",
 				Labels: map[string]string{
 					"component": "System_Board_Inlet_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_max_failure",
 				Value: "47.0",
 				Labels: map[string]string{
@@ -621,42 +636,42 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 				},
 			},
 
-			Value{
+			{
 				Name:  "chassis_temps",
 				Value: "0",
 				Labels: map[string]string{
 					"component": "CPU1_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_reading",
 				Value: "34.0",
 				Labels: map[string]string{
 					"component": "CPU1_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_min_warning",
 				Value: "8.0",
 				Labels: map[string]string{
 					"component": "CPU1_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_max_warning",
 				Value: "82.0",
 				Labels: map[string]string{
 					"component": "CPU1_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_min_failure",
 				Value: "3.0",
 				Labels: map[string]string{
 					"component": "CPU1_Temp",
 				},
 			},
-			Value{
+			{
 				Name:  "chassis_temps_max_failure",
 				Value: "87.0",
 				Labels: map[string]string{
@@ -673,14 +688,12 @@ func TestTemps(t *testing.T) {
 	for _, result := range tempsTests {
 		input = result.Input
 		values, _ := report.Temps()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("temps result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }
 
-var voltsTests = []TestResultOMReport{
-	TestResultOMReport{
+var voltsTests = []testResultOMReport{
+	{
 		Input: `Voltage Probes Information
 
 Health : Ok
@@ -691,30 +704,30 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 1;Ok;System Board 3.3V PG;Good;[N/A];[N/A];[N/A];[N/A]
 `,
 		Values: []Value{
-			Value{
+			{
 				Name:  "chassis_volts_status",
 				Value: "0",
 				Labels: map[string]string{
 					"component": "CPU1_VCORE_PG",
 				},
 			},
-			/*Value{
+			/*{
 				Name:  "chassis_volts_reading",
-				Value: "0",
+				Value: "NaN",
 				Labels: map[string]string{
 					"component": "CPU1_VCORE_PG",
 				},
 			},*/
-			Value{
+			{
 				Name:  "chassis_volts_status",
 				Value: "0",
 				Labels: map[string]string{
 					"component": "System_Board_3.3V_PG",
 				},
 			},
-			/*Value{
+			/*{
 				Name:  "chassis_volts_reading",
-				Value: "0",
+				Value: "NaN",
 				Labels: map[string]string{
 					"component": "System_Board_3.3V_PG",
 				},
@@ -729,8 +742,6 @@ func TestVolts(t *testing.T) {
 	for _, result := range voltsTests {
 		input = result.Input
 		values, _ := report.Volts()
-		if !reflect.DeepEqual(values, result.Values) {
-			t.Errorf("volts result not equal: %+v - %+v\n", values, result.Values)
-		}
+		assert.Equal(t, result.Values, values)
 	}
 }

@@ -5,6 +5,15 @@ import (
 	"strings"
 )
 
+const (
+	// Prefixes
+	omReportControllerNamePrefix = "Controller "
+
+	// Labels
+	controllerLabel     = "controller"
+	controllerNameLabel = "controller_name"
+)
+
 // Options allow to set options for the OMReport package
 type Options struct {
 	OMReportExecutable string
@@ -148,15 +157,22 @@ func (or *OMReport) System() ([]Value, error) {
 // StorageBattery returns the storage battery ("RAID batteries")
 func (or *OMReport) StorageBattery() ([]Value, error) {
 	values := []Value{}
+	controllerName := ""
 	err := or.readReport(func(fields []string) {
-		if len(fields) < 3 || fields[0] == "ID" {
+		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
+			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
+			return
+		} else if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
 		values = append(values, Value{
-			Name:   "storage_battery_status",
-			Value:  severity(fields[1]),
-			Labels: map[string]string{"controller": id},
+			Name:  "storage_battery_status",
+			Value: severity(fields[1]),
+			Labels: map[string]string{
+				controllerLabel:     id,
+				controllerNameLabel: controllerName,
+			},
 		})
 	}, or.getOMReportExecutable(), "storage", "battery")
 	return values, err
@@ -165,16 +181,23 @@ func (or *OMReport) StorageBattery() ([]Value, error) {
 // StorageController returns the storage controller status
 func (or *OMReport) StorageController() ([]Value, error) {
 	values := []Value{}
+	controllerName := ""
 	err := or.readReport(func(fields []string) {
-		if len(fields) < 3 || fields[0] == "ID" {
+		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
+			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
+			return
+		} else if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
 		or.StoragePdisk(fields[0])
 		id := strings.Replace(fields[0], ":", "_", -1)
 		values = append(values, Value{
-			Name:   "storage_controller_status",
-			Value:  severity(fields[1]),
-			Labels: map[string]string{"id": id},
+			Name:  "storage_controller_status",
+			Value: severity(fields[1]),
+			Labels: map[string]string{
+				"id":                id,
+				controllerNameLabel: controllerName,
+			},
 		})
 	}, or.getOMReportExecutable(), "storage", "controller")
 	return values, err
@@ -183,15 +206,22 @@ func (or *OMReport) StorageController() ([]Value, error) {
 // StorageEnclosure returns the storage enclosure status
 func (or *OMReport) StorageEnclosure() ([]Value, error) {
 	values := []Value{}
+	controllerName := ""
 	err := or.readReport(func(fields []string) {
-		if len(fields) < 3 || fields[0] == "ID" {
+		if len(fields) == 1 && strings.HasPrefix(fields[0], "Enclosure(s) on Controller ") {
+			controllerName = strings.TrimPrefix(fields[0], "Enclosure(s) on Controller ")
+			return
+		} else if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
 		values = append(values, Value{
-			Name:   "storage_enclosure_status",
-			Value:  severity(fields[1]),
-			Labels: map[string]string{"enclosure": id},
+			Name:  "storage_enclosure_status",
+			Value: severity(fields[1]),
+			Labels: map[string]string{
+				"enclosure":         id,
+				controllerNameLabel: controllerName,
+			},
 		})
 	}, or.getOMReportExecutable(), "storage", "enclosure")
 	return values, err
@@ -200,8 +230,12 @@ func (or *OMReport) StorageEnclosure() ([]Value, error) {
 // StoragePdisk is called from the controller func, since it needs the encapsulating IDs.
 func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 	values := []Value{}
+	controllerName := ""
 	err := or.readReport(func(fields []string) {
-		if len(fields) < 3 || fields[0] == "ID" {
+		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
+			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
+			return
+		} else if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
 		// Need to find out what the various ID formats might be
@@ -210,8 +244,9 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 			Name:  "storage_pdisk_status",
 			Value: severity(fields[1]),
 			Labels: map[string]string{
-				"controller": cid,
-				"disk":       id,
+				controllerLabel:     cid,
+				"disk":              id,
+				controllerNameLabel: controllerName,
 			},
 		})
 	}, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
@@ -221,15 +256,22 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 // StorageVdisk returns the storage vdisk status
 func (or *OMReport) StorageVdisk() ([]Value, error) {
 	values := []Value{}
+	controllerName := ""
 	err := or.readReport(func(fields []string) {
-		if len(fields) < 3 || fields[0] == "ID" {
+		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
+			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
+			return
+		} else if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
 		id := strings.Replace(fields[0], ":", "_", -1)
 		values = append(values, Value{
-			Name:   "storage_vdisk_status",
-			Value:  severity(fields[1]),
-			Labels: map[string]string{"vdisk": id},
+			Name:  "storage_vdisk_status",
+			Value: severity(fields[1]),
+			Labels: map[string]string{
+				"vdisk":             id,
+				controllerNameLabel: controllerName,
+			},
 		})
 	}, or.getOMReportExecutable(), "storage", "vdisk")
 	return values, err
