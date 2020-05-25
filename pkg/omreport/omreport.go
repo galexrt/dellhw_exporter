@@ -1,6 +1,7 @@
 package omreport
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -157,7 +158,7 @@ func (or *OMReport) System() ([]Value, error) {
 // StorageBattery returns the storage battery ("RAID batteries")
 func (or *OMReport) StorageBattery() ([]Value, error) {
 	values := []Value{}
-	controllerName := ""
+	controllerName := "N/A"
 	err := or.readReport(func(fields []string) {
 		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
 			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
@@ -181,14 +182,13 @@ func (or *OMReport) StorageBattery() ([]Value, error) {
 // StorageController returns the storage controller status
 func (or *OMReport) StorageController() ([]Value, error) {
 	values := []Value{}
-	controllerName := ""
+	controllerName := "N/A"
 	err := or.readReport(func(fields []string) {
-		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
-			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
-			return
-		} else if len(fields) < 3 || fields[0] == "ID" {
+		// Use the fields instead of the "single line with the controller name on it"
+		if len(fields) < 3 || fields[0] == "ID" {
 			return
 		}
+		controllerName = fmt.Sprintf("%s (Slot %s)", fields[2], fields[3])
 		or.StoragePdisk(fields[0])
 		id := strings.Replace(fields[0], ":", "_", -1)
 		values = append(values, Value{
@@ -206,7 +206,7 @@ func (or *OMReport) StorageController() ([]Value, error) {
 // StorageEnclosure returns the storage enclosure status
 func (or *OMReport) StorageEnclosure() ([]Value, error) {
 	values := []Value{}
-	controllerName := ""
+	controllerName := "N/A"
 	err := or.readReport(func(fields []string) {
 		if len(fields) == 1 && strings.HasPrefix(fields[0], "Enclosure(s) on Controller ") {
 			controllerName = strings.TrimPrefix(fields[0], "Enclosure(s) on Controller ")
@@ -230,7 +230,7 @@ func (or *OMReport) StorageEnclosure() ([]Value, error) {
 // StoragePdisk is called from the controller func, since it needs the encapsulating IDs.
 func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 	values := []Value{}
-	controllerName := ""
+	controllerName := "N/A"
 	err := or.readReport(func(fields []string) {
 		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
 			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
@@ -256,7 +256,7 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 // StorageVdisk returns the storage vdisk status
 func (or *OMReport) StorageVdisk() ([]Value, error) {
 	values := []Value{}
-	controllerName := ""
+	controllerName := "N/A"
 	err := or.readReport(func(fields []string) {
 		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
 			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)

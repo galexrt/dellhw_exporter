@@ -289,6 +289,51 @@ ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;
 			},
 		},
 	},
+	{
+		Input: `List of Controllers in the system
+
+		Controller
+		
+		ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Connectors;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;Spin Down Unconfigured Drives;Spin Down Hot Spares;Spin Down Configured Drives;Automatic Disk Power Saving (Idle C);Start Time (HH:MM);Time Interval for Spin Up (in Hours);T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy;Current Controller Mode
+		0;Ok;PERC H730P Mini;Embedded;Ready;25.5.5.0005;Not Applicable;06.810.09.00-rc1;Not Applicable;Not Applicable;Not Applicable;1;30%;30%;30%;30%;Not Applicable;Not Applicable;Not Applicable;2048 MB;Auto;Stopped;30%;159;Disabled;Enabled;Not Applicable;Disabled;Not Applicable;Not Applicable;Disabled;Yes;No;None;Not Applicable;Disabled;Disabled;Disabled;Disabled;Not Applicable;Not Applicable;No;Unchanged;RAID
+		
+		Controller
+		
+		ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Connectors;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;Spin Down Unconfigured Drives;Spin Down Hot Spares;Spin Down Configured Drives;Automatic Disk Power Saving (Idle C);Start Time (HH:MM);Time Interval for Spin Up (in Hours);T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy
+		1;Ok;PERC H810 Adapter;PCI Slot 6;Ready;21.3.5-0002;Not Applicable;06.810.09.00-rc1;Not Applicable;Not Applicable;Not Applicable;2;30%;30%;30%;30%;Not Applicable;Not Applicable;Not Applicable;1024 MB;Auto;Stopped;30%;122;Disabled;Enabled;Auto;Disabled;Detected;Yes;Disabled;Yes;No;None;Not Applicable;Disabled;Disabled;Disabled;Disabled;Not Applicable;Not Applicable;No;Not Applicable
+		
+		Controller
+		
+		ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Connectors;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;Spin Down Unconfigured Drives;Spin Down Hot Spares;Spin Down Configured Drives;Automatic Disk Power Saving (Idle C);Start Time (HH:MM);Time Interval for Spin Up (in Hours);T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy
+		2;Ok;PERC H810 Adapter;PCI Slot 4;Ready;21.3.5-0002;Not Applicable;06.810.09.00-rc1;Not Applicable;Not Applicable;Not Applicable;2;30%;30%;30%;30%;Not Applicable;Not Applicable;Not Applicable;1024 MB;Auto;Stopped;30%;96;Disabled;Enabled;Auto;Disabled;Detected;Yes;Disabled;Yes;No;None;Not Applicable;Disabled;Disabled;Disabled;Disabled;Not Applicable;Not Applicable;No;Not Applicable
+`,
+		Values: []Value{
+			{
+				Name:  "storage_controller_status",
+				Value: "0",
+				Labels: map[string]string{
+					"id":                "0",
+					controllerNameLabel: "PERC H730P Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_controller_status",
+				Value: "0",
+				Labels: map[string]string{
+					"id":                "1",
+					controllerNameLabel: "PERC H810 Adapter (Slot PCI Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_controller_status",
+				Value: "0",
+				Labels: map[string]string{
+					"id":                "2",
+					controllerNameLabel: "PERC H810 Adapter (Slot PCI Slot 4)",
+				},
+			},
+		},
+	},
 }
 
 func TestStorageController(t *testing.T) {
@@ -711,13 +756,6 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 					"component": "CPU1_VCORE_PG",
 				},
 			},
-			/*{
-				Name:  "chassis_volts_reading",
-				Value: "NaN",
-				Labels: map[string]string{
-					"component": "CPU1_VCORE_PG",
-				},
-			},*/
 			{
 				Name:  "chassis_volts_status",
 				Value: "0",
@@ -725,13 +763,40 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 					"component": "System_Board_3.3V_PG",
 				},
 			},
-			/*{
-				Name:  "chassis_volts_reading",
-				Value: "NaN",
+		},
+	},
+	{
+		Input: `Voltage Probes Information
+
+		Health : Ok
+		
+		
+		Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Threshold;Minimum Failure Threshold;Maximum Failure Threshold
+		0;Ok;CPU1 VCORE PG;Good;[N/A];[N/A];[N/A];[N/A]
+		2;Ok;System Board 3.3V PG;Good;[N/A];[N/A];[N/A];[N/A]
+		31;Ok;System Board 2.5V AUX PG;Good;[N/A];[N/A];[N/A];[N/A]`,
+		Values: []Value{
+			{
+				Name:  "chassis_volts_status",
+				Value: "0",
+				Labels: map[string]string{
+					"component": "CPU1_VCORE_PG",
+				},
+			},
+			{
+				Name:  "chassis_volts_status",
+				Value: "0",
 				Labels: map[string]string{
 					"component": "System_Board_3.3V_PG",
 				},
-			},*/
+			},
+			{
+				Name:  "chassis_volts_status",
+				Value: "0",
+				Labels: map[string]string{
+					"component": "System_Board_2.5V_AUX_PG",
+				},
+			},
 		},
 	},
 }
