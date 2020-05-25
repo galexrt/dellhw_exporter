@@ -67,27 +67,17 @@ Most metrics returned besides temperature, volts, fans RPM count and others, are
 
 ```cosnole
 $ dellhw_exporter --help
-Usage: dellhw_exporter [OPTION]...
-  -collectors.cmd-timeout int
-    	Command execution timeout for omreport (default 15)
-  -collectors.enabled string
-    	Comma separated list of active collectors (default "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
-  -collectors.omr-report string
-    	Path to the omReport executable (default "/opt/dell/srvadmin/bin/omreport")
-  -collectors.print
-    	If true, print available collectors and exit.
-  -container
-    	!! DEPRECATED !! Starts the Dell OpenManage start script !! DEPRECATED !!
-  -debug
-    	Enable debug output
-  -help
-    	Show help menu
-  -version
-    	Show version information
-  -web.listen-address string
-    	The address to listen on for HTTP requests (default ":9137")
-  -web.telemetry-path string
-    	Path the metrics will be exposed under (default "/metrics")
+Usage of dellhw_exporter:
+      --collectors-cmd-timeout int   Command execution timeout for omreport (default 15)
+      --collectors-enabled string    Comma separated list of active collectors (default "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
+      --collectors-omreport string   Path to the omReport executable (default "/opt/dell/srvadmin/bin/omreport")
+      --collectors-print             If true, print available collectors and exit.
+      --log-level string             Set log level (default "INFO")
+      --version                      Show version information
+      --web-listen-address string    The address to listen on for HTTP requests (default ":9137")
+      --web-telemetry-path string    Path the metrics will be exposed under (default "/metrics")
+pflag: help requested
+exit status 2
 ```
 
 ### Environment variables
@@ -97,9 +87,9 @@ For the description of the env vars, see the above equivalent flags.
 ```console
 DELLHW_EXPORTER_COLLECTORS_CMD_TIMEOUT
 DELLHW_EXPORTER_COLLECTORS_ENABLED
-DELLHW_EXPORTER_COLLECTORS_OMR_REPORT
+DELLHW_EXPORTER_COLLECTORS_OMREPORT
 DELLHW_EXPORTER_COLLECTORS_PRINT
-DELLHW_EXPORTER_DEBUG
+DELLHW_EXPORTER_LOG_LEVEL
 DELLHW_EXPORTER_HELP
 DELLHW_EXPORTER_VERSION
 DELLHW_EXPORTER_WEB_LISTEN_ADDRESS

@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/spf13/pflag"
 	flag "github.com/spf13/pflag"
 
 	"github.com/galexrt/dellhw_exporter/collector"
-	"github.com/galexrt/dellhw_exporter/pkg/flagutil"
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -42,9 +42,7 @@ var (
 // CmdLineOpts holds possible command line options/flags
 type CmdLineOpts struct {
 	version        bool
-	container      bool
 	showCollectors bool
-	debugMode      bool
 	logLevel       string
 
 	metricsAddr        string
@@ -55,9 +53,9 @@ type CmdLineOpts struct {
 }
 
 var (
-	log                 = logrus.New()
-	opts                CmdLineOpts
-	dellhwExporterFlags = flag.NewFlagSet("dellhw_exporter", flag.ExitOnError)
+	log   = logrus.New()
+	opts  CmdLineOpts
+	flags = flag.NewFlagSet("dellhw_exporter", flag.ExitOnError)
 )
 
 // DellHWCollector contains the collectors to be used
@@ -67,24 +65,66 @@ type DellHWCollector struct {
 }
 
 func init() {
-	dellhwExporterFlags.BoolVar(&opts.version, "version", false, "Show version information")
-	dellhwExporterFlags.BoolVar(&opts.container, "container", false, "Starts the Dell OpenManage start script")
-	dellhwExporterFlags.BoolVar(&opts.showCollectors, "collectors.print", false, "If true, print available collectors and exit.")
-	dellhwExporterFlags.BoolVar(&opts.debugMode, "debug", false, "Enable debug output")
-	dellhwExporterFlags.StringVar(&opts.logLevel, "debug", "INFO", "Enable debug output")
+	flags.BoolVar(&opts.version, "version", false, "Show version information")
+	flags.StringVar(&opts.logLevel, "log-level", "INFO", "Set log level")
 
-	dellhwExporterFlags.StringVar(&opts.metricsAddr, "web.listen-address", ":9137", "The address to listen on for HTTP requests")
-	dellhwExporterFlags.StringVar(&opts.metricsPath, "web.telemetry-path", "/metrics", "Path the metrics will be exposed under")
-	dellhwExporterFlags.StringVar(&opts.enabledCollectors, "collectors.enabled", defaultCollectors, "Comma separated list of active collectors")
-	dellhwExporterFlags.StringVar(&opts.omReportExecutable, "collectors.omr-report", "/opt/dell/srvadmin/bin/omreport", "Path to the omReport executable")
-	dellhwExporterFlags.Int64Var(&opts.cmdTimeout, "collectors.cmd-timeout", 15, "Command execution timeout for omreport")
+	flags.BoolVar(&opts.showCollectors, "collectors-print", false, "If true, print available collectors and exit.")
+	flags.StringVar(&opts.enabledCollectors, "collectors-enabled", defaultCollectors, "Comma separated list of active collectors")
+	flags.StringVar(&opts.omReportExecutable, "collectors-omreport", "/opt/dell/srvadmin/bin/omreport", "Path to the omReport executable")
+	flags.Int64Var(&opts.cmdTimeout, "collectors-cmd-timeout", 15, "Command execution timeout for omreport")
 
-	dellhwExporterFlags.MarkDeprecated("container", "DEPRECATED the dellhw_exporter will no logner start the Dell OpenManage services / scripts")
-	dellhwExporterFlags.MarkDeprecated("debug", "DEPRECATED in favor of the --log-level=INFO flag")
+	flags.StringVar(&opts.metricsAddr, "web-listen-address", ":9137", "The address to listen on for HTTP requests")
+	flags.StringVar(&opts.metricsPath, "web-telemetry-path", "/metrics", "Path the metrics will be exposed under")
 
-	if err := dellhwExporterFlags.Parse(os.Args[1:]); err != nil {
-		log.Fatal(err)
+	flags.SetNormalizeFunc(normalizeFlags)
+	flags.SortFlags = true
+}
+
+// normalizeFlags "normalize" / alias flags that have been deprcated / removed
+func normalizeFlags(f *pflag.FlagSet, name string) pflag.NormalizedName {
+	switch name {
+	case "collectors.print":
+		name = "collectors-print"
+	case "web.listen-address":
+		name = "web-listen-address"
+	case "web.telemetry-path":
+		name = "web-telemetry-path"
+	case "collectors.enabled":
+		name = "collectors-enabled"
+	case "collectors.omr-report":
+		name = "collectors-omreport"
+	case "collectors.cmd-timeout":
+		name = "collectors-cmd-timeout"
 	}
+	return pflag.NormalizedName(name)
+}
+
+func flagNameFromEnvName(s string) string {
+	s = strings.ToLower(s)
+	s = strings.ReplaceAll(s, "_", "-")
+	return s
+}
+
+func parseFlagsAndEnvVars() error {
+	for _, v := range os.Environ() {
+		vals := strings.SplitN(v, "=", 2)
+
+		if !strings.HasPrefix(vals[0], "DELLHW_EXPORTER_") {
+			continue
+		}
+		flagName := flagNameFromEnvName(strings.ReplaceAll(vals[0], "DELLHW_EXPORTER_", ""))
+
+		fn := flags.Lookup(flagName)
+		if fn == nil || fn.Changed {
+			continue
+		}
+
+		if err := fn.Value.Set(vals[1]); err != nil {
+			return err
+		}
+	}
+
+	return flags.Parse(os.Args[1:])
 }
 
 // Describe implements the prometheus.Collector interface.
@@ -140,9 +180,10 @@ func loadCollectors(list string) (map[string]collector.Collector, error) {
 }
 
 func main() {
-	if err := flagutil.SetFlagsFromEnv(dellhwExporterFlags, "DELLHW_EXPORTER"); err != nil {
+	if err := parseFlagsAndEnvVars(); err != nil {
 		log.Fatal(err)
 	}
+
 	if opts.version {
 		fmt.Fprintln(os.Stdout, version.Print("dellhw_exporter"))
 		return
@@ -163,6 +204,7 @@ func main() {
 
 	log.Out = os.Stdout
 
+	// Set log level
 	l, err := logrus.ParseLevel(opts.logLevel)
 	if err != nil {
 		log.Fatal(err)
@@ -207,13 +249,14 @@ func main() {
 		handler.ServeHTTP(w, r)
 	})
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`<html>
-			<head><title>DellHW Exporter</title></head>
-			<body>
-			<h1>DellHW Exporter</h1>
-			<p><a href="` + opts.metricsPath + `">Metrics</a></p>
-			</body>
-			</html>`))
+		w.Write([]byte(`<!DOCTYPE html>
+<html>
+	<head><title>DellHW Exporter</title></head>
+	<body>
+		<h1>DellHW Exporter</h1>
+		<p><a href="` + opts.metricsPath + `">Metrics</a></p>
+	</body>
+</html>`))
 	})
 
 	if err := http.ListenAndServe(opts.metricsAddr, nil); err != nil {
