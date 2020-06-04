@@ -67,6 +67,7 @@ Most metrics returned besides temperature, volts, fans RPM count and others, are
 
 ```cosnole
 $ dellhw_exporter --help
+unknown flag: --debug
 Usage of dellhw_exporter:
       --collectors-cmd-timeout int   Command execution timeout for omreport (default 15)
       --collectors-enabled string    Comma separated list of active collectors (default "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
@@ -76,8 +77,7 @@ Usage of dellhw_exporter:
       --version                      Show version information
       --web-listen-address string    The address to listen on for HTTP requests (default ":9137")
       --web-telemetry-path string    Path the metrics will be exposed under (default "/metrics")
-pflag: help requested
-exit status 2
+unknown flag: --debug
 ```
 
 ### Environment variables
