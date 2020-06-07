@@ -2,7 +2,7 @@ name: build-release
 on:
   push:
     tags:
-      - v.*
+      - '.*'
 jobs:
   build-release:
     runs-on: ubuntu-18.04
