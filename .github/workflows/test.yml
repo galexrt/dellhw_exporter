@@ -19,3 +19,5 @@ jobs:
       - name: Run tests
         run: |
           make test
+          make promu
+          make check_license

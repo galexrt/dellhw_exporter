@@ -16,6 +16,8 @@ jobs:
       - name: Run tests
         run: |
           make test
+          make promu
+          make check_license
       - name: Build and release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -16,6 +16,7 @@ build:
           path: ./cmd/dellhw_exporter
 tarball:
     files:
+        - LICENSE
         - NOTICE
         - systemd/dellhw_exporter.service
         - systemd/sysconfig.dellhw_exporter

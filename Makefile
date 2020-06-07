@@ -43,6 +43,16 @@ build: promu
 	@echo ">> building binaries"
 	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(PREFIX) $(PROMU_BINARIES)
 
+check_license:
+	@OUTPUT="$$(promu check licenses)"; \
+	if [[ $$OUTPUT ]]; then \
+		echo "Found go files without license header:"; \
+		echo "$$OUTPUT"; \
+		exit 1; \
+	else \
+		echo "All files with license header"; \
+	fi
+
 docker:
 	@echo ">> building docker image"
 	@docker build -t "$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)" .
