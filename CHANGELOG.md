@@ -1,3 +1,7 @@
+## 1.5.11 / 2020-06-07
+
+* [ENHANCEMENT] ci: use github actions
+
 ## 1.5.9 / 2020-06-07
 
 * [ENHANCEMENT] ci: use github actions
