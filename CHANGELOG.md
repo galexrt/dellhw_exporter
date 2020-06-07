@@ -1,3 +1,7 @@
+## 1.5.16 / 2020-06-07
+
+* [ENHANCEMENT] ci: no need to specify docker build dir
+
 ## 1.5.15 / 2020-06-07
 
 * [ENHANCEMENT] docker: fix copy path for binary
