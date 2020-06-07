@@ -1,8 +1,9 @@
 package omreport
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type SeverityTestResult struct {
@@ -28,8 +29,6 @@ var severityTests = []SeverityTestResult{
 func TestSeverity(t *testing.T) {
 	for _, result := range severityTests {
 		value := severity(result.Input)
-		if !reflect.DeepEqual(value, result.Output) {
-			t.Errorf("severity result not equal: %+v - %+v\n", value, result.Output)
-		}
+		assert.Equal(t, result.Output, value)
 	}
 }
