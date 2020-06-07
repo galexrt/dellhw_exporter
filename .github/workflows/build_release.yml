@@ -17,6 +17,8 @@ jobs:
         run: |
           make test
       - name: Build and release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           make promu
           promu crossbuild

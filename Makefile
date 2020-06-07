@@ -3,7 +3,9 @@ DESCRIPTION ?= dellhw_exporter - Prometheus exporter for Dell Hardware component
 MAINTAINER  ?= Alexander Trost <galexrt@googlemail.com>
 HOMEPAGE    ?= https://github.com/galexrt/dellhw_exporter
 
-GO           := go
+GO111MODULE  ?= on
+GO           ?= go
+PROMU        ?= promu
 FPM          ?= fpm
 CWD          ?= $(shell pwd)
 BIN_DIR      ?= $(CWD)/.bin
@@ -38,7 +40,8 @@ DOCKER_IMAGE_TAG  ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
 all: format style vet test build
 
 build: promu
-	@$(PROMU) build --prefix $(BIN_DIR)
+	@echo ">> building binaries"
+	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(PREFIX) $(PROMU_BINARIES)
 
 docker:
 	@echo ">> building docker image"
@@ -47,7 +50,6 @@ docker:
 format:
 	go fmt $(pkgs)
 
-.PHONY: package
 package-%: build
 	mkdir -p -m0755 $(PACKAGE_DIR)/lib/systemd/system $(PACKAGE_DIR)/usr/bin
 	mkdir -p $(PACKAGE_DIR)/etc/sysconfig
@@ -90,4 +92,4 @@ vet:
 	@echo ">> vetting code"
 	@$(GO) vet $(pkgs)
 
-.PHONY: all build crossbuild docker format promu style tarball test vet
+.PHONY: all build crossbuild docker format package promu style tarball test vet
