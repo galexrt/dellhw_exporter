@@ -1,0 +1,39 @@
+name: build-release
+on:
+  push:
+    tags:
+      - v.*
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.14'
+      - name: Run tests
+        run: |
+          make test
+      - name: Build and release
+        run: |
+          make promu
+          promu crossbuild .tarballs
+          promu checksum .tarballs
+          promu release .tarballs
+      - name: Build and push to Docker Hub
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: ${{ env.GITHUB_REPOSITORY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tag_names: true
+      - name: Build and push to Quay.io
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: ${{ env.GITHUB_REPOSITORY }}
+          username: ${{ secrets.QUAYIO_USERNAME }}
+          password: ${{ secrets.QUAYIO_PASSWORD }}
+          registry: quay.io
+          tag_names: true
