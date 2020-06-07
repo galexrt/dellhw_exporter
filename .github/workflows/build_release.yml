@@ -19,7 +19,8 @@ jobs:
       - name: Build and release
         run: |
           make promu
-          promu crossbuild .tarballs
+          promu crossbuild
+          promu crossbuild tarballs
           promu checksum .tarballs
           promu release .tarballs
       - name: Build and push to Docker Hub

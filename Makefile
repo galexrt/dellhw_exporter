@@ -5,14 +5,15 @@ HOMEPAGE    ?= https://github.com/galexrt/dellhw_exporter
 
 GO           := go
 FPM          ?= fpm
-PROMU        := $(GOPATH)/bin/promu
-PREFIX       ?= $(shell pwd)
-BIN_DIR      ?= $(PREFIX)/.bin
-TARBALL_DIR  ?= $(PREFIX)/.tarball
-PACKAGE_DIR  ?= $(PREFIX)/.package
+CWD          ?= $(shell pwd)
+BIN_DIR      ?= $(CWD)/.bin
+TARBALL_DIR  ?= $(CWD)/.tarball
+PACKAGE_DIR  ?= $(CWD)/.package
 ARCH         ?= amd64
 PACKAGE_ARCH ?= linux-amd64
-VERSION      ?= $(shell cat VERSION)
+
+PROMU_VERSION ?= 0.5.0
+PROMU_URL     := https://github.com/prometheus/promu/releases/download/v$(PROMU_VERSION)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM).tar.gz
 
 pkgs = $(shell go list ./... | grep -v /vendor/ | grep -v /test/)
 
@@ -41,7 +42,7 @@ package-%: build
 	cd $(PACKAGE_DIR) && $(FPM) -s dir -t $(patsubst package-%, %, $@) \
 	--deb-user root --deb-group root \
 	--name $(PROJECTNAME) \
-	--version $(VERSION) \
+	--version $(shell cat VERSION) \
 	--architecture $(PACKAGE_ARCH) \
 	--description "$(DESCRIPTION)" \
 	--maintainer "$(MAINTAINER)" \
@@ -49,11 +50,11 @@ package-%: build
 	usr/ etc/
 
 promu:
-	@echo ">> fetching promu"
-	@GOOS="$(shell uname -s | tr A-Z a-z)" \
-		GOARCH="$(subst x86_64,amd64,$(patsubst i%86,386,$(shell uname -m)))" \
-		GO111MODULE=off \
-		$(GO) get -u github.com/prometheus/promu
+	$(eval PROMU_TMP := $(shell mktemp -d))
+	curl -s -L $(PROMU_URL) | tar -xvzf - -C $(PROMU_TMP)
+	mkdir -p $(FIRST_GOPATH)/bin
+	cp $(PROMU_TMP)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM)/promu $(FIRST_GOPATH)/bin/promu
+	rm -r $(PROMU_TMP)
 
 style:
 	@echo ">> checking code style"
