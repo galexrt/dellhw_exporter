@@ -14,8 +14,11 @@ PACKAGE_ARCH ?= linux-amd64
 
 # The GOHOSTARM and PROMU parts have been taken from the prometheus/promu repository
 # which is licensed under Apache License 2.0 Copyright 2018 The Prometheus Authors
+FIRST_GOPATH := $(firstword $(subst :, ,$(shell $(GO) env GOPATH)))
+
 GOHOSTOS     ?= $(shell $(GO) env GOHOSTOS)
 GOHOSTARCH   ?= $(shell $(GO) env GOHOSTARCH)
+
 ifeq (arm, $(GOHOSTARCH))
 	GOHOSTARM ?= $(shell GOARM= $(GO) env GOARM)
 	GO_BUILD_PLATFORM ?= $(GOHOSTOS)-$(GOHOSTARCH)v$(GOHOSTARM)
