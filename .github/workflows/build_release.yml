@@ -1,11 +1,11 @@
-name: build-release
+name: build_release
 on:
   push:
     tags:
-      - '.*'
+      - 'v*'
 jobs:
-  build-release:
-    runs-on: ubuntu-18.04
+  build_release:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
