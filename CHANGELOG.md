@@ -1,3 +1,7 @@
+## 1.5.13 / 2020-06-07
+
+* [ENHANCEMENT] ci: use correct env vars for image name
+
 ## 1.5.11 / 2020-06-07
 
 * [ENHANCEMENT] ci: use github actions
