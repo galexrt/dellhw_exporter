@@ -12,8 +12,20 @@ PACKAGE_DIR  ?= $(CWD)/.package
 ARCH         ?= amd64
 PACKAGE_ARCH ?= linux-amd64
 
+# The GOHOSTARM and PROMU parts have been taken from the prometheus/promu repository
+# which is licensed under Apache License 2.0 Copyright 2018 The Prometheus Authors
+GOHOSTOS     ?= $(shell $(GO) env GOHOSTOS)
+GOHOSTARCH   ?= $(shell $(GO) env GOHOSTARCH)
+ifeq (arm, $(GOHOSTARCH))
+	GOHOSTARM ?= $(shell GOARM= $(GO) env GOARM)
+	GO_BUILD_PLATFORM ?= $(GOHOSTOS)-$(GOHOSTARCH)v$(GOHOSTARM)
+else
+	GO_BUILD_PLATFORM ?= $(GOHOSTOS)-$(GOHOSTARCH)
+endif
+
 PROMU_VERSION ?= 0.5.0
 PROMU_URL     := https://github.com/prometheus/promu/releases/download/v$(PROMU_VERSION)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM).tar.gz
+# END copied code
 
 pkgs = $(shell go list ./... | grep -v /vendor/ | grep -v /test/)
 
