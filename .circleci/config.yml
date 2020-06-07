@@ -50,7 +50,7 @@ jobs:
           if [ -n "$CIRCLE_TAG" ]; then
               make docker DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME DOCKER_IMAGE_TAG=$CIRCLE_TAG
               make docker DOCKER_IMAGE_NAME=$QUAY_IMAGE_NAME DOCKER_IMAGE_TAG=$CIRCLE_TAG
-              promu crossbuild tarballs
+              promu crossbuild .tarballs
               promu checksum .tarballs
               promu release .tarballs
               mkdir $CIRCLE_ARTIFACTS/releases/ && cp -a .tarballs/* $CIRCLE_ARTIFACTS/releases/
