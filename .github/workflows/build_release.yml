@@ -34,6 +34,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_names: true
+          workdir: ${{ github.workspace }}
       - name: Build and push to Quay.io
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -42,3 +43,4 @@ jobs:
           password: ${{ secrets.QUAYIO_PASSWORD }}
           registry: quay.io
           tag_names: true
+          workdir: ${{ github.workspace }}
