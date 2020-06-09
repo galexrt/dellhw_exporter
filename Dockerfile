@@ -14,6 +14,8 @@ RUN yum -y update && \
     yum -y install srvadmin-base srvadmin-storageservices && \
     yum clean all
 
+EXPOSE 9137/tcp
+
 ADD docker/entrypoint.sh /bin/entrypoint
 
 RUN chmod +x /bin/entrypoint
