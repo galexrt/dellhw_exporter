@@ -1,3 +1,9 @@
+## 1.6.0 /2020-06-09
+
+* [ENHANCEMENT] Add support for firmware versions #43 (PR #44).
+  * Thanks to [@sfudeus](https://github.com/sfudeus) for implementing this!
+* [ENHANCEMENT] docker: added expose for 9137/tcp exporter port
+
 ## 1.5.19 / 2020-06-07
 
 * [BUGFIX] ci: debug using tmate action
