@@ -821,10 +821,10 @@ var chassisBiosTests = []testResultOMReport{
 		`,
 		Values: []Value{
 			{
-				Name: "bios",
+				Name:  "bios",
 				Value: "0",
 				Labels: map[string]string{
-					"version": "2.10.5",
+					"version":      "2.10.5",
 					"manufacturer": "dell inc.",
 					"release_date": "07/25/2019",
 				},
@@ -853,10 +853,10 @@ var chassisFirmwareTests = []testResultOMReport{
 		`,
 		Values: []Value{
 			{
-				Name: "firmware",
+				Name:  "firmware",
 				Value: "0",
 				Labels: map[string]string{
-					"idrac8": "2.70.70.70 (build 45)",
+					"idrac8":               "2.70.70.70 (build 45)",
 					"lifecycle_controller": "2.70.70.70",
 				},
 			},
