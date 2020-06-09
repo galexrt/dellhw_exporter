@@ -510,3 +510,51 @@ func (or *OMReport) ChassisBatteries() ([]Value, error) {
 	}, or.getOMReportExecutable(), "chassis", "batteries")
 	return values, err
 }
+
+// ChassisBios returns the bios version name
+func (or *OMReport) ChassisBios() ([]Value, error) {
+	value := Value{
+		Name:   "bios",
+		Value:  "0",
+		Labels: map[string]string{},
+	}
+
+	err := or.readReport(func(fields []string) {
+
+		if len(fields) != 2 {
+			return
+		}
+		id := strings.Replace(strings.ToLower(fields[0]), " ", "_", -1)
+		value.Labels[id] = strings.ToLower(fields[1])
+
+	}, or.getOMReportExecutable(), "chassis", "bios")
+
+	values := []Value{}
+	values = append(values, value)
+
+	return values, err
+}
+
+// ChassisFirmware returns the firmware revisions
+func (or *OMReport) ChassisFirmware() ([]Value, error) {
+	value := Value{
+		Name:   "firmware",
+		Value:  "0",
+		Labels: map[string]string{},
+	}
+
+	err := or.readReport(func(fields []string) {
+
+		if len(fields) != 2 {
+			return
+		}
+		id := strings.Replace(strings.ToLower(fields[0]), " ", "_", -1)
+		value.Labels[id] = strings.ToLower(fields[1])
+
+	}, or.getOMReportExecutable(), "chassis", "firmware")
+
+	values := []Value{}
+	values = append(values, value)
+
+	return values, err
+}

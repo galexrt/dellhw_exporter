@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	defaultCollectors = "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts"
+	defaultCollectors = "chassis,chassis_batteries,fans,firmwares,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts"
 )
 
 var (

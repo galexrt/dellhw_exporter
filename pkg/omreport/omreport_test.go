@@ -293,17 +293,17 @@ ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;
 		Input: `List of Controllers in the system
 
 		Controller
-		
+
 		ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Connectors;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;Spin Down Unconfigured Drives;Spin Down Hot Spares;Spin Down Configured Drives;Automatic Disk Power Saving (Idle C);Start Time (HH:MM);Time Interval for Spin Up (in Hours);T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy;Current Controller Mode
 		0;Ok;PERC H730P Mini;Embedded;Ready;25.5.5.0005;Not Applicable;06.810.09.00-rc1;Not Applicable;Not Applicable;Not Applicable;1;30%;30%;30%;30%;Not Applicable;Not Applicable;Not Applicable;2048 MB;Auto;Stopped;30%;159;Disabled;Enabled;Not Applicable;Disabled;Not Applicable;Not Applicable;Disabled;Yes;No;None;Not Applicable;Disabled;Disabled;Disabled;Disabled;Not Applicable;Not Applicable;No;Unchanged;RAID
-		
+
 		Controller
-		
+
 		ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Connectors;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;Spin Down Unconfigured Drives;Spin Down Hot Spares;Spin Down Configured Drives;Automatic Disk Power Saving (Idle C);Start Time (HH:MM);Time Interval for Spin Up (in Hours);T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy
 		1;Ok;PERC H810 Adapter;PCI Slot 6;Ready;21.3.5-0002;Not Applicable;06.810.09.00-rc1;Not Applicable;Not Applicable;Not Applicable;2;30%;30%;30%;30%;Not Applicable;Not Applicable;Not Applicable;1024 MB;Auto;Stopped;30%;122;Disabled;Enabled;Auto;Disabled;Detected;Yes;Disabled;Yes;No;None;Not Applicable;Disabled;Disabled;Disabled;Disabled;Not Applicable;Not Applicable;No;Not Applicable
-		
+
 		Controller
-		
+
 		ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Connectors;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;Spin Down Unconfigured Drives;Spin Down Hot Spares;Spin Down Configured Drives;Automatic Disk Power Saving (Idle C);Start Time (HH:MM);Time Interval for Spin Up (in Hours);T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy
 		2;Ok;PERC H810 Adapter;PCI Slot 4;Ready;21.3.5-0002;Not Applicable;06.810.09.00-rc1;Not Applicable;Not Applicable;Not Applicable;2;30%;30%;30%;30%;Not Applicable;Not Applicable;Not Applicable;1024 MB;Auto;Stopped;30%;96;Disabled;Enabled;Auto;Disabled;Detected;Yes;Disabled;Yes;No;None;Not Applicable;Disabled;Disabled;Disabled;Disabled;Not Applicable;Not Applicable;No;Not Applicable
 `,
@@ -769,8 +769,8 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 		Input: `Voltage Probes Information
 
 		Health : Ok
-		
-		
+
+
 		Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Threshold;Minimum Failure Threshold;Maximum Failure Threshold
 		0;Ok;CPU1 VCORE PG;Good;[N/A];[N/A];[N/A];[N/A]
 		2;Ok;System Board 3.3V PG;Good;[N/A];[N/A];[N/A];[N/A]
@@ -807,6 +807,69 @@ func TestVolts(t *testing.T) {
 	for _, result := range voltsTests {
 		input = result.Input
 		values, _ := report.Volts()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
+var chassisBiosTests = []testResultOMReport{
+	{
+		Input: `BIOS Information
+
+		Manufacturer;Dell Inc.
+		Version;2.10.5
+		Release Date;07/25/2019
+		`,
+		Values: []Value{
+			{
+				Name: "bios",
+				Value: "0",
+				Labels: map[string]string{
+					"version": "2.10.5",
+					"manufacturer": "dell inc.",
+					"release_date": "07/25/2019",
+				},
+			},
+		},
+	},
+}
+
+func TestChassisBios(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range chassisBiosTests {
+		input = result.Input
+		values, _ := report.ChassisBios()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
+var chassisFirmwareTests = []testResultOMReport{
+	{
+		Input: `Firmware Information
+
+		Version Information
+		iDRAC8;2.70.70.70 (Build 45)
+		Lifecycle Controller;2.70.70.70
+		`,
+		Values: []Value{
+			{
+				Name: "firmware",
+				Value: "0",
+				Labels: map[string]string{
+					"idrac8": "2.70.70.70 (build 45)",
+					"lifecycle_controller": "2.70.70.70",
+				},
+			},
+		},
+	},
+}
+
+func TestChassisFirmware(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range chassisFirmwareTests {
+		input = result.Input
+		values, _ := report.ChassisFirmware()
 		assert.Equal(t, result.Values, values)
 	}
 }
