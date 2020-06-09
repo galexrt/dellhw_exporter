@@ -1,3 +1,7 @@
+## 1.5.19 / 2020-06-07
+
+* [BUGFIX] ci: debug using tmate action
+
 ## 1.5.18 / 2020-06-07
 
 * [BUGFIX] ci: debug using tmate action
