@@ -1,6 +1,6 @@
 # dellhw_exporter
 
-[![CircleCI branch](https://img.shields.io/circleci/project/github/galexrt/dellhw_exporter/master.svg)]() [![Docker Repository on Quay](https://quay.io/repository/galexrt/dellhw_exporter/status "Docker Repository on Quay")](https://quay.io/repository/galexrt/dellhw_exporter) [![Go Report Card](https://goreportcard.com/badge/github.com/galexrt/dellhw_exporter)](https://goreportcard.com/report/github.com/galexrt/dellhw_exporter)
+![build_release](https://github.com/galexrt/dellhw_exporter/workflows/build_release/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/galexrt/dellhw_exporter)](https://goreportcard.com/report/github.com/galexrt/dellhw_exporter)
 
 Prometheus exporter for Dell Hardware components using OMSA.
 

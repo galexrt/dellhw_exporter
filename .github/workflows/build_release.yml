@@ -18,6 +18,10 @@ jobs:
           make test
           make promu
           make check_license
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
