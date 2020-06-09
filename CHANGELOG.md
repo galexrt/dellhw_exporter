@@ -1,3 +1,7 @@
+## 1.5.17 / 2020-06-07
+
+* [BUGFIX] ci: fix build routine issues #42
+
 ## 1.5.16 / 2020-06-07
 
 * [ENHANCEMENT] ci: no need to specify docker build dir
