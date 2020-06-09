@@ -5,7 +5,6 @@ HOMEPAGE    ?= https://github.com/galexrt/dellhw_exporter
 
 GO111MODULE  ?= on
 GO           ?= go
-PROMU        ?= promu
 FPM          ?= fpm
 CWD          ?= $(shell pwd)
 BIN_DIR      ?= $(CWD)/.bin
@@ -30,6 +29,8 @@ endif
 
 PROMU_VERSION ?= 0.5.0
 PROMU_URL     := https://github.com/prometheus/promu/releases/download/v$(PROMU_VERSION)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM).tar.gz
+
+PROMU := $(FIRST_GOPATH)/bin/promu
 # END copied code
 
 pkgs = $(shell go list ./... | grep -v /vendor/ | grep -v /test/)
@@ -41,7 +42,7 @@ all: format style vet test build
 
 build: promu
 	@echo ">> building binaries"
-	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(PREFIX) $(PROMU_BINARIES)
+	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(CWD) $(PROMU_BINARIES)
 
 check_license:
 	@OUTPUT="$$(promu check licenses)"; \
