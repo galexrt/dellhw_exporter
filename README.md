@@ -28,17 +28,18 @@ Should you run into issues when using the Docker image, please follow the [Troub
 
 ## Collectors
 
-Which collectors are enabled is controlled by the `--colectors.enabled` flag.
+Which collectors are enabled is controlled by the `--collectors-enabled` flag.
 
 ### Enabled by default
 
-All collectors are enabled by default. You can disable collectors by specifying the whole list of collectors through the `--collectors.enabled` flag.
+All collectors are enabled by default. You can disable collectors by specifying the whole list of collectors through the `--collectors-enabled` flag.
 
 | Name                 | Description                                                                      |
 | -------------------- | -------------------------------------------------------------------------------- |
 | chassis              | Overall status of chassis components.                                            |
 | chassis_batteries    | Overall status of chassis CMOS batteries.                                        |
 | fans                 | Overall status of system fans.                                                   |
+| firmwares            | Information about some firmware versions (Drac, BIOS)
 | memory               | System RAM DIMM status.                                                          |
 | nics                 | NICs connection status.                                                          |
 | processors           | Overall status of CPUs.                                                          |
@@ -70,7 +71,7 @@ $ dellhw_exporter --help
 unknown flag: --debug
 Usage of dellhw_exporter:
       --collectors-cmd-timeout int   Command execution timeout for omreport (default 15)
-      --collectors-enabled string    Comma separated list of active collectors (default "chassis,chassis_batteries,fans,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
+      --collectors-enabled string    Comma separated list of active collectors (default "chassis,chassis_batteries,fans,firmwares,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
       --collectors-omreport string   Path to the omReport executable (default "/opt/dell/srvadmin/bin/omreport")
       --collectors-print             If true, print available collectors and exit.
       --log-level string             Set log level (default "INFO")
