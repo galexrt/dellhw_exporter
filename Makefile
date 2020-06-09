@@ -6,10 +6,10 @@ HOMEPAGE    ?= https://github.com/galexrt/dellhw_exporter
 GO111MODULE  ?= on
 GO           ?= go
 FPM          ?= fpm
-CWD          ?= $(shell pwd)
-BIN_DIR      ?= $(CWD)/.bin
-TARBALL_DIR  ?= $(CWD)/.tarball
-PACKAGE_DIR  ?= $(CWD)/.package
+PREFIX       ?= $(shell pwd)
+BIN_DIR      ?= $(PREFIX)/.bin
+TARBALL_DIR  ?= $(PREFIX)/.tarball
+PACKAGE_DIR  ?= $(PREFIX)/.package
 ARCH         ?= amd64
 PACKAGE_ARCH ?= linux-amd64
 
@@ -42,7 +42,7 @@ all: format style vet test build
 
 build: promu
 	@echo ">> building binaries"
-	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(CWD) $(PROMU_BINARIES)
+	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(PREFIX)
 
 check_license:
 	@OUTPUT="$$(promu check licenses)"; \

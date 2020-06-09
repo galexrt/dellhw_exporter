@@ -26,7 +26,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          make promu
           promu crossbuild
           promu crossbuild tarballs
           promu checksum .tarballs
