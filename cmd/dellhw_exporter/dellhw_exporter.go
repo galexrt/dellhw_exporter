@@ -50,6 +50,9 @@ type CmdLineOpts struct {
 	enabledCollectors  string
 	omReportExecutable string
 	cmdTimeout         int64
+
+	cachingEnabled bool
+	cacheDuration  int64
 }
 
 var (
@@ -62,6 +65,22 @@ var (
 type DellHWCollector struct {
 	lastCollectTime time.Time
 	collectors      map[string]collector.Collector
+
+	// Cache related
+	cachingEnabled bool
+	cacheDuration  time.Duration
+	cache          []prometheus.Metric
+	cacheMutex     sync.Mutex
+}
+
+func NewDellHWCollector(collectors map[string]collector.Collector, cachingEnabled bool, cacheDurationSeconds int64) *DellHWCollector {
+	return &DellHWCollector{
+		cache:           make([]prometheus.Metric, 0),
+		lastCollectTime: time.Unix(0, 0),
+		collectors:      collectors,
+		cachingEnabled:  cachingEnabled,
+		cacheDuration:   time.Duration(cacheDurationSeconds) * time.Second,
+	}
 }
 
 func init() {
@@ -75,6 +94,9 @@ func init() {
 
 	flags.StringVar(&opts.metricsAddr, "web-listen-address", ":9137", "The address to listen on for HTTP requests")
 	flags.StringVar(&opts.metricsPath, "web-telemetry-path", "/metrics", "Path the metrics will be exposed under")
+
+	flags.BoolVar(&opts.cachingEnabled, "cache-enabled", false, "Enable metrics caching to reduce load")
+	flags.Int64Var(&opts.cacheDuration, "cache-duration", 20, "Cache duration in seconds")
 
 	flags.SetNormalizeFunc(normalizeFlags)
 	flags.SortFlags = true
@@ -128,22 +150,68 @@ func parseFlagsAndEnvVars() error {
 }
 
 // Describe implements the prometheus.Collector interface.
-func (n DellHWCollector) Describe(ch chan<- *prometheus.Desc) {
+func (n *DellHWCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- scrapeDurationDesc
 	ch <- scrapeSuccessDesc
 }
 
 // Collect implements the prometheus.Collector interface.
-func (n DellHWCollector) Collect(ch chan<- prometheus.Metric) {
-	wg := sync.WaitGroup{}
-	wg.Add(len(n.collectors))
-	for name, c := range n.collectors {
-		go func(name string, c collector.Collector) {
-			execute(name, c, ch)
-			wg.Done()
-		}(name, c)
+func (n *DellHWCollector) Collect(outgoingCh chan<- prometheus.Metric) {
+	if n.cachingEnabled {
+		n.cacheMutex.Lock()
+		defer n.cacheMutex.Unlock()
+
+		expiry := n.lastCollectTime.Add(n.cacheDuration)
+		if time.Now().Before(expiry) {
+			log.Debugf("Using cache. Now: %s, Expiry: %s, LastCollect: %s", time.Now().String(), expiry.String(), n.lastCollectTime.String())
+			for _, cachedMetric := range n.cache {
+				log.Debugf("Pushing cached metric %s to outgoingCh", cachedMetric.Desc().String())
+				outgoingCh <- cachedMetric
+			}
+			return
+		}
+		// Clear cache, but keep slice
+		n.cache = n.cache[:0]
 	}
-	wg.Wait()
+
+	metricsCh := make(chan prometheus.Metric)
+
+	// Wait to ensure outgoingCh is not closed before the goroutine is finished
+	wgOutgoing := sync.WaitGroup{}
+	wgOutgoing.Add(1)
+	go func() {
+		for metric := range metricsCh {
+			outgoingCh <- metric
+			if n.cachingEnabled {
+				log.Debugf("Appending metric %s to cache", metric.Desc().String())
+				n.cache = append(n.cache, metric)
+			}
+		}
+		log.Debug("Finished pushing metrics from metricsCh to outgoingCh")
+		wgOutgoing.Done()
+	}()
+
+	wgCollection := sync.WaitGroup{}
+	wgCollection.Add(len(n.collectors))
+	for name, coll := range n.collectors {
+		go func(name string, coll collector.Collector) {
+			execute(name, coll, metricsCh)
+			wgCollection.Done()
+		}(name, coll)
+	}
+
+	log.Debug("Waiting for collectors")
+	wgCollection.Wait()
+	log.Debug("Finished waiting for collectors")
+
+	n.lastCollectTime = time.Now()
+	log.Debugf("Updated lastCollectTime to %s", n.lastCollectTime.String())
+
+	close(metricsCh)
+
+	log.Debug("Waiting for outgoing Adapter")
+	wgOutgoing.Wait()
+	log.Debug("Finished waiting for outgoing Adapter")
 }
 
 func execute(name string, c collector.Collector, ch chan<- prometheus.Metric) {
@@ -221,6 +289,12 @@ func main() {
 		log.Warnf("Not setting command timeout because it is zero")
 	}
 
+	if opts.cachingEnabled {
+		log.Infof("Caching enabled. Cache Duration: %ds", opts.cacheDuration)
+	} else {
+		log.Info("Caching is disabled by default")
+	}
+
 	omrOpts := &omreport.Options{
 		OMReportExecutable: opts.omReportExecutable,
 	}
@@ -236,7 +310,7 @@ func main() {
 		log.Infof(" - %s", n)
 	}
 
-	if err = prometheus.Register(DellHWCollector{lastCollectTime: time.Now(), collectors: collectors}); err != nil {
+	if err = prometheus.Register(NewDellHWCollector(collectors, opts.cachingEnabled, opts.cacheDuration)); err != nil {
 		log.Fatalf("Couldn't register collector: %s", err)
 	}
 	handler := promhttp.HandlerFor(prometheus.DefaultGatherer,
