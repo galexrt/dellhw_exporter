@@ -4,7 +4,7 @@ on:
     branches:
       - master
 jobs:
-  test:
+  generate-and-publish:
     runs-on: ubuntu-latest
     container:
       image: "squidfunk/mkdocs-material:latest"
