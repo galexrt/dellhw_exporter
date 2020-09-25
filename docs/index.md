@@ -1,6 +1,6 @@
-# Home
+# home
 
-![build_release](https://github.com/galexrt/dellhw_exporter/workflows/build_release/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/galexrt/dellhw_exporter)](https://goreportcard.com/report/github.com/galexrt/dellhw_exporter)
+![build_release](https://github.com/galexrt/dellhw_exporter/workflows/build_release/badge.svg )
 
 Prometheus exporter for Dell Hardware components using OMSA.
 
