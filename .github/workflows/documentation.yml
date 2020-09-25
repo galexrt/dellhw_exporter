@@ -6,6 +6,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container:
+      image: "squidfunk/mkdocs-material:latest"
     steps:
       - uses: actions/checkout@v2
         with:
