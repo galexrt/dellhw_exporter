@@ -10,7 +10,9 @@ Omreport parsing functions were borrowed from the [Bosun project](https://github
 
 This exporter wraps the "omreport" command from Dell OMSA. If you can't run omreport on your system, the exporter won't export any metrics.
 
-## Tested Dell OMSA Compatibility
+## Compatibility
+
+### Tested Dell OMSA Compatibility
 
 The dellhw_exporter has been tested with the following OMSA versions:
 
@@ -28,80 +30,11 @@ Should you run into issues when using the Docker image, please follow the [Troub
 
 ## Collectors
 
-Which collectors are enabled is controlled by the `--collectors-enabled` flag.
-
-### Enabled by default
-
-All collectors are enabled by default. You can disable collectors by specifying the whole list of collectors through the `--collectors-enabled` flag.
-
-| Name                 | Description                                                                      |
-| -------------------- | -------------------------------------------------------------------------------- |
-| chassis              | Overall status of chassis components.                                            |
-| chassis_batteries    | Overall status of chassis CMOS batteries.                                        |
-| fans                 | Overall status of system fans.                                                   |
-| firmwares            | Information about some firmware versions (Drac, BIOS)
-| memory               | System RAM DIMM status.                                                          |
-| nics                 | NICs connection status.                                                          |
-| processors           | Overall status of CPUs.                                                          |
-| ps                   | Overall status of power supplies.                                                |
-| ps_amps_sysboard_pwr | System board power usage.                                                        |
-| storage_battery      | Status of storage controller backup batteries.                                   |
-| storage_controller   | Overall status of storage controllers.                                           |
-| storage_enclosure    | Overall status of storage enclosures.                                            |
-| storage_pdisk        | Overall status of physical disks.                                                |
-| storage_vdisk        | Overall status of virtual disks.                                                 |
-| system               | Overall status of system components.                                             |
-| temps                | Overall temperatures (**in Celsius**) and status of system temperature readings. |
-| volts                | Overall volts and status of power supply volt readings.                          |
-
-### What do the metrics mean?
-
-Most metrics returned besides temperature, volts, fans RPM count and others, are state indicators which can have the following of the four states:
-
-* `0` - `OK`, the component should be fine.
-* `1` - `Critical`, the component is not okay / has potentially failed / `Unknown` status.
-* `2` - `Non-Critical`, the component is not okay, but not critical.
+For a list of the available collectors, see [Collectors doc page](docs/collectors.md).
 
 ## Configuration
 
-### Flags
-
-```cosnole
-$ dellhw_exporter --help
-unknown flag: --debug
-Usage of dellhw_exporter:
-      --collectors-cmd-timeout int   Command execution timeout for omreport (default 15)
-      --collectors-enabled string    Comma separated list of active collectors (default "chassis,chassis_batteries,fans,firmwares,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
-      --collectors-omreport string   Path to the omReport executable (default "/opt/dell/srvadmin/bin/omreport")
-      --collectors-print             If true, print available collectors and exit.
-      --log-level string             Set log level (default "INFO")
-      --version                      Show version information
-      --web-listen-address string    The address to listen on for HTTP requests (default ":9137")
-      --web-telemetry-path string    Path the metrics will be exposed under (default "/metrics")
-unknown flag: --debug
-```
-
-### Environment variables
-
-For the description of the env vars, see the above equivalent flags.
-
-```console
-DELLHW_EXPORTER_COLLECTORS_CMD_TIMEOUT
-DELLHW_EXPORTER_COLLECTORS_ENABLED
-DELLHW_EXPORTER_COLLECTORS_OMREPORT
-DELLHW_EXPORTER_COLLECTORS_PRINT
-DELLHW_EXPORTER_LOG_LEVEL
-DELLHW_EXPORTER_HELP
-DELLHW_EXPORTER_VERSION
-DELLHW_EXPORTER_WEB_LISTEN_ADDRESS
-DELLHW_EXPORTER_WEB_TELEMETRY_PATH
-```
-
-#### Docker specific environment variables
-
-```console
-START_DELL_SRVADMIN_SERVICES # Defaults to `true`, toggle if the srvadmin services are started inside the container
-```
+For flags and environment variables, see [Configuration doc page](docs/configuration.md).
 
 ## Running in Docker
 
@@ -133,7 +66,7 @@ docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/d
 
 ## Running without Docker
 
-To run without Docker either download a [release binary](https://github.com/galexrt/dellhw_exporter/releases) or build it (using `make build`):
+To run without Docker either download a [release binary](https://github.com/galexrt/dellhw_exporter/releases) or build it (using `make build` command):
 
 ```console
 ./dellhw_exporter
@@ -147,7 +80,7 @@ E.g., run `/opt/dell/srvadmin/sbin/srvadmin-services.sh start` and / or `systemc
 
 ## Prometheus
 
-The exporter runs on TCP port `9137`.
+The exporter runs on port `9137` TCP.
 
 Example static Prometheus Job config:
 
@@ -168,29 +101,8 @@ Checkout the files in the [`contrib/monitoring/`](contrib/monitoring/) directory
 
 ## Troubleshooting
 
-### No metrics being exported
-
-If you are not running the Docker container, it is probably that your OMSA / srvadmin services are not running. Start them using the following commands:
-
-```console
-/opt/dell/srvadmin/sbin/srvadmin-services.sh status
-/opt/dell/srvadmin/sbin/srvadmin-services.sh start
-echo "return code: $?"
-```
-Please note that the return code should be `0`, if not please investigate the logs of srvadmin services.
-
-When running inside the container this most of the time means
-Be sure to enter the container and run the following commands to verify if the kernel modules have been loaded:
-
-```console
-/usr/libexec/instsvcdrv-helper status
-lsmod | grep -iE 'dell|dsu'
-```
-
-Should the `lsmod` not contain any module named after `dell_` and / or `dsu_`, be sure to add the following read-only mounts depending on your OS, for the kernel modules directory (`/lib/modules`) and / or the kernel source / headers directory (depends hardly on the OS your are using) to the `dellhw_exporter` Docker container using `-v HOST_PATH:CONTAINER_PATH:ro` flag.
+See [Troubleshooting doc page](docs/troubleshooting.md).
 
 ## Development
 
-### Dependencies
-
-`dep` is used for vendoring the dependencies.
+`go mod` is used for "vendoring" of the dependencies.

@@ -1,0 +1,21 @@
+name: documentation
+on:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
+      - name: Build
+        run: |
+          mkdocs build --clean
+      - name: Deploy to GitHub pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          cname: dellhw-exporter.galexrt.moe

@@ -104,3 +104,11 @@ vet:
 	@$(GO) vet $(pkgs)
 
 .PHONY: all build crossbuild docker format package promu style tarball test vet
+
+.PHONY: docs-serve
+docs-serve:
+	docker run --net=host --volume "$$(pwd)":"$$(pwd)" --workdir "$$(pwd)" -it squidfunk/mkdocs-material
+
+.PHONY: docs-build
+docs-build:
+	docker run --net=host --volume "$$(pwd)":"$$(pwd)" --workdir "$$(pwd)" -it squidfunk/mkdocs-material build --clean
