@@ -66,7 +66,6 @@ type DellHWCollector struct {
 }
 
 func init() {
-
 	flags.BoolVar(&opts.version, "version", false, "Show version information")
 	flags.StringVar(&opts.logLevel, "log-level", "INFO", "Set log level")
 
