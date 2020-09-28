@@ -1,0 +1,10 @@
+GO   ?= go
+HELM ?= helm
+
+.PHONY: helm-docs
+helm-docs:
+	GO111MODULE=on $(GO) get github.com/norwoodj/helm-docs/cmd/helm-docs
+
+.PHONY: docs
+docs: helm-docs
+	helm-docs
