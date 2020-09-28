@@ -105,4 +105,6 @@ See [Troubleshooting doc page](docs/troubleshooting.md).
 
 ## Development
 
+Golang version `1.15` is used for testing and building the dellhw_exporter.
+
 `go mod` is used for "vendoring" of the dependencies.
