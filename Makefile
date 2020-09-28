@@ -43,6 +43,7 @@ all: format style vet test build
 build: promu
 	@echo ">> building binaries"
 	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(PREFIX)
+	GOOS=windows GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(PREFIX)
 
 check_license:
 	@OUTPUT="$$(promu check licenses)"; \

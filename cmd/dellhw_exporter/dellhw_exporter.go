@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"runtime"
 	"sort"
 	"strings"
 	"sync"
@@ -65,12 +66,13 @@ type DellHWCollector struct {
 }
 
 func init() {
+
 	flags.BoolVar(&opts.version, "version", false, "Show version information")
 	flags.StringVar(&opts.logLevel, "log-level", "INFO", "Set log level")
 
 	flags.BoolVar(&opts.showCollectors, "collectors-print", false, "If true, print available collectors and exit.")
 	flags.StringVar(&opts.enabledCollectors, "collectors-enabled", defaultCollectors, "Comma separated list of active collectors")
-	flags.StringVar(&opts.omReportExecutable, "collectors-omreport", "/opt/dell/srvadmin/bin/omreport", "Path to the omReport executable")
+	flags.StringVar(&opts.omReportExecutable, "collectors-omreport", getDefaultOmReportPath(), "Path to the omReport executable")
 	flags.Int64Var(&opts.cmdTimeout, "collectors-cmd-timeout", 15, "Command execution timeout for omreport")
 
 	flags.StringVar(&opts.metricsAddr, "web-listen-address", ":9137", "The address to listen on for HTTP requests")
@@ -177,6 +179,14 @@ func loadCollectors(list string) (map[string]collector.Collector, error) {
 		collectors[name] = c
 	}
 	return collectors, nil
+}
+
+func getDefaultOmReportPath() string {
+	if runtime.GOOS == "windows" {
+		return "C:\\Program Files\\Dell\\SysMgt\\oma\\bin\\omreport.exe"
+	}
+
+	return "/opt/dell/srvadmin/bin/omreport"
 }
 
 func main() {
