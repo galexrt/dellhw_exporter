@@ -1,4 +1,15 @@
-## 1.6.0 /2020-06-09
+## 1.7.0 / 2020-09-29
+
+* [ENHANCEMENT] Metric results can be cached to improve performance.
+  * Thanks to [@Phil1602](https://github.com/Phil1602) for adding this as a feature!
+* [ENHANCEMENT] The default value of the `--collectors-omreport` flag is now dependent on the OS for Linux and Windows.
+  * Thanks to [@Phil1602](https://github.com/Phil1602) for adding this as a feature!
+* [ENHANCEMENT] Enabled `windows/amd64` release binary builds.
+* [ENHANCEMENT] Golang 1.15 is used by default for CI and build.
+* [ENHANCEMENT] Updated LICENSE file and go code file headers.
+* [ENHANCEMENT] Created documentation page using [mkdocs](https://www.mkdocs.org/), available at [dellhw-exporter.galexrt.moe](https://dellhw-exporter.galexrt.moe/).
+
+## 1.6.0 / 2020-06-09
 
 * [ENHANCEMENT] Add support for firmware versions #43 (PR #44).
   * Thanks to [@sfudeus](https://github.com/sfudeus) for implementing this!
