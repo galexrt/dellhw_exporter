@@ -36,6 +36,10 @@ For a list of the available collectors, see [Collectors doc page](docs/collector
 
 For flags and environment variables, see [Configuration doc page](docs/configuration.md).
 
+## Caching
+
+Optional caching can be enabled to prevent performance issues caused by this exporter, see [Caching doc page](docs/caching.md).
+
 ## Running in Docker
 
 The container image is available from [Docker Hub](https://hub.docker.com/) and [Quay.io](https://quay.io/):
