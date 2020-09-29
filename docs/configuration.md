@@ -14,6 +14,8 @@ Usage of dellhw_exporter:
       --version                      Show version information
       --web-listen-address string    The address to listen on for HTTP requests (default ":9137")
       --web-telemetry-path string    Path the metrics will be exposed under (default "/metrics")
+      --cache-enabled bool           Enable caching (default false)
+      --cache-duration int           Duration in seconds for the cache lifetime (default 20)
 ```
 
 ## Environment Variables
@@ -30,6 +32,8 @@ DELLHW_EXPORTER_HELP
 DELLHW_EXPORTER_VERSION
 DELLHW_EXPORTER_WEB_LISTEN_ADDRESS
 DELLHW_EXPORTER_WEB_TELEMETRY_PATH
+DELLHW_EXPORTER_CACHE_ENABLED
+DELLHW_EXPORTER_CACHE_DURATION
 ```
 
 ### Docker Image specific Environment Variables
