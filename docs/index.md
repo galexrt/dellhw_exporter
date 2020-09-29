@@ -1,4 +1,4 @@
-# home
+# Home
 
 ![build_release](https://github.com/galexrt/dellhw_exporter/workflows/build_release/badge.svg )
 
