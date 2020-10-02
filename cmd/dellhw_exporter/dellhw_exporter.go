@@ -31,6 +31,7 @@ import (
 
 	"github.com/galexrt/dellhw_exporter/collector"
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
+	"github.com/kardianos/service"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/version"
@@ -55,6 +56,8 @@ var (
 		nil,
 	)
 )
+
+type program struct{}
 
 // CmdLineOpts holds possible command line options/flags
 type CmdLineOpts struct {
@@ -88,6 +91,103 @@ type DellHWCollector struct {
 	cacheDuration  time.Duration
 	cache          []prometheus.Metric
 	cacheMutex     sync.Mutex
+}
+
+func main() {
+	// Service setup
+	svcConfig := &service.Config{
+		Name:        "DellOMSAExporter",
+		DisplayName: "Dell OMSA Exporter",
+		Description: "Prometheus exporter for Dell Hardware components using OMSA",
+	}
+
+	prg := &program{}
+	s, err := service.New(prg, svcConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = s.Run()
+	if err != nil {
+		log.Error(err)
+	}
+}
+
+func (p *program) Start(s service.Service) error {
+	if err := parseFlagsAndEnvVars(); err != nil {
+		log.Fatal(err)
+	}
+
+	if opts.version {
+		fmt.Fprintln(os.Stdout, version.Print("dellhw_exporter"))
+		os.Exit(0)
+	}
+
+	if opts.showCollectors {
+		collectorNames := make(sort.StringSlice, 0, len(collector.Factories))
+		for n := range collector.Factories {
+			collectorNames = append(collectorNames, n)
+		}
+		collectorNames.Sort()
+		fmt.Printf("Available collectors:\n")
+		for _, n := range collectorNames {
+			fmt.Printf(" - %s\n", n)
+		}
+		os.Exit(0)
+	}
+
+	log.Out = os.Stdout
+
+	// Set log level
+	l, err := logrus.ParseLevel(opts.logLevel)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.SetLevel(l)
+
+	log.Infoln("Starting dellhw_exporter", version.Info())
+	log.Infoln("Build context", version.BuildContext())
+
+	if opts.cmdTimeout > 0 {
+		log.Infof("Setting command timeout to %d", opts.cmdTimeout)
+		omreport.SetCommandTimeout(opts.cmdTimeout)
+	} else {
+		log.Warnf("Not setting command timeout because it is zero")
+	}
+
+	if opts.cachingEnabled {
+		log.Infof("Caching enabled. Cache Duration: %ds", opts.cacheDuration)
+	} else {
+		log.Info("Caching is disabled by default")
+	}
+
+	omrOpts := &omreport.Options{
+		OMReportExecutable: opts.omReportExecutable,
+	}
+
+	collector.SetOMReport(omreport.New(omrOpts))
+
+	collectors, err := loadCollectors(opts.enabledCollectors)
+	if err != nil {
+		log.Fatalf("Couldn't load collectors: %s", err)
+	}
+	log.Infof("Enabled collectors:")
+	for n := range collectors {
+		log.Infof(" - %s", n)
+	}
+
+	if err = prometheus.Register(NewDellHWCollector(collectors, opts.cachingEnabled, opts.cacheDuration)); err != nil {
+		log.Fatalf("Couldn't register collector: %s", err)
+	}
+
+	// non-blocking start
+	go p.run()
+	return nil
+}
+
+func (p *program) Stop(s service.Service) error {
+	// non-blocking stop
+	return nil
 }
 
 func NewDellHWCollector(collectors map[string]collector.Collector, cachingEnabled bool, cacheDurationSeconds int64) *DellHWCollector {
@@ -272,72 +372,8 @@ func getDefaultOmReportPath() string {
 	return "/opt/dell/srvadmin/bin/omreport"
 }
 
-func main() {
-	if err := parseFlagsAndEnvVars(); err != nil {
-		log.Fatal(err)
-	}
-
-	if opts.version {
-		fmt.Fprintln(os.Stdout, version.Print("dellhw_exporter"))
-		return
-	}
-
-	if opts.showCollectors {
-		collectorNames := make(sort.StringSlice, 0, len(collector.Factories))
-		for n := range collector.Factories {
-			collectorNames = append(collectorNames, n)
-		}
-		collectorNames.Sort()
-		fmt.Printf("Available collectors:\n")
-		for _, n := range collectorNames {
-			fmt.Printf(" - %s\n", n)
-		}
-		return
-	}
-
-	log.Out = os.Stdout
-
-	// Set log level
-	l, err := logrus.ParseLevel(opts.logLevel)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.SetLevel(l)
-
-	log.Infoln("Starting dellhw_exporter", version.Info())
-	log.Infoln("Build context", version.BuildContext())
-
-	if opts.cmdTimeout > 0 {
-		log.Infof("Setting command timeout to %d", opts.cmdTimeout)
-		omreport.SetCommandTimeout(opts.cmdTimeout)
-	} else {
-		log.Warnf("Not setting command timeout because it is zero")
-	}
-
-	if opts.cachingEnabled {
-		log.Infof("Caching enabled. Cache Duration: %ds", opts.cacheDuration)
-	} else {
-		log.Info("Caching is disabled by default")
-	}
-
-	omrOpts := &omreport.Options{
-		OMReportExecutable: opts.omReportExecutable,
-	}
-
-	collector.SetOMReport(omreport.New(omrOpts))
-
-	collectors, err := loadCollectors(opts.enabledCollectors)
-	if err != nil {
-		log.Fatalf("Couldn't load collectors: %s", err)
-	}
-	log.Infof("Enabled collectors:")
-	for n := range collectors {
-		log.Infof(" - %s", n)
-	}
-
-	if err = prometheus.Register(NewDellHWCollector(collectors, opts.cachingEnabled, opts.cacheDuration)); err != nil {
-		log.Fatalf("Couldn't register collector: %s", err)
-	}
+func (p *program) run() {
+	// Background work
 	handler := promhttp.HandlerFor(prometheus.DefaultGatherer,
 		promhttp.HandlerOpts{
 			ErrorLog:      log,

@@ -103,6 +103,10 @@ Example static Prometheus Job config:
 
 Checkout the files in the [`contrib/monitoring/`](contrib/monitoring/) directory.
 
+## Installation
+
+See [Installation doc page](docs/installation.md).
+
 ## Troubleshooting
 
 See [Troubleshooting doc page](docs/troubleshooting.md).
