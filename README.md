@@ -109,7 +109,7 @@ The binary supports the proper events and signals for using as a Windows service
 
 Example to add the executable as a service in Windows:
 
-```
+```console
 sc.exe create "Dell OMSA Exporter" binPath="C:\Program Files\Dell\dellhw_exporter.exe" start=auto
 ```
 
