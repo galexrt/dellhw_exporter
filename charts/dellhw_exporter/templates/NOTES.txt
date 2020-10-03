@@ -1,0 +1,7 @@
+The dellhw_exporter has been configured with:
+
+* Image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+* (Non-default) ServiceAccount: {{ .Values.serviceAccount.create }}
+* PodSecurityPolicy: {{ .Values.psp.create }}
+* prometheus-operator ServiceMonitor: {{ .Values.serviceMonitor.enabled }}
+* prometheus-operator PrometheusRules: {{ .Values.prometheusRule.enabled }}

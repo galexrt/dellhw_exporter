@@ -1,0 +1,105 @@
+# Default values for dellhw_exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  # -- Image repository
+  repository: galexrt/dellhw-exporter
+  # -- Override the `imagePullPolicy`
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# -- ImagePullSecrets to add to the DaemonSet
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- If not set and create is true, a name is generated using the fullname template
+  # -- The name of the service account to use.
+  name: ""
+
+# -- Annotations to add to the Pods created by the DaemonSet
+podAnnotations: {}
+# -- Additional labels to add to the Pods created by the DaemonSet
+podLabels: {}
+
+# -- Kubernetes PodSecurityContext for the Pods
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- SecurityContext for the container
+securityContext:
+  privileged: true
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+psp:
+  # -- Specifies whether a PodSecurityPolicy (PSP) should be created
+  create: true
+  # -- PodSecurityPolicy spec
+  spec:
+    privileged: true
+    allowedHostPaths: []
+    volumes:
+      - secret
+
+service:
+  type: ClusterIP
+  port: 9137
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  # -- NodeSelector for the DaemonSet
+nodeSelector: {}
+
+# -- Tolerations for the DaemonSet
+tolerations: []
+
+# -- Affinity for the DaemonSet
+affinity: {}
+
+serviceMonitor:
+  # -- Specifies whether a prometheus-operator ServiceMonitor should be created
+  enabled: false
+  # -- Additional Labels for the ServiceMonitor object
+  additionalLabels: {}
+  #namespace: "monitoring"
+  namespaceSelector:
+  # Default: scrape .Release.Namespace only
+  # To scrape all, use the following:
+  #  matchNames:
+  #    - monitoring
+  #   any: true
+  scrapeInterval: 30s
+  # honorLabels: true
+
+prometheusRule:
+  # -- Specifies whether a prometheus-operator PrometheusRule should be created
+  enabled: false
+  # -- Additional Labels for the PrometheusRule object
+  additionalLabels: {}
+  # Default: .Release.Namespace
+  # namespace: ""
+  # prometheusRule.rules -- Checkout the `/contrib/prometheus-alerts/prometheus-alerts.yml` file for example alerts
+  rules: []
