@@ -1,9 +1,15 @@
+## 1.8.0 / 2020-10-07
+
+* [ENHANCEMENT] Windows Service Support
+  * Thanks to [@kyle-williams-1](https://github.com/kyle-williams-1) for adding this feature!
+* [ENHANCEMENT] Kubernetes Helm chart
+
 ## 1.7.0 / 2020-09-29
 
 * [ENHANCEMENT] Metric results can be cached to improve performance.
   * Thanks to [@Phil1602](https://github.com/Phil1602) for adding this as a feature!
 * [ENHANCEMENT] The default value of the `--collectors-omreport` flag is now dependent on the OS for Linux and Windows.
-  * Thanks to [@Phil1602](https://github.com/Phil1602) for adding this as a feature!
+  * Thanks to [@kyle-williams-1](https://github.com/kyle-williams-1) for adding this as a feature!
 * [ENHANCEMENT] Enabled `windows/amd64` release binary builds.
 * [ENHANCEMENT] Golang 1.15 is used by default for CI and build.
 * [ENHANCEMENT] Updated LICENSE file and go code file headers.
