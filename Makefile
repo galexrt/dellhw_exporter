@@ -27,7 +27,7 @@ else
 	GO_BUILD_PLATFORM ?= $(GOHOSTOS)-$(GOHOSTARCH)
 endif
 
-PROMU_VERSION ?= 0.5.0
+PROMU_VERSION ?= 0.7.0
 PROMU_URL     := https://github.com/prometheus/promu/releases/download/v$(PROMU_VERSION)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM).tar.gz
 
 PROMU := $(FIRST_GOPATH)/bin/promu
