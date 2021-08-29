@@ -1,3 +1,7 @@
+## 1.9.0 / 2021-08-29
+
+* [ENHANCEMENT] update go version and deps
+
 ## 1.8.0 / 2020-10-07
 
 * [ENHANCEMENT] Windows Service Support

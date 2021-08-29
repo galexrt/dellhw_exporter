@@ -31,7 +31,9 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/prometheus/common/log"
+	// TODO this is bad, we should at least use a passed in logger instead of the
+	// global logrus logger instance
+	log "github.com/sirupsen/logrus"
 )
 
 var (
