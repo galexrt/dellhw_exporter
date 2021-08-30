@@ -2,7 +2,7 @@ name: documentation
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   generate-and-publish:
     runs-on: ubuntu-latest
