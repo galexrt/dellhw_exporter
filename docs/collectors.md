@@ -18,7 +18,7 @@ All collectors are enabled by default. You can disable collectors by specifying 
 | `storage_battery`      | Status of storage controller backup batteries.                                   |
 | `storage_controller`   | Overall status of storage controllers.                                           |
 | `storage_enclosure`    | Overall status of storage enclosures.                                            |
-| `storage_pdisk`        | Overall status of physical disks.                                                |
+| `storage_pdisk`        | Overall status of physical disks + failure prediction (if available).            |
 | `storage_vdisk`        | Overall status of virtual disks.                                                 |
 | `system`               | Overall status of system components.                                             |
 | `temps`                | Overall temperatures (**in Celsius**) and status of system temperature readings. |

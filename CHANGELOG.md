@@ -1,3 +1,7 @@
+## 1.10.0 / 2021-08-30
+
+* [ENHANCEMENT] add pdisk "predicted failure" metric
+
 ## 1.9.0 / 2021-08-29
 
 * [ENHANCEMENT] update go version and deps

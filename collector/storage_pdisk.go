@@ -53,7 +53,7 @@ func (c *storagePdiskCollector) Update(ch chan<- prometheus.Metric) error {
 			}
 			c.current = prometheus.NewDesc(
 				prometheus.BuildFQName(Namespace, "", value.Name),
-				"Overall status of physical disks.",
+				"Overall status of physical disks + failure prediction (if available).",
 				nil, value.Labels)
 			ch <- prometheus.MustNewConstMetric(
 				c.current, prometheus.GaugeValue, float)

@@ -236,10 +236,14 @@ dell_hw_storage_controller_status{controller_name="Dell HBA330 Mini (Slot Embedd
 # HELP dell_hw_storage_enclosure_status Overall status of storage enclosures.
 # TYPE dell_hw_storage_enclosure_status gauge
 dell_hw_storage_enclosure_status{controller_name="Dell HBA330 Mini (Embedded)",enclosure="0_1"} 0
-# HELP dell_hw_storage_pdisk_status Overall status of physical disks.
+# HELP dell_hw_storage_pdisk_status Overall status of physical disks + failure prediction (if available).
 # TYPE dell_hw_storage_pdisk_status gauge
 dell_hw_storage_pdisk_status{controller="0",controller_name="Dell HBA330 Mini (Embedded)",disk="0_1_10"} 0
 dell_hw_storage_pdisk_status{controller="0",controller_name="Dell HBA330 Mini (Embedded)",disk="0_1_11"} 0
+# HELP dell_hw_storage_pdisk_failure_predicted Overall status of physical disks + failure prediction (if available).
+# TYPE dell_hw_storage_pdisk_failure_predicted gauge
+dell_hw_storage_pdisk_failure_predicted{controller="0",controller_name="Dell HBA330 Mini (Embedded)",disk="0_1_10"} 0
+dell_hw_storage_pdisk_failure_predicted{controller="0",controller_name="Dell HBA330 Mini (Embedded)",disk="0_1_11"} 0
 # HELP dell_hw_system_status Overall status of system components.
 # TYPE dell_hw_system_status gauge
 dell_hw_system_status{component="Main_System_Chassis"} 0
@@ -354,6 +358,4 @@ process_virtual_memory_bytes 1.22191872e+08
 # HELP process_virtual_memory_max_bytes Maximum amount of virtual memory available in bytes.
 # TYPE process_virtual_memory_max_bytes gauge
 process_virtual_memory_max_bytes -1
-
-
 ```

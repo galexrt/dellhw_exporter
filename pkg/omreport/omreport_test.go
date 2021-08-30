@@ -404,10 +404,20 @@ Controller PERC H730 Mini (Slot Embedded)
 ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remaining Rated Write Endurance;Failure Predicted;Revision;Driver Version;Model Number;T10 PI Capable;Certified;Encryption Capable;Encrypted;Progress;Mirror Set ID;Capacity;Used RAID Disk Space;Available RAID Disk Space;Hot Spare;Vendor ID;Product ID;Serial No.;Part Number;Negotiated Speed;Capable Speed;PCIe Negotiated Link Width;PCIe Maximum Link Width;Sector Size;Device Write Cache;Manufacture Day;Manufacture Week;Manufacture Year;SAS Address;Non-RAID HDD Disk Cache Policy;Disk Cache Policy;Form Factor ;Sub Vendor;ISE Capable
 0:1:0;Ok;Physical Disk 0:1:0;Ready;Not Applicable;SATA;SSD;Not Applicable;100%;No;G201DL2B;Not Applicable;Not Applicable;No;Yes;No;Not Applicable;Not Applicable;Not Applicable;185.75 GB (199447543808 bytes);185.75 GB (199447543808 bytes);0.00 GB (0 bytes);Dedicated;DELL(tm);INTEL SSDSC2BX200G4R;BTHC643503A2200TGN;CN03481GIT2006AT00P3A0;6.00 Gbps;6.00 Gbps;Not Applicable;Not Applicable;512B;Not Applicable;Not Available;Not Available;Not Available;500056B3B43B8CC0;Not Applicable;Not Applicable;Not Available;Not Available;No
 0:1:1;Ok;Physical Disk 0:1:1;Online;Not Applicable;SATA;SSD;Not Applicable;100%;No;G201DL2B;Not Applicable;Not Applicable;No;Yes;No;Not Applicable;Not Applicable;Not Applicable;185.75 GB (199447543808 bytes);185.75 GB (199447543808 bytes);0.00 GB (0 bytes);No;DELL(tm);INTEL SSDSC2BX200G4R;BTHC643503BX200TGN;CN03481GIT2006AT00PGA0;6.00 Gbps;6.00 Gbps;Not Applicable;Not Applicable;512B;Not Applicable;Not Available;Not Available;Not Available;500056B3B43B8CC1;Not Applicable;Not Applicable;Not Available;Not Available;No
+0:2:0;Ok;Physical Disk 0:1:1;Online;Not Applicable;SATA;SSD;Not Applicable;100%;Yes;G201DL2B;Not Applicable;Not Applicable;No;Yes;No;Not Applicable;Not Applicable;Not Applicable;185.75 GB (199447543808 bytes);185.75 GB (199447543808 bytes);0.00 GB (0 bytes);No;DELL(tm);INTEL SSDSC2BX200G4R;BTHC643503BX200TGN;CN03481GIT2006AT00PGA0;6.00 Gbps;6.00 Gbps;Not Applicable;Not Applicable;512B;Not Applicable;Not Available;Not Available;Not Available;500056B3B43B8CC1;Not Applicable;Not Applicable;Not Available;Not Available;No
 `,
 		Values: []Value{
 			{
 				Name:  "storage_pdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_failure_predicted",
 				Value: "0",
 				Labels: map[string]string{
 					"controller":        "0",
@@ -421,6 +431,33 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 				Labels: map[string]string{
 					"controller":        "0",
 					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_failure_predicted",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_2_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_failure_predicted",
+				Value: "1",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_2_0",
 					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
 				},
 			},
@@ -567,7 +604,6 @@ System Peak Power;Wed Dec 14 21:57:41 2016;Wed Dec 28 08:41:13 2016;1023 W
 System Peak Amperage;Wed Dec 14 21:57:41 2016;Wed Dec 28 08:41:13 2016;1.3 A
 `,
 		Values: []Value{
-			//{Name:chassis_power_reading Value:84 Labels:map[]}
 			{
 				Name:   "chassis_power_reading",
 				Value:  "84",

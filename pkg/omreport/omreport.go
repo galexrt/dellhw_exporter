@@ -265,6 +265,17 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 				controllerNameLabel: controllerName,
 			},
 		})
+		if len(fields) > 8 {
+			values = append(values, Value{
+				Name:  "storage_pdisk_failure_predicted",
+				Value: yesNoToBool(fields[9]),
+				Labels: map[string]string{
+					controllerLabel:     cid,
+					"disk":              id,
+					controllerNameLabel: controllerName,
+				},
+			})
+		}
 	}, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
 	return values, err
 }

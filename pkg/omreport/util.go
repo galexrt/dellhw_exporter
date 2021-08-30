@@ -74,6 +74,14 @@ func severity(s string) string {
 	return "0"
 }
 
+// yesNoToBool returns "1" for "Yes" and "0" for "No"
+func yesNoToBool(s string) string {
+	if s == "Yes" {
+		return "1"
+	}
+	return "0"
+}
+
 func replace(name string) string {
 	r, _ := Replace(name, "_")
 	return r
