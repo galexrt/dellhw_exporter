@@ -16,7 +16,7 @@ RUN yum -y update && \
 
 EXPOSE 9137/tcp
 
-ADD docker/entrypoint.sh /bin/entrypoint
+ADD container/entrypoint.sh /bin/entrypoint
 
 RUN chmod +x /bin/entrypoint
 

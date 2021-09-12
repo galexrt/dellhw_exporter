@@ -40,17 +40,13 @@ For flags and environment variables, see [Configuration doc page](docs/configura
 
 Optional caching can be enabled to prevent performance issues caused by this exporter, see [Caching doc page](docs/caching.md).
 
-## Running in Docker
+## Running in Container
 
-The container image is available from [Docker Hub](https://hub.docker.com/) and [Quay.io](https://quay.io/):
+The container image is available from [Quay.io](https://quay.io/) and [GHCR.io](https://ghcr.io/):
 
-### Pull the Docker image
+### Pull the Container Image
 
-#### Docker Hub
-
-```console
-docker pull galexrt/dellhw_exporter
-```
+Each Git tag is built and published as a release and container image.
 
 #### Quay.io
 
@@ -58,19 +54,23 @@ docker pull galexrt/dellhw_exporter
 docker pull quay.io/galexrt/dellhw_exporter
 ```
 
-### Run the Docker image
+#### GHCR.IO
+
+```console
+docker pull ghcr.io/galexrt/dellhw_exporter
+```
+
+### Run the Container Image
 
 > **NOTE** The `--privileged` flag is required as the OMSA needs to access the host's devices and other components.
 
 ```console
-docker run -d --name dellhw_exporter --privileged -p 9137:9137 galexrt/dellhw_exporter
-# or for quay.io
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
 ```
 
-## Running without Docker
+## Running without Docker / Podman
 
-To run without Docker either download a [release binary](https://github.com/galexrt/dellhw_exporter/releases) or build it (using `make build` command):
+To run without Docker / Podman either download a [release binary](https://github.com/galexrt/dellhw_exporter/releases) or build it (using `make build` command):
 
 ```console
 ./dellhw_exporter

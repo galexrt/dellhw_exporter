@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The dellhw_exporter Authors. All rights reserved.
+Copyright 2021 The dellhw_exporter Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/spf13/pflag"
 	flag "github.com/spf13/pflag"
 
 	"github.com/galexrt/dellhw_exporter/collector"
@@ -220,7 +219,7 @@ func init() {
 }
 
 // normalizeFlags "normalize" / alias flags that have been deprcated / removed
-func normalizeFlags(f *pflag.FlagSet, name string) pflag.NormalizedName {
+func normalizeFlags(f *flag.FlagSet, name string) flag.NormalizedName {
 	switch name {
 	case "collectors.print":
 		name = "collectors-print"
@@ -235,7 +234,7 @@ func normalizeFlags(f *pflag.FlagSet, name string) pflag.NormalizedName {
 	case "collectors.cmd-timeout":
 		name = "collectors-cmd-timeout"
 	}
-	return pflag.NormalizedName(name)
+	return flag.NormalizedName(name)
 }
 
 func flagNameFromEnvName(s string) string {

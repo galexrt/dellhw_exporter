@@ -1,8 +1,8 @@
 dellhw_exporter
-Copyright 2017-2018 Alexander Trost
+Copyright 2021 Alexander Trost
 
 
-For the components used in this product, please refer to the `vendor/` directory.
+For the components used in this product, please refer to the `go.mod` file.
 The following components were used in this product as inspiration:
 
 Bosun

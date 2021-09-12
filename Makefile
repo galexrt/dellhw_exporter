@@ -45,7 +45,7 @@ build: promu
 	GO111MODULE=$(GO111MODULE) $(PROMU) build --prefix $(PREFIX)
 
 check_license:
-	@OUTPUT="$$(promu check licenses)"; \
+	@OUTPUT="$$($(PROMU) check licenses)"; \
 	if [[ $$OUTPUT ]]; then \
 		echo "Found go files without license header:"; \
 		echo "$$OUTPUT"; \
@@ -103,12 +103,10 @@ vet:
 	@echo ">> vetting code"
 	@$(GO) vet $(pkgs)
 
-.PHONY: all build crossbuild docker format package promu style tarball test vet
-
-.PHONY: docs-serve
 docs-serve:
 	docker run --net=host --volume "$$(pwd)":"$$(pwd)" --workdir "$$(pwd)" -it squidfunk/mkdocs-material
 
-.PHONY: docs-build
 docs-build:
 	docker run --net=host --volume "$$(pwd)":"$$(pwd)" --workdir "$$(pwd)" -it squidfunk/mkdocs-material build --clean
+
+.PHONY: all build crossbuild docker format package promu style tarball test vet docs-serve docs-build
