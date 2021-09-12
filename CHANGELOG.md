@@ -1,3 +1,11 @@
+## 1.11.0 / 2021-09-12
+
+* [ENHANCEMENT] add vdisk raid level metric
+  * This adds `dell_hw_storage_vdisk_raidlevel` metric, which holds the RAID
+    level of the VDISK.
+    Additionally the controller ID label was added to some metrics missing
+    it. Resolves #8
+
 ## 1.10.0 / 2021-08-30
 
 * [ENHANCEMENT] add pdisk "predicted failure" metric
