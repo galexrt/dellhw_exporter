@@ -483,6 +483,7 @@ Controller PERC H730 Mini (Slot Embedded)
 
 ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Stripe Element Size;Disk Cache Policy
 0;Ok;GenericR5_0;Ready;Not Assigned;No;RAID-5;743.00 GB (797790175232 bytes);No;Not Applicable;/dev/sda;SATA;SSD;No Read Ahead;Write Through;Not Applicable;64 KB;Unchanged
+1;Ok;GenericR10_0;Ready;Not Assigned;No;RAID-10;743.00 GB (797790175232 bytes);No;Not Applicable;/dev/sdb;SATA;SSD;No Read Ahead;Write Through;Not Applicable;64 KB;Unchanged
 `,
 		Values: []Value{
 			{
@@ -490,6 +491,34 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protect
 				Value: "0",
 				Labels: map[string]string{
 					"vdisk":             "0",
+					"vdisk_name":        "GenericR5_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "5",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "GenericR5_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "GenericR10_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "10",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "GenericR10_0",
 					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
 				},
 			},

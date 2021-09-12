@@ -6,6 +6,8 @@ Most metrics returned besides temperature, volts, fans RPM count and others, are
 * `1` - `Critical`, the component is not okay / has potentially failed / `Unknown` status.
 * `2` - `Non-Critical`, the component is not okay, but not critical.
 
+Some metrics don't follow this pattern as they return, e.g., VDisk RAID level, "if a failure is predicted" (`0` no failure predicted, `1` a failure is predicted).
+
 ## Example Metrics Output
 
 ```plain
@@ -244,6 +246,12 @@ dell_hw_storage_pdisk_status{controller="0",controller_name="Dell HBA330 Mini (E
 # TYPE dell_hw_storage_pdisk_failure_predicted gauge
 dell_hw_storage_pdisk_failure_predicted{controller="0",controller_name="Dell HBA330 Mini (Embedded)",disk="0_1_10"} 0
 dell_hw_storage_pdisk_failure_predicted{controller="0",controller_name="Dell HBA330 Mini (Embedded)",disk="0_1_11"} 0
+# HELP dell_hw_storage_vdisk_status Overall status of virtual disks + RAID level (if available).
+# TYPE dell_hw_storage_vdisk_status gauge
+dell_hw_storage_vdisk_status{controller_name="Dell HBA330 Mini (Embedded)",vdisk="0",vdisk_name="GenericR1_0"} 0
+# HELP dell_hw_storage_vdisk_raidlevel Overall status of virtual disks + RAID level (if available).
+# TYPE dell_hw_storage_vdisk_raidlevel gauge
+dell_hw_storage_vdisk_raidlevel{controller_name="Dell HBA330 Mini (Embedded)",vdisk="0",vdisk_name="GenericR1_0"} 1
 # HELP dell_hw_system_status Overall status of system components.
 # TYPE dell_hw_system_status gauge
 dell_hw_system_status{component="Main_System_Chassis"} 0

@@ -25,6 +25,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -80,6 +81,18 @@ func yesNoToBool(s string) string {
 		return "1"
 	}
 	return "0"
+}
+
+var (
+	getNumberFromStringRegex = regexp.MustCompile("[0-9]+")
+)
+
+func getNumberFromString(s string) string {
+	result := getNumberFromStringRegex.FindString(s)
+	if result != "" {
+		return result
+	}
+	return "-1"
 }
 
 func replace(name string) string {

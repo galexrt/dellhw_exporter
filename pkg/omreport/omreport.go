@@ -297,9 +297,21 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 			Value: severity(fields[1]),
 			Labels: map[string]string{
 				"vdisk":             id,
+				"vdisk_name":        fields[2],
 				controllerNameLabel: controllerName,
 			},
 		})
+		if len(fields) > 5 {
+			values = append(values, Value{
+				Name:  "storage_vdisk_raidlevel",
+				Value: getNumberFromString(fields[6]),
+				Labels: map[string]string{
+					"vdisk":             id,
+					"vdisk_name":        fields[2],
+					controllerNameLabel: controllerName,
+				},
+			})
+		}
 	}, or.getOMReportExecutable(), "storage", "vdisk")
 	return values, err
 }

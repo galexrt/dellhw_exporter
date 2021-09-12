@@ -48,7 +48,7 @@ func (c *storageVdiskCollector) Update(ch chan<- prometheus.Metric) error {
 		}
 		c.current = prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, "", value.Name),
-			"Overall status of virtual disks.",
+			"Overall status of virtual disks + RAID level (if available).",
 			nil, value.Labels)
 		ch <- prometheus.MustNewConstMetric(
 			c.current, prometheus.GaugeValue, float)
