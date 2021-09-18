@@ -42,7 +42,10 @@ Optional caching can be enabled to prevent performance issues caused by this exp
 
 ## Running in Container
 
-The container image is available from [Quay.io](https://quay.io/) and [GHCR.io](https://ghcr.io/):
+Container Image available from:
+
+* [Quay.io](https://quay.io/repository/galexrt/dellhw_exporter)
+* [GHCR.io](https://github.com/users/galexrt/packages/container/package/dellhw_exporter)
 
 ### Pull the Container Image
 

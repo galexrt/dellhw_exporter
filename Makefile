@@ -56,7 +56,11 @@ check_license:
 
 docker:
 	@echo ">> building docker image"
-	@docker build -t "$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)" .
+	docker build \
+		--build-arg BUILD_DATE="$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+		--build-arg VCS_REF="$(shell git rev-parse HEAD)" \
+		-t "$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)" \
+		.
 
 format:
 	go fmt $(pkgs)

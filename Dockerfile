@@ -1,5 +1,20 @@
 FROM centos:7
-LABEL maintainer="Alexander Trost <galexrt@googlemail.com>"
+
+ARG BUILD_DATE="N/A"
+ARG REVISION="N/A"
+
+ARG DELLHW_EXPORTER_VERSION="N/A"
+
+LABEL org.opencontainers.image.authors="Alexander Trost <galexrt@googlemail.com>" \
+    org.opencontainers.image.created="${BUILD_DATE}" \
+    org.opencontainers.image.title="galexrt/dellhw_exporter" \
+    org.opencontainers.image.description="Prometheus exporter for Dell Hardware components using OMSA." \
+    org.opencontainers.image.documentation="https://github.com/galexrt/dellhw_exporter/blob/main/README.md" \
+    org.opencontainers.image.url="https://github.com/galexrt/dellhw_exporter" \
+    org.opencontainers.image.source="https://github.com/galexrt/dellhw_exporter" \
+    org.opencontainers.image.revision="${REVISION}" \
+    org.opencontainers.image.vendor="galexrt" \
+    org.opencontainers.image.version="${DELLHW_EXPORTER_VERSION}"
 
 # Environment variables
 ENV PATH="$PATH:/opt/dell/srvadmin/bin:/opt/dell/srvadmin/sbin" \
