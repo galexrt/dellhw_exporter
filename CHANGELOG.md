@@ -1,3 +1,7 @@
+## 1.11.1 / 2021-10-12
+
+* [ENHANCEMENT] update go version to 1.16
+
 ## 1.11.0 / 2021-09-12
 
 * [ENHANCEMENT] add vdisk raid level metric

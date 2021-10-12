@@ -26,7 +26,7 @@ The dellhw_exporter has been tested with the following OMSA versions:
 
 **State 07.06.2019**: Dell OMSA `DSU_19.05.00` is not compatible with 5.x kernel it seems (e.g., Fedora uses that kernel).
 
-Should you run into issues when using the Docker image, please follow the [Troubleshooting - No metrics being exported](#no-metrics-being-exported).
+Should you run into issues when using the Container image, please follow the [Troubleshooting - No metrics being exported](#no-metrics-being-exported).
 
 ## Collectors
 
@@ -116,6 +116,6 @@ See [Troubleshooting doc page](docs/troubleshooting.md).
 
 ## Development
 
-Golang version `1.15` is used for testing and building the dellhw_exporter.
+Golang version `1.16` is used for testing and building the dellhw_exporter.
 
 `go mod` is used for "vendoring" of the dependencies.
