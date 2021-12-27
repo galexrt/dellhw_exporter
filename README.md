@@ -47,6 +47,8 @@ Container Image available from:
 * [Quay.io](https://quay.io/repository/galexrt/dellhw_exporter)
 * [GHCR.io](https://github.com/users/galexrt/packages/container/package/dellhw_exporter)
 
+(Docker Hub is not receiving new images begining from release `v1.10.0`)
+
 ### Pull the Container Image
 
 Each Git tag is built and published as a release and container image.

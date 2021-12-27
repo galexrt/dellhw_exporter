@@ -4,7 +4,7 @@
 
 image:
   # -- Image repository
-  repository: galexrt/dellhw-exporter
+  repository: quay.io/galexrt/dellhw-exporter
   # -- Override the `imagePullPolicy`
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion.
