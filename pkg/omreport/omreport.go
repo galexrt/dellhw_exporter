@@ -275,6 +275,15 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 					controllerNameLabel: controllerName,
 				},
 			})
+			values = append(values, Value{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: getNumberFromString(fields[8]),
+				Labels: map[string]string{
+					controllerLabel:     cid,
+					"disk":              id,
+					controllerNameLabel: controllerName,
+				},
+			})
 		}
 	}, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
 	return values, err

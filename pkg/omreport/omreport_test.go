@@ -426,6 +426,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 				},
 			},
 			{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: "100",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
 				Name:  "storage_pdisk_status",
 				Value: "0",
 				Labels: map[string]string{
@@ -437,6 +446,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 			{
 				Name:  "storage_pdisk_failure_predicted",
 				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: "100",
 				Labels: map[string]string{
 					"controller":        "0",
 					"disk":              "0_1_1",
@@ -455,6 +473,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 			{
 				Name:  "storage_pdisk_failure_predicted",
 				Value: "1",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_2_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: "100",
 				Labels: map[string]string{
 					"controller":        "0",
 					"disk":              "0_2_0",
