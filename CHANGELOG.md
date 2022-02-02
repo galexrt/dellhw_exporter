@@ -1,3 +1,7 @@
+## 1.12.0 / 2022-02-02
+
+* [ENHANCEMENT] Added Pdisk Remaining Rated Write Endurance Metric by @adityaborgaonkar
+
 ## 1.11.1 / 2021-10-12
 
 * [ENHANCEMENT] update go version to 1.16
