@@ -1,3 +1,8 @@
+## 1.12.1 / 2022-05-04
+
+* [ENHANCEMENT] update deps to latest version
+* [ENHANCEMENT] updated minimum go version to 1.18
+
 ## 1.12.0 / 2022-02-02
 
 * [ENHANCEMENT] Added Pdisk Remaining Rated Write Endurance Metric by @adityaborgaonkar
