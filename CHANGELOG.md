@@ -1,3 +1,7 @@
+## 1.12.2 / 2022-05-31
+
+* [SECURITY] update gopkg.in/yaml.v3 to v3.0.1 (CVE-2022-28948)
+
 ## 1.12.1 / 2022-05-04
 
 * [ENHANCEMENT] update deps to latest version
