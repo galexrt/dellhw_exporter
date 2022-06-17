@@ -75,6 +75,27 @@ func severity(s string) string {
 	return "0"
 }
 
+func state(s string) string {
+    states := map[string]string {
+        `Unknown`: "0",
+        `Ready`: "1",
+        `Online`: "2",
+        `Degraded`: "3",
+        `Failed`: "4",
+        `Offline`: "5",
+        `Rebuilding`: "6",
+        `Incompatible`: "7",
+        `Removed`: "8",
+        `Clear`: "9",
+        `SMART Alert Detected`: "10",
+        `Foreign`: "11",
+        `Unsupported`: "12",
+        `Replacing`: "13",
+    }
+
+    return states[s]
+}
+
 // yesNoToBool returns "1" for "Yes" and "0" for "No"
 func yesNoToBool(s string) string {
 	if s == "Yes" {
