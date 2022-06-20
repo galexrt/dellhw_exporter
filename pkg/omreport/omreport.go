@@ -267,15 +267,15 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 			},
 		})
 
-        values = append(values, Value{
-            Name:  "storage_pdisk_state",
-            Value: state(fields[3]),
-            Labels: map[string]string{
-                controllerLabel:     cid,
-                "disk":              id,
-                controllerNameLabel: controllerName,
-            },
-        })
+		values = append(values, Value{
+			Name:  "storage_pdisk_state",
+			Value: state(fields[3]),
+			Labels: map[string]string{
+				controllerLabel:     cid,
+				"disk":              id,
+				controllerNameLabel: controllerName,
+			},
+		})
 
 		if len(fields) > 8 {
 			values = append(values, Value{
