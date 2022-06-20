@@ -269,7 +269,7 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 
 		values = append(values, Value{
 			Name:  "storage_pdisk_state",
-			Value: state(fields[3]),
+			Value: pdiskState(fields[3]),
 			Labels: map[string]string{
 				controllerLabel:     cid,
 				"disk":              id,
@@ -322,10 +322,51 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 				controllerNameLabel: controllerName,
 			},
 		})
+
+		values = append(values, Value{
+			Name:  "storage_vdisk_state",
+			Value: vdiskState(fields[3]),
+			Labels: map[string]string{
+				"vdisk":             id,
+				"vdisk_name":        fields[2],
+				controllerNameLabel: controllerName,
+			},
+		})
+
 		if len(fields) > 5 {
 			values = append(values, Value{
 				Name:  "storage_vdisk_raidlevel",
 				Value: getNumberFromString(fields[6]),
+				Labels: map[string]string{
+					"vdisk":             id,
+					"vdisk_name":        fields[2],
+					controllerNameLabel: controllerName,
+				},
+			})
+
+			values = append(values, Value{
+				Name:  "storage_vdisk_read_policy",
+				Value: vdiskReadPolicy(fields[13]),
+				Labels: map[string]string{
+					"vdisk":             id,
+					"vdisk_name":        fields[2],
+					controllerNameLabel: controllerName,
+				},
+			})
+
+			values = append(values, Value{
+				Name:  "storage_vdisk_write_policy",
+				Value: vdiskWritePolicy(fields[14]),
+				Labels: map[string]string{
+					"vdisk":             id,
+					"vdisk_name":        fields[2],
+					controllerNameLabel: controllerName,
+				},
+			})
+
+			values = append(values, Value{
+				Name:  "storage_vdisk_cache_policy",
+				Value: vdiskCachePolicy(fields[15]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
