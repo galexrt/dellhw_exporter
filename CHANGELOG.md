@@ -1,3 +1,16 @@
+## 1.12.2 / 2022-05-31
+
+* [SECURITY] update gopkg.in/yaml.v3 to v3.0.1 (CVE-2022-28948)
+
+## 1.12.1 / 2022-05-04
+
+* [ENHANCEMENT] update deps to latest version
+* [ENHANCEMENT] updated minimum go version to 1.18
+
+## 1.12.0 / 2022-02-02
+
+* [ENHANCEMENT] Added Pdisk Remaining Rated Write Endurance Metric by @adityaborgaonkar
+
 ## 1.11.1 / 2021-10-12
 
 * [ENHANCEMENT] update go version to 1.16
