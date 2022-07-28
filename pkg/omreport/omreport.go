@@ -249,52 +249,52 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 	controllerName := "N/A"
 	err := or.readReport(func(fields []string) {
 		if len(fields) == 1 && strings.HasPrefix(fields[0], omReportControllerNamePrefix) {
-				controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
-				return
+			controllerName = strings.TrimPrefix(fields[0], omReportControllerNamePrefix)
+			return
 		} else if len(fields) < 3 || fields[0] == "ID" {
-				return
+			return
 		}
 		// Need to find out what the various ID formats might be
 		id := strings.Replace(fields[0], ":", "_", -1)
 		values = append(values, Value{
-				Name:  "storage_pdisk_status",
-				Value: severity(fields[1]),
+			Name:  "storage_pdisk_status",
+			Value: severity(fields[1]),
+			Labels: map[string]string{
+				controllerLabel:     cid,
+				"disk":              id,
+				controllerNameLabel: controllerName,
+			},
+		})
+		if len(fields) > 8 {
+			values = append(values, Value{
+				Name:  "storage_pdisk_failure_predicted",
+				Value: yesNoToBool(fields[9]),
 				Labels: map[string]string{
+					controllerLabel:     cid,
+					"disk":              id,
+					controllerNameLabel: controllerName,
+				},
+			})
+			values = append(values, Value{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: getNumberFromString(fields[8]),
+				Labels: map[string]string{
+					controllerLabel:     cid,
+					"disk":              id,
+					controllerNameLabel: controllerName,
+				},
+			})
+			if fields[15] == "Yes" {
+				values = append(values, Value{
+					Name:  "storage_pdisk_storage_encrypted",
+					Value: yesNoToBool(fields[16]),
+					Labels: map[string]string{
 						controllerLabel:     cid,
 						"disk":              id,
 						controllerNameLabel: controllerName,
-				},
-		})
-		if len(fields) > 8 {
-				values = append(values, Value{
-						Name:  "storage_pdisk_failure_predicted",
-						Value: yesNoToBool(fields[9]),
-						Labels: map[string]string{
-								controllerLabel:     cid,
-								"disk":              id,
-								controllerNameLabel: controllerName,
-						},
+					},
 				})
-				values = append(values, Value{
-						Name:  "storage_pdisk_remaining_rated_write_endurance",
-						Value: getNumberFromString(fields[8]),
-						Labels: map[string]string{
-								controllerLabel:     cid,
-								"disk":              id,
-								controllerNameLabel: controllerName,
-						},
-				})
-				if fields[15] == "Yes" {
-						values = append(values, Value{
-								Name:  "storage_pdisk_storage_encryption",
-								Value: yesNoToBool(fields[17]),
-								Labels: map[string]string{
-										controllerLabel:     cid,
-										"disk":              id,
-										controllerNameLabel: controllerName,
-								},
-						})
-				}
+			}
 		}
 	}, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
 	return values, err
