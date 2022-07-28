@@ -407,88 +407,115 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 0:2:0;Ok;Physical Disk 0:1:1;Online;Not Applicable;SATA;SSD;Not Applicable;100%;Yes;G201DL2B;Not Applicable;Not Applicable;No;Yes;No;Not Applicable;Not Applicable;Not Applicable;185.75 GB (199447543808 bytes);185.75 GB (199447543808 bytes);0.00 GB (0 bytes);No;DELL(tm);INTEL SSDSC2BX200G4R;BTHC643503BX200TGN;CN03481GIT2006AT00PGA0;6.00 Gbps;6.00 Gbps;Not Applicable;Not Applicable;512B;Not Applicable;Not Available;Not Available;Not Available;500056B3B43B8CC1;Not Applicable;Not Applicable;Not Available;Not Available;No
 `,
 		Values: []Value{
-			{
-				Name:  "storage_pdisk_status",
-				Value: "0",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_1_0",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				{
+						Name:  "storage_pdisk_status",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_failure_predicted",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_remaining_rated_write_endurance",
+						Value: "100",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_storage_encryption",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_status",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_1",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_failure_predicted",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_1",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_remaining_rated_write_endurance",
+						Value: "100",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_1",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_storage_encryption",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_1_1",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_status",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_2_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_failure_predicted",
+						Value: "1",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_2_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_remaining_rated_write_endurance",
+						Value: "100",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_2_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
+				},
+				{
+						Name:  "storage_pdisk_storage_encryption",
+						Value: "0",
+						Labels: map[string]string{
+								"controller":        "0",
+								"disk":              "0_2_0",
+								controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+						},
 				},
 			},
-			{
-				Name:  "storage_pdisk_failure_predicted",
-				Value: "0",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_1_0",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-			{
-				Name:  "storage_pdisk_remaining_rated_write_endurance",
-				Value: "100",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_1_0",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-			{
-				Name:  "storage_pdisk_status",
-				Value: "0",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_1_1",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-			{
-				Name:  "storage_pdisk_failure_predicted",
-				Value: "0",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_1_1",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-			{
-				Name:  "storage_pdisk_remaining_rated_write_endurance",
-				Value: "100",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_1_1",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-			{
-				Name:  "storage_pdisk_status",
-				Value: "0",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_2_0",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-			{
-				Name:  "storage_pdisk_failure_predicted",
-				Value: "1",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_2_0",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-			{
-				Name:  "storage_pdisk_remaining_rated_write_endurance",
-				Value: "100",
-				Labels: map[string]string{
-					"controller":        "0",
-					"disk":              "0_2_0",
-					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
-				},
-			},
-		},
 	},
 }
 
