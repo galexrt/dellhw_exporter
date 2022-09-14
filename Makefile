@@ -87,6 +87,9 @@ install: build
 	cp systemd/dellhw_exporter.service $(DESTDIR)/usr/lib/systemd/system
 	cp systemd/sysconfig.dellhw_exporter $(DESTDIR)/etc/sysconfig/dellhw_exporter
 	
+
+$(PROJECTNAME).spec: $(PROJECTNAME).spec.in
+	sed -e's#@VERSION@#$(VERSION)#g' $< > $@
 	
 rpm: dist $(PROJECTNAME).spec
 	mkdir -p $(TOPDIR)/SOURCES \
