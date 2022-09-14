@@ -123,7 +123,11 @@ dist:
 	@rm -rf .srcpackage
 	@mkdir .srcpackage
 	cp -r $(FILELIST) .srcpackage/
-	tar --transform "s/\.srcpackage/$(PROJECTNAME)-$(shell cat VERSION)/" -zcvf $(PROJECTNAME)-$(shell cat VERSION).tar.gz .srcpackage
+	tar --transform "s/\.srcpackage/$(PROJECTNAME)-$(VERSION)/" -zcvf $(PROJECTNAME)-$(VERSION).tar.gz .srcpackage
+	
+clean:
+	rm -rf .srcpackage RPMBUILD $(PROJECTNAME) $(PROJECTNAME).spec $(PROJECTNAME)-$(VERSION).tar.gz 
+	
 	
 test:
 	@$(GO) test $(pkgs)
