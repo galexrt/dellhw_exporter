@@ -33,10 +33,7 @@ _testmain.go
 /.tarball/
 
 # RPM
+dellhw_exporter.spec
 .srcpackage/
-BUILD/
-RPMS/
-SPECS/
-SRPMS/
-BUILDROOT/
+RPMBUILD
 

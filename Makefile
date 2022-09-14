@@ -16,6 +16,8 @@ PACKAGE_ARCH ?= linux-amd64
 VERSION      := $(shell cat VERSION)
 TOPDIR       := $(shell pwd)
 
+RPMBUILD     := $(TOPDIR)/RPMBUILD
+
 # The GOHOSTARM and PROMU parts have been taken from the prometheus/promu repository
 # which is licensed under Apache License 2.0 Copyright 2018 The Prometheus Authors
 FIRST_GOPATH := $(firstword $(subst :, ,$(shell $(GO) env GOPATH)))
@@ -92,13 +94,13 @@ $(PROJECTNAME).spec: $(PROJECTNAME).spec.in
 	sed -e's#@VERSION@#$(VERSION)#g' $< > $@
 	
 rpm: dist $(PROJECTNAME).spec
-	mkdir -p $(TOPDIR)/SOURCES \
-	$(TOPDIR)/SPECS \
-	$(TOPDIR)/BUILD \
-	$(TOPDIR)/RPMS $(TOPDIR)/SRPMS
-	cp $(PROJECTNAME)-$(VERSION).tar.gz $(TOPDIR)/SOURCES
-	cp $(PROJECTNAME).spec $(TOPDIR)/SPECS
-	rpmbuild -vv --define "_topdir $(TOPDIR)" -ba $(PROJECTNAME).spec
+	mkdir -p $(RPMBUILD)/SOURCES \
+	$(RPMBUILD)/SPECS \
+	$(RPMBUILD)/BUILD \
+	$(RPMBUILD)/RPMS $(RPMBUILD)/SRPMS
+	cp $(PROJECTNAME)-$(VERSION).tar.gz $(RPMBUILD)/SOURCES/
+	cp $(PROJECTNAME).spec $(RPMBUILD)/SPECS/
+	rpmbuild -vv --define "_topdir $(RPMBUILD)" -ba $(PROJECTNAME).spec
 
 
 promu:
