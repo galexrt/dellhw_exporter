@@ -74,7 +74,7 @@ docker:
 format:
 	go fmt $(pkgs)
 
-
+	
 tree: build
 	mkdir -p -m0755 $(PACKAGE_DIR)/lib/systemd/system $(PACKAGE_DIR)/usr/sbin
 	mkdir -p $(PACKAGE_DIR)/etc/sysconfig
@@ -82,6 +82,18 @@ tree: build
 	cp systemd/dellhw_exporter.service $(PACKAGE_DIR)/lib/systemd/system
 	cp systemd/sysconfig.dellhw_exporter $(PACKAGE_DIR)/etc/sysconfig/dellhw_exporter
 
+package-%: tree
+	cd $(PACKAGE_DIR) && $(FPM) -s dir -t $(patsubst package-%, %, $@) \
+	--deb-user root --deb-group root \
+	--name $(PROJECTNAME) \
+	--version $(shell cat VERSION) \
+	--architecture $(PACKAGE_ARCH) \
+	--description "$(DESCRIPTION)" \
+	--maintainer "$(MAINTAINER)" \
+	--url $(HOMEPAGE) \
+	usr/ etc/
+	
+	
 install: build
 	mkdir -p -m0755 $(DESTDIR)/usr/lib/systemd/system $(DESTDIR)/usr/sbin
 	mkdir -p $(DESTDIR)/etc/sysconfig
