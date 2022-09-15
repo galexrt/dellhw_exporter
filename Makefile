@@ -76,9 +76,9 @@ format:
 
 
 tree: build
-	mkdir -p -m0755 $(PACKAGE_DIR)/lib/systemd/system $(PACKAGE_DIR)/usr/bin
+	mkdir -p -m0755 $(PACKAGE_DIR)/lib/systemd/system $(PACKAGE_DIR)/usr/sbin
 	mkdir -p $(PACKAGE_DIR)/etc/sysconfig
-	cp dellhw_exporter $(PACKAGE_DIR)/usr/bin
+	cp dellhw_exporter $(PACKAGE_DIR)/usr/sbin
 	cp systemd/dellhw_exporter.service $(PACKAGE_DIR)/lib/systemd/system
 	cp systemd/sysconfig.dellhw_exporter $(PACKAGE_DIR)/etc/sysconfig/dellhw_exporter
 
