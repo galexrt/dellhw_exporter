@@ -22,6 +22,7 @@ _testmain.go
 *.exe
 *.test
 *.prof
+*.tar.gz
 .idea/
 .build/
 .tarballs/
@@ -30,3 +31,9 @@ _testmain.go
 /.bin/
 /.build/
 /.tarball/
+
+# RPM
+dellhw_exporter.spec
+.srcpackage/
+RPMBUILD
+
