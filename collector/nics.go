@@ -24,6 +24,7 @@ import (
 
 type nicsCollector struct {
 	current *prometheus.Desc
+  nicList []string
 }
 
 func init() {
@@ -37,7 +38,7 @@ func NewNicsCollector() (Collector, error) {
 
 // Update Prometheus metrics
 func (c *nicsCollector) Update(ch chan<- prometheus.Metric) error {
-	nics, err := or.Nics()
+	nics, err := or.Nics(c.nicList...)
 	if err != nil {
 		return err
 	}
