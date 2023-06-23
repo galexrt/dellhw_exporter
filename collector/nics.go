@@ -24,7 +24,7 @@ import (
 
 type nicsCollector struct {
 	current *prometheus.Desc
-  nicList []string
+  	nicList []string
 }
 
 func init() {
@@ -32,8 +32,8 @@ func init() {
 }
 
 // NewNicsCollector returns a new nicsCollector
-func NewNicsCollector() (Collector, error) {
-	return &nicsCollector{}, nil
+func NewNicsCollector(nics ...string) (Collector, error) {
+	return &nicsCollector{nicList: nics}, nil
 }
 
 // Update Prometheus metrics

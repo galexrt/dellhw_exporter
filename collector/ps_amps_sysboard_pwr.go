@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewPsAmpsSysboardPwrCollector returns a new psAmpsSysboardPwrCollector
-func NewPsAmpsSysboardPwrCollector() (Collector, error) {
+func NewPsAmpsSysboardPwrCollector(args ...string) (Collector, error) {
 	return &psAmpsSysboardPwrCollector{}, nil
 }
 

@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewChassisCollector returns a new chassisCollector
-func NewChassisCollector() (Collector, error) {
+func NewChassisCollector(args ...string) (Collector, error) {
 	return &chassisCollector{}, nil
 }
 

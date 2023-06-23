@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewStorageEnclosureCollector returns a new storageEnclosureCollector
-func NewStorageEnclosureCollector() (Collector, error) {
+func NewStorageEnclosureCollector(args ...string) (Collector, error) {
 	return &storageEnclosureCollector{}, nil
 }
 

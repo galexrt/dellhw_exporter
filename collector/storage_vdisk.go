@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewStorageVdiskCollector returns a new storageVdiskCollector
-func NewStorageVdiskCollector() (Collector, error) {
+func NewStorageVdiskCollector(args ...string) (Collector, error) {
 	return &storageVdiskCollector{}, nil
 }
 
