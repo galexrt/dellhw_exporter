@@ -398,8 +398,8 @@ func (or *OMReport) Nics(nicList ...string) ([]Value, error) {
         Name:   "nic_status",
         Value:  ret,
         Labels: ts,
-      }
-    })
+      })
+    }
 	}, or.getOMReportExecutable(), "chassis", "nics")
 	return values, err
 }
