@@ -67,7 +67,7 @@ type CmdLineOpts struct {
 	metricsAddr        string
 	metricsPath        string
 	enabledCollectors  string
-  monitoredNics      string
+	monitoredNics      string
 	omReportExecutable string
 	cmdTimeout         int64
 
@@ -167,10 +167,12 @@ func (p *program) Start(s service.Service) error {
 
 	collector.SetOMReport(omreport.New(omrOpts))
 
-  monitoredNics := []string
-  for _, nic := range strings.Split(opts.monitoredNics, ",") {
-    monitoredNics = append(monitoredNics, nic)
-    log.Info("Adding %s to list of monitored nics", nic)
+  monitoredNics := []string{}
+  if len(opts.monitoredNics) > 0 {
+    for _, nic := range strings.Split(opts.monitoredNics, ",") {
+      monitoredNics = append(monitoredNics, nic)
+      log.Infof("Adding %s to list of monitored nics", nic)
+    }
   }
 
 	collectors, err := loadCollectors(opts.enabledCollectors, monitoredNics)
@@ -357,16 +359,18 @@ func execute(name string, c collector.Collector, ch chan<- prometheus.Metric) {
 
 func loadCollectors(list string, nicList []string) (map[string]collector.Collector, error) {
 	collectors := map[string]collector.Collector{}
+	var c collector.Collector
+	var err error
 	for _, name := range strings.Split(list, ",") {
 		fn, ok := collector.Factories[name]
 		if !ok {
 			return nil, fmt.Errorf("collector '%s' not available", name)
 		}
-    if name == "nics" {
-      c, err := fn(nicList...)
-    } else {
-		  c, err := fn()
-    }
+		if name == "nics" {
+			c, err = fn(nicList...)
+		} else {
+			c, err = fn()
+		}
 		if err != nil {
 			return nil, err
 		}
