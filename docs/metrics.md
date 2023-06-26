@@ -8,10 +8,19 @@ Most metrics returned besides temperature, volts, fans RPM count and others, are
 
 Some metrics don't follow this pattern as they return, e.g., VDisk RAID level, "if a failure is predicted" (`0` no failure predicted, `1` a failure is predicted).
 
+### PDisk and VDisk States, VDisk Policy Values
+
+Can be found in the [`pkg/omreport/util.go` file](pkg/omreport/util.go).
+
 ## Example Metrics Output
 
-```plain
+!!! note
+    Due to my lack of having access to a "fully equipped" DELL server anymore, this example metrics output is not complete.
+    E.g., `dell_hw_storage_pdisk_state`, `dell_hw_nic_status`, some policy metrics of `dell_hw_storage_vdisk_*`.
 
+    If you want to contribute a `/metrics` output of the exporter, please open an issue or a pull request, thanks!
+
+```plain
 # HELP dell_hw_bios Version info of firmwares/bios.
 # TYPE dell_hw_bios gauge
 dell_hw_bios{manufacturer="dell inc.",release_date="06/26/2020",version="2.8.1"} 0

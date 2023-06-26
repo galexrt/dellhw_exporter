@@ -417,6 +417,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 				},
 			},
 			{
+				Name:  "storage_pdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
 				Name:  "storage_pdisk_failure_predicted",
 				Value: "0",
 				Labels: map[string]string{
@@ -444,6 +453,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 				},
 			},
 			{
+				Name:  "storage_pdisk_state",
+				Value: "2",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
 				Name:  "storage_pdisk_failure_predicted",
 				Value: "0",
 				Labels: map[string]string{
@@ -464,6 +482,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 			{
 				Name:  "storage_pdisk_status",
 				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_2_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_state",
+				Value: "2",
 				Labels: map[string]string{
 					"controller":        "0",
 					"disk":              "0_2_0",
@@ -523,8 +550,44 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protect
 				},
 			},
 			{
+				Name:  "storage_vdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "GenericR5_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
 				Name:  "storage_vdisk_raidlevel",
 				Value: "5",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "GenericR5_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "2",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "GenericR5_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "4",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "GenericR5_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
 				Labels: map[string]string{
 					"vdisk":             "0",
 					"vdisk_name":        "GenericR5_0",
@@ -541,8 +604,44 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protect
 				},
 			},
 			{
+				Name:  "storage_vdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "GenericR10_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
 				Name:  "storage_vdisk_raidlevel",
 				Value: "10",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "GenericR10_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "2",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "GenericR10_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "4",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "GenericR10_0",
+					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
 				Labels: map[string]string{
 					"vdisk":             "1",
 					"vdisk_name":        "GenericR10_0",
