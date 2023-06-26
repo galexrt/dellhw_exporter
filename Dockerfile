@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:8
 
 ARG BUILD_DATE="N/A"
 ARG REVISION="N/A"
