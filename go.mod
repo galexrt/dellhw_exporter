@@ -3,7 +3,7 @@ module github.com/galexrt/dellhw_exporter
 go 1.18
 
 require (
-	github.com/kardianos/service v1.2.1
+	github.com/kardianos/service v1.2.2
 	github.com/prometheus/client_golang v1.16.0
 	github.com/prometheus/common v0.42.0
 	github.com/sirupsen/logrus v1.8.1
