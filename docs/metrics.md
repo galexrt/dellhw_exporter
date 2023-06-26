@@ -10,8 +10,13 @@ Some metrics don't follow this pattern as they return, e.g., VDisk RAID level, "
 
 ## Example Metrics Output
 
-```plain
+!!! note
+    Due to my lack of having access to a "fully equipped" DELL server anymore, this example metrics output is not complete.
+    E.g., `dell_hw_storage_pdisk_state` and `dell_hw_nic_status`.
 
+    If you want to contribute a `/metrics` output of the exporter, please open an issue or a pull request, thanks!
+
+```plain
 # HELP dell_hw_bios Version info of firmwares/bios.
 # TYPE dell_hw_bios gauge
 dell_hw_bios{manufacturer="dell inc.",release_date="06/26/2020",version="2.8.1"} 0
