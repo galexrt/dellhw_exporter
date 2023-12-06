@@ -75,6 +75,82 @@ func severity(s string) string {
 	return "0"
 }
 
+func pdiskState(s string) string {
+	states := map[string]string{
+		"Unknown":              "0",
+		"Ready":                "1",
+		"Online":               "2",
+		"Degraded":             "3",
+		"Failed":               "4",
+		"Offline":              "5",
+		"Rebuilding":           "6",
+		"Incompatible":         "7",
+		"Removed":              "8",
+		"Clear":                "9",
+		"SMART Alert Detected": "10",
+		"Foreign":              "11",
+		"Unsupported":          "12",
+		"Replacing":            "13",
+	}
+
+	return states[s]
+}
+
+func vdiskState(s string) string {
+	states := map[string]string{
+		"Ready":                     "1",
+		"Degraded":                  "2",
+		"Resynching":                "3",
+		"Resynching Paused":         "4",
+		"Regenerating":              "5",
+		"Reconstructing":            "6",
+		"Failed":                    "7",
+		"Failed Redundancy":         "8",
+		"Background Initialization": "9",
+		"Formatting":                "10",
+		"Initializing":              "11",
+		"Degraded Redundancy":       "12",
+	}
+
+	return states[s]
+}
+
+func vdiskReadPolicy(s string) string {
+	policies := map[string]string{
+		"Not Applicable":      "0",
+		"Read Ahead":          "1",
+		"No Read Ahead":       "2",
+		"Read Cache Enabled":  "3",
+		"Read Cache Disabled": "4",
+	}
+
+	return policies[s]
+}
+
+func vdiskWritePolicy(s string) string {
+	policies := map[string]string{
+		"Not Applicable":                "0",
+		"Write Ahead":                   "1",
+		"Force Write Back":              "2",
+		"Write Back Enabled":            "3",
+		"Write Through":                 "4",
+		"Write Cache Enabled Protected": "5",
+		"Write Cache Disabled":          "6",
+	}
+
+	return policies[s]
+}
+
+func vdiskCachePolicy(s string) string {
+	policies := map[string]string{
+		"Not Applicable": "0",
+		"Cache I/O":      "1",
+		"Direct I/O":     "2",
+	}
+
+	return policies[s]
+}
+
 // yesNoToBool returns "1" for "Yes" and "0" for "No"
 func yesNoToBool(s string) string {
 	if s == "Yes" {
