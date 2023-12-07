@@ -433,16 +433,16 @@ func (or *OMReport) Ps() ([]Value, error) {
 // Nics returns the connection status of the NICs
 func (or *OMReport) Nics(nicList ...string) ([]Value, error) {
 	values := []Value{}
-  monitorAllNics := false
-  monitoredNics := make(map[string]bool)
+	monitorAllNics := false
+	monitoredNics := make(map[string]bool)
 
-  if len(nicList) == 0 {
-    monitorAllNics = true
-  }
+	if len(nicList) == 0 {
+		monitorAllNics = true
+	}
 
-  for _, nic := range nicList {
-    monitoredNics[nic] = true
-  }
+	for _, nic := range nicList {
+		monitoredNics[nic] = true
+	}
 
 	err := or.readReport(func(fields []string) {
 		if len(fields) < 5 || fields[0] == indexField {
@@ -456,14 +456,14 @@ func (or *OMReport) Nics(nicList ...string) ([]Value, error) {
 		} else {
 			ret = "1"
 		}
-    dev := ts["device"]
-    if monitorAllNics || monitoredNics[dev] {
-      values = append(values, Value{
-        Name:   "nic_status",
-        Value:  ret,
-        Labels: ts,
-      })
-    }
+		dev := ts["device"]
+		if monitorAllNics || monitoredNics[dev] {
+			values = append(values, Value{
+				Name:   "nic_status",
+				Value:  ret,
+				Labels: ts,
+			})
+		}
 	}, or.getOMReportExecutable(), "chassis", "nics")
 	return values, err
 }

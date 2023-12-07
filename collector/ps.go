@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewPsCollector returns new psCollector
-func NewPsCollector(args ...string) (Collector, error) {
+func NewPsCollector(cfg *Config) (Collector, error) {
 	return &psCollector{}, nil
 }
 

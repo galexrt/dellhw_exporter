@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewSystemCollector returns a new systemCollector
-func NewSystemCollector(args ...string) (Collector, error) {
+func NewSystemCollector(cfg *Config) (Collector, error) {
 	return &systemCollector{}, nil
 }
 

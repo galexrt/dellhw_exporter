@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewFansCollector returns a new fansCollector
-func NewFansCollector(args ...string) (Collector, error) {
+func NewFansCollector(cfg *Config) (Collector, error) {
 	return &fansCollector{}, nil
 }
 
