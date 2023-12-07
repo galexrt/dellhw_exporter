@@ -1,3 +1,9 @@
+## 1.13.0 / 2023-12-07
+
+* [ENHANCEMENT] [Allow for user to specify a list of interfaces to monitor #89](https://github.com/galexrt/dellhw_exporter/pull/89)
+* [ENHANCEMENT] Added Storage Pdisk Hardware Encryption status
+* [SECURITY] Updated dependencies to latest version
+
 ## 1.12.2 / 2022-05-31
 
 * [SECURITY] update gopkg.in/yaml.v3 to v3.0.1 (CVE-2022-28948)
