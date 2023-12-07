@@ -351,7 +351,15 @@
 <span class=normal>351</span>
 <span class=normal>352</span>
 <span class=normal>353</span>
-<span class=normal>354</span></pre></div></td><td class=code><div><pre><span></span><code># HELP dell_hw_bios Version info of firmwares/bios.
+<span class=normal>354</span>
+<span class=normal>355</span>
+<span class=normal>356</span>
+<span class=normal>357</span>
+<span class=normal>358</span>
+<span class=normal>359</span>
+<span class=normal>360</span>
+<span class=normal>361</span>
+<span class=normal>362</span></pre></div></td><td class=code><div><pre><span></span><code># HELP dell_hw_bios Version info of firmwares/bios.
 # TYPE dell_hw_bios gauge
 dell_hw_bios{manufacturer=&quot;dell inc.&quot;,release_date=&quot;06/26/2020&quot;,version=&quot;2.8.1&quot;} 0
 # HELP dell_hw_chassis_current_reading System board power usage.
@@ -585,6 +593,14 @@ dell_hw_storage_pdisk_status{controller=&quot;0&quot;,controller_name=&quot;Dell
 # TYPE dell_hw_storage_pdisk_failure_predicted gauge
 dell_hw_storage_pdisk_failure_predicted{controller=&quot;0&quot;,controller_name=&quot;Dell HBA330 Mini (Embedded)&quot;,disk=&quot;0_1_10&quot;} 0
 dell_hw_storage_pdisk_failure_predicted{controller=&quot;0&quot;,controller_name=&quot;Dell HBA330 Mini (Embedded)&quot;,disk=&quot;0_1_11&quot;} 0
+# HELP storage_pdisk_remaining_rated_write_endurance Overall status of physical disks + failure prediction (if available).
+# TYPE storage_pdisk_remaining_rated_write_endurance gauge
+storage_pdisk_remaining_rated_write_endurance{controller=&quot;0&quot;,controller_name=&quot;Dell HBA330 Mini (Embedded)&quot;,disk=&quot;0_1_10&quot;} 100
+storage_pdisk_remaining_rated_write_endurance{controller=&quot;0&quot;,controller_name=&quot;Dell HBA330 Mini (Embedded)&quot;,disk=&quot;0_1_11&quot;} 100
+# HELP storage_pdisk_storage_encrypted Overall status of physical disks + failure prediction (if available).
+# TYPE storage_pdisk_storage_encrypted gauge
+storage_pdisk_storage_encrypted{controller=&quot;0&quot;,controller_name=&quot;Dell HBA330 Mini (Embedded)&quot;,disk=&quot;0_1_10&quot;} 0
+storage_pdisk_storage_encrypted{controller=&quot;0&quot;,controller_name=&quot;Dell HBA330 Mini (Embedded)&quot;,disk=&quot;0_1_11&quot;} 0
 # HELP dell_hw_storage_vdisk_status Overall status of virtual disks + RAID level (if available).
 # TYPE dell_hw_storage_vdisk_status gauge
 dell_hw_storage_vdisk_status{controller_name=&quot;Dell HBA330 Mini (Embedded)&quot;,vdisk=&quot;0&quot;,vdisk_name=&quot;GenericR1_0&quot;} 0
