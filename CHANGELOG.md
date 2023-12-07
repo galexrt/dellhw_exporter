@@ -1,3 +1,7 @@
+## 1.13.1 / 2023-12-07
+
+* [BUGFIX] Fix container image build issue caused by wget, use curl now
+
 ## 1.13.0 / 2023-12-07
 
 * [ENHANCEMENT] [Allow for user to specify a list of interfaces to monitor #89](https://github.com/galexrt/dellhw_exporter/pull/89)
