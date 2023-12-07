@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewFirmwaresCollector returns a new firmwaresCollector
-func NewFirmwaresCollector() (Collector, error) {
+func NewFirmwaresCollector(args ...string) (Collector, error) {
 	return &firmwaresCollector{}, nil
 }
 

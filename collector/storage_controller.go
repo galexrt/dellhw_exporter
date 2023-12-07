@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewStorageControllerCollector returns a new storageControllerCollector
-func NewStorageControllerCollector() (Collector, error) {
+func NewStorageControllerCollector(args ...string) (Collector, error) {
 	return &storageControllerCollector{}, nil
 }
 

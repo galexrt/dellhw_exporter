@@ -27,7 +27,7 @@ const Namespace = "dell_hw"
 var or *omreport.OMReport
 
 // Factories contains the list of all available collectors.
-var Factories = make(map[string]func() (Collector, error))
+var Factories = make(map[string]func(...string) (Collector, error))
 
 // Collector is the interface a collector has to implement.
 type Collector interface {
