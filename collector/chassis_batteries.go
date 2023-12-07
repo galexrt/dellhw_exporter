@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewChassisBatteriesCollector returns a new chassisBatteriesCollector
-func NewChassisBatteriesCollector(args ...string) (Collector, error) {
+func NewChassisBatteriesCollector(cfg *Config) (Collector, error) {
 	return &chassisBatteriesCollector{}, nil
 }
 

@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewMemoryCollector returns a new memoryCollector
-func NewMemoryCollector(args ...string) (Collector, error) {
+func NewMemoryCollector(cfg *Config) (Collector, error) {
 	return &memoryCollector{}, nil
 }
 

@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewStorageBatteryCollector returns a new storageBatteryCollector
-func NewStorageBatteryCollector(args ...string) (Collector, error) {
+func NewStorageBatteryCollector(cfg *Config) (Collector, error) {
 	return &storageBatteryCollector{}, nil
 }
 

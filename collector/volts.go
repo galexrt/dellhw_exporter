@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewVoltsCollector returns a new voltsCollector
-func NewVoltsCollector(args ...string) (Collector, error) {
+func NewVoltsCollector(cfg *Config) (Collector, error) {
 	return &voltsCollector{}, nil
 }
 

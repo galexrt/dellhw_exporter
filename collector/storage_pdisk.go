@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewStoragePdiskCollector returns a new storagePdiskCollector
-func NewStoragePdiskCollector(args ...string) (Collector, error) {
+func NewStoragePdiskCollector(cfg *Config) (Collector, error) {
 	return &storagePdiskCollector{}, nil
 }
 

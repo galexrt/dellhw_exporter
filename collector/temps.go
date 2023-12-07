@@ -31,7 +31,7 @@ func init() {
 }
 
 // NewTempsCollector returns a new tempsCollector
-func NewTempsCollector(args ...string) (Collector, error) {
+func NewTempsCollector(cfg *Config) (Collector, error) {
 	return &tempsCollector{}, nil
 }
 

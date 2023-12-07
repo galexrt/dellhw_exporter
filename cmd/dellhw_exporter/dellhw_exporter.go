@@ -67,7 +67,7 @@ type CmdLineOpts struct {
 	metricsAddr        string
 	metricsPath        string
 	enabledCollectors  string
-	monitoredNics      string
+	monitoredNics      []string
 	omReportExecutable string
 	cmdTimeout         int64
 
@@ -167,15 +167,7 @@ func (p *program) Start(s service.Service) error {
 
 	collector.SetOMReport(omreport.New(omrOpts))
 
-  monitoredNics := []string{}
-  if len(opts.monitoredNics) > 0 {
-    for _, nic := range strings.Split(opts.monitoredNics, ",") {
-      monitoredNics = append(monitoredNics, nic)
-      log.Infof("Adding %s to list of monitored nics", nic)
-    }
-  }
-
-	collectors, err := loadCollectors(opts.enabledCollectors, monitoredNics)
+	collectors, err := loadCollectors(opts.enabledCollectors, opts.monitoredNics)
 	if err != nil {
 		log.Fatalf("Couldn't load collectors: %s", err)
 	}
@@ -214,7 +206,7 @@ func init() {
 
 	flags.BoolVar(&opts.showCollectors, "collectors-print", false, "If true, print available collectors and exit.")
 	flags.StringVar(&opts.enabledCollectors, "collectors-enabled", defaultCollectors, "Comma separated list of active collectors")
-	flags.StringVar(&opts.monitoredNics, "monitored-nics", "", "Comma separated list of nics to monitor (default is to monitor all)")
+	flags.StringSliceVar(&opts.monitoredNics, "monitored-nics", []string{}, "Comma separated list of nics to monitor (default, empty list, is to monitor all)")
 	flags.StringVar(&opts.omReportExecutable, "collectors-omreport", getDefaultOmReportPath(), "Path to the omreport executable (based on the OS (linux or windows) default paths are used if unset)")
 	flags.Int64Var(&opts.cmdTimeout, "collectors-cmd-timeout", 15, "Command execution timeout for omreport")
 
@@ -357,7 +349,15 @@ func execute(name string, c collector.Collector, ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(scrapeSuccessDesc, prometheus.GaugeValue, success, name)
 }
 
+func getCollectorConfig() *collector.Config {
+	return &collector.Config{
+		MonitoredNICs: opts.monitoredNics,
+	}
+}
+
 func loadCollectors(list string, nicList []string) (map[string]collector.Collector, error) {
+	cfg := getCollectorConfig()
+
 	collectors := map[string]collector.Collector{}
 	var c collector.Collector
 	var err error
@@ -366,16 +366,14 @@ func loadCollectors(list string, nicList []string) (map[string]collector.Collect
 		if !ok {
 			return nil, fmt.Errorf("collector '%s' not available", name)
 		}
-		if name == "nics" {
-			c, err = fn(nicList...)
-		} else {
-			c, err = fn()
-		}
+
+		c, err = fn(cfg)
 		if err != nil {
 			return nil, err
 		}
 		collectors[name] = c
 	}
+
 	return collectors, nil
 }
 
