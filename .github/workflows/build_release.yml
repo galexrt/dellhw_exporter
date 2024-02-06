@@ -27,7 +27,7 @@ jobs:
           promu checksum .tarballs
           promu release .tarballs
       - name: Build and push to GHCR.io
-        uses: elgohr/Publish-Docker-Github-Action@3.04
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: ${{ github.repository }}
           registry: ghcr.io
@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           tag_names: true
       - name: Build and push to Quay.io
-        uses: elgohr/Publish-Docker-Github-Action@3.04
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: ${{ github.repository }}
           registry: quay.io
