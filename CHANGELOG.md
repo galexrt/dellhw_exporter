@@ -1,3 +1,8 @@
+## 1.13.2 / 2024-02-06
+
+* [BUGFIX] [Consider 'Not Applicable' as healthy for Nic status #95](https://github.com/galexrt/dellhw_exporter/pull/95)
+    * Thanks to [@B0go](https://github.com/B0go) for fixing this issue!
+
 ## 1.13.1 / 2023-12-07
 
 * [BUGFIX] Fix container image build issue caused by wget, use curl now
