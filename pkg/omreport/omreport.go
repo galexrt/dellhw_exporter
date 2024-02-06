@@ -451,7 +451,7 @@ func (or *OMReport) Nics(nicList ...string) ([]Value, error) {
 		id := strings.Replace(fields[0], ":", "_", -1)
 		ts := map[string]string{"id": id, "device": fields[1]}
 		var ret string
-		if fields[4] == "Connected" || fields[4] == "Full" {
+		if fields[4] == "Connected" || fields[4] == "Full" || fields[4] == "Not Applicable" {
 			ret = "0"
 		} else {
 			ret = "1"

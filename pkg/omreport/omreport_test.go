@@ -190,6 +190,87 @@ func TestMemory(t *testing.T) {
 	}
 }
 
+var nicTests = []testResultOMReport{
+	{
+		Input: `Network Interfaces Information
+
+Physical NIC Interface(s)
+
+Index;Interface Name;Vendor;Description;Connection Status;Slot
+0;eno1;Manufacturer;Device Spec;Connected;Embedded
+1;eno2;Manufacturer;Device Spec;Connected;Embedded
+2;eno3;Manufacturer;Device Spec;Disabled;Embedded
+3;eno4;Manufacturer;Device Spec;Disabled;Embedded
+
+Team Interface(s)
+
+Index;Interface Name;Vendor;Description;Redundancy Status
+0;bond0;Linux;Ethernet Channel Bonding;Full
+1;br0;Linux;Network Bridge;Not Applicable
+`,
+		Values: []Value{
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "eno1",
+					"id":     "0",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "eno2",
+					"id":     "1",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "1",
+				Labels: map[string]string{
+					"device": "eno3",
+					"id":     "2",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "1",
+				Labels: map[string]string{
+					"device": "eno4",
+					"id":     "3",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "bond0",
+					"id":     "0",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "br0",
+					"id":     "1",
+				},
+			},
+		},
+	},
+}
+
+func TestNic(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range nicTests {
+		input = result.Input
+		values, _ := report.Nics()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
 var systemTests = []testResultOMReport{
 	{
 		Input: `Health
