@@ -169,7 +169,7 @@ func (p *program) Start(s service.Service) error {
 
 	collectors, err := loadCollectors(opts.enabledCollectors, opts.monitoredNics)
 	if err != nil {
-		log.Fatalf("Couldn't load collectors: %s", err)
+		log.Fatalf("Couldn't load collectors: %v", err)
 	}
 	log.Infof("Enabled collectors:")
 	for n := range collectors {
@@ -177,7 +177,7 @@ func (p *program) Start(s service.Service) error {
 	}
 
 	if err = prometheus.Register(NewDellHWCollector(collectors, opts.cachingEnabled, opts.cacheDuration)); err != nil {
-		log.Fatalf("Couldn't register collector: %s", err)
+		log.Fatalf("Couldn't register collector: %v", err)
 	}
 
 	// non-blocking start
@@ -339,7 +339,7 @@ func execute(name string, c collector.Collector, ch chan<- prometheus.Metric) {
 	var success float64
 
 	if err != nil {
-		log.Errorf("%s collector failed after %fs: %s", name, duration.Seconds(), err)
+		log.Errorf("%s collector failed after %fs: %v", name, duration.Seconds(), err)
 		success = 0
 	} else {
 		log.Debugf("%s collector succeeded after %fs.", name, duration.Seconds())

@@ -431,6 +431,32 @@ ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;
 			},
 		},
 	},
+	{
+		Input: `Controller  PERC H730 Mini (Slot Embedded)
+
+Controller
+
+ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Connectors;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;Spin Down Unconfigured Drives;Spin Down Hot Spares;Spin Down Configured Drives;Automatic Disk Power Saving (Idle C);Time Interval for Spin Down (in Minutes);Start Time (HH:MM);Time Interval for Spin Up (in Hours);T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy;Current Controller Mode
+`,
+		Values: []Value{},
+	},
+	{
+		Input: `Controller  PCIe SSD Subsystem(Not Available)
+
+Controller
+ID;Status;Name;Slot ID;State;Firmware Version;Minimum Required Firmware Version;Driver Version;Minimum Required Driver Version;Storport Driver Version;Minimum Required Storport Driver Version;Number of Extenders;Rebuild Rate;BGI Rate;Check Consistency Rate;Reconstruct Rate;Alarm State;Cluster Mode;SCSI Initiator ID;Cache Memory Size;Patrol Read Mode;Patrol Read State;Patrol Read Rate;Patrol Read Iterations;Abort Check Consistency on Error;Allow Revertible Hot Spare and Replace Member;Load Balance;Auto Replace Member on Predictive Failure;Redundant Path view;CacheCade Capable;Persistent Hot Spare;Encryption Capable;Encryption Key Present;Encryption Mode;Preserved Cache;T10 Protection Information Capable;Non-RAID HDD Disk Cache Policy
+0;Ok;PCIe SSD Subsystem;Not Applicable;Ready;Not Available;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable;Not Applicable`,
+		Values: []Value{
+			{
+				Name:  "storage_controller_status",
+				Value: "0",
+				Labels: map[string]string{
+					"id":                "0",
+					controllerNameLabel: "PCIe SSD Subsystem (Slot Not Applicable)",
+				},
+			},
+		},
+	},
 }
 
 func TestStorageController(t *testing.T) {
@@ -727,6 +753,78 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protect
 					"vdisk":             "1",
 					"vdisk_name":        "GenericR10_0",
 					controllerNameLabel: "PERC H730 Mini (Slot Embedded)",
+				},
+			},
+		},
+	},
+	{
+		Input: `List of Virtual Disks in the System
+
+ID;Status;Name;State;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Stripe Element Size;Disk Cache Policy
+`,
+		Values: []Value{},
+	},
+	{
+		Input: `List of Virtual Disks in the System
+
+Controller PERC H730 Mini (Embedded)
+
+ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Stripe Element Size;Disk Cache Policy
+0;Ok;Virtual Disk0;Ready;Not Assigned;No;RAID-1;1,117.25 GB (1199638052864 bytes);No;Not Applicable;/dev/sda;SAS;HDD;Adaptive Read Ahead;Write Back;Not Applicable;64 KB;Unchanged
+`,
+		Values: []Value{
+			{
+				Name:  "storage_vdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730 Mini (Embedded)",
 				},
 			},
 		},

@@ -244,16 +244,16 @@ func readCommand(line func(string) error, name string, arg ...string) error {
 func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io.Reader, name string, arg ...string) error {
 	b, err := Command(timeout, stdin, name, arg...)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to execute command. %w", err)
 	}
 	scanner := bufio.NewScanner(b)
 	for scanner.Scan() {
 		if err := line(scanner.Text()); err != nil {
-			return err
+			return fmt.Errorf("failed to read command output. %w", err)
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		log.Error(name, " : ", err)
+		log.Errorf("failed to scan command output. %v", err)
 	}
 	return nil
 }
