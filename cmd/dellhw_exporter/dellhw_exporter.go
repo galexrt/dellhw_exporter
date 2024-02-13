@@ -165,6 +165,7 @@ func (p *program) Start(s service.Service) error {
 		OMReportExecutable: opts.omReportExecutable,
 	}
 
+	collector.SetLogger(log)
 	collector.SetOMReport(omreport.New(omrOpts))
 
 	collectors, err := loadCollectors(opts.enabledCollectors, opts.monitoredNics)

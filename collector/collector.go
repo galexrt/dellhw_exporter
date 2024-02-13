@@ -19,12 +19,20 @@ package collector
 import (
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/sirupsen/logrus"
 )
 
 // Namespace holds the metrics namespace/first part
 const Namespace = "dell_hw"
 
-var or *omreport.OMReport
+var (
+	or  *omreport.OMReport
+	log = logrus.New()
+)
+
+type Config struct {
+	MonitoredNICs []string
+}
 
 // Factories contains the list of all available collectors.
 var Factories = make(map[string]func(*Config) (Collector, error))
@@ -40,6 +48,11 @@ func SetOMReport(omrep *omreport.OMReport) {
 	or = omrep
 }
 
-type Config struct {
-	MonitoredNICs []string
+// SetLogger
+func SetLogger(logger *logrus.Logger) {
+	log = logger
+}
+
+func init() {
+	log.SetLevel(logrus.ErrorLevel)
 }
