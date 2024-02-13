@@ -1,3 +1,7 @@
+## 1.13.4 / 2024-02-13
+
+* [BUGFIX] add logging to pdisk collector
+
 ## 1.13.3 / 2024-02-13
 
 * [BUGFIX] improve log lines to better be able to pin point the recent parsing issues
