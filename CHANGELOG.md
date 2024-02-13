@@ -1,3 +1,7 @@
+## 1.13.3 / 2024-02-13
+
+* [BUGFIX] improve log lines to better be able to pin point the recent parsing issues
+
 ## 1.13.2 / 2024-02-06
 
 * [BUGFIX] [Consider 'Not Applicable' as healthy for Nic status #95](https://github.com/galexrt/dellhw_exporter/pull/95)
