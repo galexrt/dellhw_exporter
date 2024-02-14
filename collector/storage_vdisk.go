@@ -42,6 +42,9 @@ func (c *storageVdiskCollector) Update(ch chan<- prometheus.Metric) error {
 		return err
 	}
 	for _, value := range storageVdisk {
+		log.
+			WithField("vdisk", value).
+			Debugf("iterating vdisk values, data: %+v", value)
 		float, err := strconv.ParseFloat(value.Value, 64)
 		if err != nil {
 			return err

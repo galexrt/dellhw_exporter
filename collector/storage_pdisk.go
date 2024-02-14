@@ -44,6 +44,7 @@ func (c *storagePdiskCollector) Update(ch chan<- prometheus.Metric) error {
 	for cid := range controllers {
 		logger := log.WithField("controller", cid)
 		logger.Debugf("collecting pdisks from controller")
+
 		storagePdisk, err := or.StoragePdisk(strconv.Itoa(cid))
 		if err != nil {
 			return err
