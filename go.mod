@@ -1,6 +1,6 @@
 module github.com/galexrt/dellhw_exporter
 
-go 1.21.7
+go 1.22.0
 
 require (
 	github.com/kardianos/service v1.2.2
