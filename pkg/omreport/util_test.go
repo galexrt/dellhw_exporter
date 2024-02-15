@@ -40,6 +40,10 @@ var severityTests = []SeverityTestResult{
 		Input:  "Non-Critical",
 		Output: "2",
 	},
+	{
+		Input:  "What if a high severity issue walks into a bar?",
+		Output: "1",
+	},
 }
 
 func TestSeverity(t *testing.T) {

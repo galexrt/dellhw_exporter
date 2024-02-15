@@ -624,6 +624,90 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 			},
 		},
 	},
+	{
+		// State: "Non-RAID" - https://github.com/galexrt/dellhw_exporter/issues/93#issuecomment-1945674675
+		Input: `List of Physical Disks on Controller PERC H330 Mini (Embedded)
+
+Controller PERC H330 Mini (Embedded)
+
+ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remaining Rated Write Endurance;Failure Predicted;Revision;Driver Version;Model Number;T10 PI Capable;Certified;Encryption Capable;Encryption Protocol;Encrypted;Progress;Mirror Set ID;Capacity;Used RAID Disk Space;Available RAID Disk Space;Hot Spare;Vendor ID;Product ID;Serial No.;Part Number;Negotiated Speed;Capable Speed;PCIe Negotiated Link Width;PCIe Maximum Link Width;Sector Size;Device Write Cache;Manufacture Day;Manufacture Week;Manufacture Year;SAS Address;WWN;Non-RAID HDD Disk Cache Policy;Disk Cache Policy;Sub Vendor;Available Spare;Cryptographic Erase Capable
+0:1:0;Ok;Physical Disk 0:1:0;Non-RAID;Not Applicable;SATA;SSD;Not Applicable;100%;No;D1DF005;Not Applicable;Not Applicable;No;Yes;No;Not Applicable;Not Applicable;Not Applicable;Not Applicable;446.63 GB (479559942144 bytes);0.00 GB (0 bytes);446.63 GB (479559942144 bytes);No;DELL(tm);MTFDDAK480TDN;2014274E8D30;SG0D35F3MCS0004416JZA02;6.00 Gbps;6.00 Gbps;Not Applicable;Not Applicable;512B;Not Applicable;Not Available;Not Available;Not Available;0x4433221104000000;0x4433221104000000;Not Applicable;Not Applicable;Not Available;Not Available;Yes
+`,
+		Values: []Value{
+			{
+				Name:  "storage_pdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_failure_predicted",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: "100",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_state",
+				Value: "2",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_failure_predicted",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: "100",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_1",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+		},
+	},
 }
 
 func TestStoragePdisk(t *testing.T) {

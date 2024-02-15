@@ -91,6 +91,7 @@ func pdiskState(s string) string {
 		"Foreign":              "11",
 		"Unsupported":          "12",
 		"Replacing":            "13",
+		"Non-RAID":             "14",
 	}
 
 	return states[s]
