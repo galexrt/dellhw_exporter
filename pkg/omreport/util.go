@@ -123,6 +123,7 @@ func vdiskReadPolicy(s string) string {
 		"No Read Ahead":       "2",
 		"Read Cache Enabled":  "3",
 		"Read Cache Disabled": "4",
+		"Adaptive Read Ahead": "5",
 	}
 
 	return policies[s]
@@ -137,6 +138,7 @@ func vdiskWritePolicy(s string) string {
 		"Write Through":                 "4",
 		"Write Cache Enabled Protected": "5",
 		"Write Cache Disabled":          "6",
+		"Write Back":                    "7",
 	}
 
 	return policies[s]

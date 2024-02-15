@@ -850,7 +850,7 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protect
 			},
 			{
 				Name:  "storage_vdisk_read_policy",
-				Value: "",
+				Value: "5",
 				Labels: map[string]string{
 					"vdisk":             "0",
 					"vdisk_name":        "Virtual Disk0",
@@ -859,7 +859,7 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protect
 			},
 			{
 				Name:  "storage_vdisk_write_policy",
-				Value: "",
+				Value: "7",
 				Labels: map[string]string{
 					"vdisk":             "0",
 					"vdisk_name":        "Virtual Disk0",
