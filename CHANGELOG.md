@@ -1,3 +1,8 @@
+## 1.13.5 / 2024-02-15
+
+* [BUGFIX] add "Non-Raid" state to pdisk collector to address parts of [#93](https://github.com/galexrt/dellhw_exporter/issues/93)
+* [BUGFIX] add logging to vdisk collector
+
 ## 1.13.4 / 2024-02-13
 
 * [BUGFIX] add logging to pdisk collector
