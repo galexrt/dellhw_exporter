@@ -1,3 +1,7 @@
+## 1.13.7 / 2024-02-15
+
+* [CHORE] updated minimum go version to 1.21
+
 ## 1.13.6 / 2024-02-15
 
 * [BUGFIX] add vdisk read and write policy to vdisk collector to address final parts of [#93](https://github.com/galexrt/dellhw_exporter/issues/93)
