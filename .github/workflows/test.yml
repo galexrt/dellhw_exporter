@@ -15,7 +15,7 @@ jobs:
           submodules: true
       - uses: actions/setup-go@v5
         with:
-          go-version: '^1.18'
+          go-version: '^1.21'
       - name: Run tests
         run: |
           make test
