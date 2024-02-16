@@ -1,3 +1,7 @@
+## 1.13.8 / 2024-02-16
+
+* [BUGFIX] fix vdisk for (older?) omreport outputs
+
 ## 1.13.7 / 2024-02-15
 
 * [CHORE] updated minimum go version to 1.21
