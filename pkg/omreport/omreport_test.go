@@ -877,6 +877,73 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Layout;Size;T10 Protect
 			},
 		},
 	},
+	{
+		Input: `List of Virtual Disks in the System
+
+ID;Status;Name;State;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Stripe Element Size;Disk Cache Policy
+
+Controller BOSS-S1 (Embedded)
+
+ID;Status;Name;State;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Stripe Element Size;Disk Cache Policy
+0;Ok;VD_R1_1;Ready;Not Applicable;RAID-1;111.73 GB (119966990336 bytes);No;Not Applicable;Not Available;SATA;SSD;No Read Ahead;Write Through;Not Applicable;64 KB;Disabled
+`,
+		Values: []Value{
+			{
+				Name:  "storage_vdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "VD_R1_1",
+					controllerNameLabel: "BOSS-S1 (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "VD_R1_1",
+					controllerNameLabel: "BOSS-S1 (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "VD_R1_1",
+					controllerNameLabel: "BOSS-S1 (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "2",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "VD_R1_1",
+					controllerNameLabel: "BOSS-S1 (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "4",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "VD_R1_1",
+					controllerNameLabel: "BOSS-S1 (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "VD_R1_1",
+					controllerNameLabel: "BOSS-S1 (Embedded)",
+				},
+			},
+		},
+	},
 }
 
 func TestStorageVdisk(t *testing.T) {
