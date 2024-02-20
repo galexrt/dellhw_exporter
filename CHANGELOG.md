@@ -1,3 +1,7 @@
+## 1.13.9 / 2024-02-16
+
+* [BUGFIX] log the command that failed to execute
+
 ## 1.13.8 / 2024-02-16
 
 * [BUGFIX] fix vdisk for (older?) omreport outputs
