@@ -244,19 +244,19 @@ func readCommand(line func(string) error, name string, arg ...string) error {
 
 // ReadCommandTimeout is the same as ReadCommand with a specifiable timeout.
 // It can also take a []byte as input (useful for chaining commands).
-func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io.Reader, name string, arg ...string) error {
-	b, err := Command(timeout, stdin, name, arg...)
+func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io.Reader, name string, args ...string) error {
+	b, err := Command(timeout, stdin, name, args...)
 	if err != nil {
-		return fmt.Errorf("failed to execute command. %w", err)
+		return fmt.Errorf("failed to execute command (\"%s %s\"). %w", name, args, err)
 	}
 	scanner := bufio.NewScanner(b)
 	for scanner.Scan() {
 		if err := line(scanner.Text()); err != nil {
-			return fmt.Errorf("failed to read command output. %w", err)
+			return fmt.Errorf("failed to read command (\"%s %s\") output. %w", name, args, err)
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		log.Errorf("failed to scan command output. %v", err)
+		log.Errorf("failed to scan command (\"%s %s\") output. %v", name, args, err)
 	}
 	return nil
 }
