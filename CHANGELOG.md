@@ -1,3 +1,7 @@
+## 1.13.10 / 2024-02-28
+
+* [BUGFIX] ignore exit code 255 for omreport command - should resolve [#99](https://github.com/galexrt/dellhw_exporter/issues/99)
+
 ## 1.13.9 / 2024-02-16
 
 * [BUGFIX] log the command that failed to execute
