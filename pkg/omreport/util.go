@@ -247,6 +247,12 @@ func readCommand(line func(string) error, name string, arg ...string) error {
 func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io.Reader, name string, args ...string) error {
 	b, err := Command(timeout, stdin, name, args...)
 	if err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			// Skip exit code 255, it should indicate that no devices have been found in some cases
+			if exitErr.ExitCode() == 255 {
+				return nil
+			}
+		}
 		return fmt.Errorf("failed to execute command (\"%s %s\"). %w", name, args, err)
 	}
 	scanner := bufio.NewScanner(b)

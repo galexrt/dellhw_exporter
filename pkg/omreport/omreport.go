@@ -561,6 +561,7 @@ func (or *OMReport) Processors() ([]Value, error) {
 		if _, err := strconv.Atoi(fields[0]); err != nil {
 			return
 		}
+
 		values = append(values, Value{
 			Name:   "chassis_processor_status",
 			Value:  severity(fields[1]),
@@ -581,6 +582,7 @@ func (or *OMReport) Temps() ([]Value, error) {
 		if _, err := strconv.Atoi(fields[0]); err != nil {
 			return
 		}
+
 		ts := map[string]string{"component": replace(fields[2])}
 		values = append(values, Value{
 			Name:   "chassis_temps",
@@ -686,7 +688,6 @@ func (or *OMReport) ChassisBios() ([]Value, error) {
 	}
 
 	err := or.readReport(func(fields []string) {
-
 		if len(fields) != 2 {
 			return
 		}
@@ -710,7 +711,6 @@ func (or *OMReport) ChassisFirmware() ([]Value, error) {
 	}
 
 	err := or.readReport(func(fields []string) {
-
 		if len(fields) != 2 {
 			return
 		}
