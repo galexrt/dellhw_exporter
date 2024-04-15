@@ -1,3 +1,7 @@
+## 1.13.11 / 2024-04-15
+
+* [BUGFIX] add workaround for vdisk rebuilding progress causing parsing errors, see [#106](https://github.com/galexrt/dellhw_exporter/issues/106)
+
 ## 1.13.10 / 2024-02-28
 
 * [BUGFIX] ignore exit code 255 for omreport command - should resolve [#99](https://github.com/galexrt/dellhw_exporter/issues/99)
