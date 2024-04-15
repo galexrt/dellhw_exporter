@@ -344,10 +344,15 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 			},
 		})
 
+		fieldDifference := 0
+		if strings.HasSuffix(fields[6], "% complete") || fields[6] == "Not Applicable" {
+			fieldDifference++
+		}
+
 		if len(fields) > 17 {
 			values = append(values, Value{
 				Name:  "storage_vdisk_raidlevel",
-				Value: getNumberFromString(fields[6]),
+				Value: getNumberFromString(fields[6+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
@@ -357,7 +362,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 
 			values = append(values, Value{
 				Name:  "storage_vdisk_read_policy",
-				Value: vdiskReadPolicy(fields[13]),
+				Value: vdiskReadPolicy(fields[13+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
@@ -367,7 +372,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 
 			values = append(values, Value{
 				Name:  "storage_vdisk_write_policy",
-				Value: vdiskWritePolicy(fields[14]),
+				Value: vdiskWritePolicy(fields[14+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
@@ -377,7 +382,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 
 			values = append(values, Value{
 				Name:  "storage_vdisk_cache_policy",
-				Value: vdiskCachePolicy(fields[15]),
+				Value: vdiskCachePolicy(fields[15+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
@@ -387,7 +392,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 		} else {
 			values = append(values, Value{
 				Name:  "storage_vdisk_raidlevel",
-				Value: getNumberFromString(fields[5]),
+				Value: getNumberFromString(fields[5+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
@@ -397,7 +402,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 
 			values = append(values, Value{
 				Name:  "storage_vdisk_read_policy",
-				Value: vdiskReadPolicy(fields[12]),
+				Value: vdiskReadPolicy(fields[12+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
@@ -407,7 +412,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 
 			values = append(values, Value{
 				Name:  "storage_vdisk_write_policy",
-				Value: vdiskWritePolicy(fields[13]),
+				Value: vdiskWritePolicy(fields[13+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],
@@ -417,7 +422,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 
 			values = append(values, Value{
 				Name:  "storage_vdisk_cache_policy",
-				Value: vdiskCachePolicy(fields[14]),
+				Value: vdiskCachePolicy(fields[14+fieldDifference]),
 				Labels: map[string]string{
 					"vdisk":             id,
 					"vdisk_name":        fields[2],

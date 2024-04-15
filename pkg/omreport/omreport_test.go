@@ -944,6 +944,128 @@ ID;Status;Name;State;Encrypted;Layout;Size;T10 Protection Information Status;Ass
 			},
 		},
 	},
+	{
+		Input: `List of Virtual Disks in the System
+
+Controller PERC H730P Mini (Embedded)
+
+ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Progress;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Strip Element Size;Disk Cache Policy
+0;Ok;Virtual Disk0;Ready;Not Assigned;No;Not Applicable;RAID-6;93.13 GiB (99999547392 bytes);No;Not Applicable;/dev/sdb;SATA;HDD;Adaptive Read Ahead;Write Back;Not Applicable;128 KB;Unchanged
+1;Ok;Virtual Disk1;Background Initialization;Not Assigned;No;98% complete;RAID-6;3,631.87 GiB (3899688747008 bytes);No;Not Applicable;/dev/sda;SATA;HDD;Adaptive Read Ahead;Write Back;Not Applicable;128 KB;Unchanged
+`,
+		Values: []Value{
+			// 1st vdisk
+			{
+				Name:  "storage_vdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "6",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "5",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "7",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "Virtual Disk0",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			// 2nd vdisk
+			{
+				Name:  "storage_vdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "Virtual Disk1",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_state",
+				Value: "9",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "Virtual Disk1",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "6",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "Virtual Disk1",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "5",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "Virtual Disk1",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "7",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "Virtual Disk1",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "Virtual Disk1",
+					controllerNameLabel: "PERC H730P Mini (Embedded)",
+				},
+			},
+		},
+	},
 }
 
 func TestStorageVdisk(t *testing.T) {
