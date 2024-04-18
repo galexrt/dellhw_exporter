@@ -1,21 +1,66 @@
-name: documentation
+name: Helm and Docs Publish
 on:
   push:
     branches:
       - main
+
 jobs:
-  generate-and-publish:
+  helm-release:
+    # Depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.8.1
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+  docs:
+    needs: helm-release
     runs-on: ubuntu-latest
     container:
       image: "squidfunk/mkdocs-material:latest"
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: false
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          sparse-checkout: |
+            index.yaml
+          ref: 'gh-pages'
+          path: 'gh-pages'
+
       - name: Build
         run: |
           mkdocs build --clean
-      - name: Deploy to GitHub pages
+          cp ../gh-pages/index.yaml ./site/
+
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

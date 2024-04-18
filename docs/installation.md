@@ -1,5 +1,6 @@
 ## Linux Installation
-<!-- TODO -->
+
+Either use the container images available or download the binary and run it.
 
 ## Windows Installation
 
@@ -10,3 +11,7 @@ Example to add the executable as a service in Windows:
 ```console
 sc.exe create "Dell OMSA Exporter" binPath="C:\Program Files\Dell\dellhw_exporter.exe" start=auto
 ```
+
+## Kubernetes
+
+A Helm Chart is available at https://github.com/galexrt/dellhw_exporter/tree/main/charts/
