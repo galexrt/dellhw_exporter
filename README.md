@@ -38,7 +38,7 @@ For flags and environment variables, see [Configuration doc page](docs/configura
 
 ## Caching
 
-Optional caching can be enabled to prevent performance issues caused by this exporter, see [Caching doc page](docs/caching.md).
+Optional caching can be enabled to prevent performance issues caused by this exporter, see [Caching doc page](caching.md).
 
 ## Running in Container
 

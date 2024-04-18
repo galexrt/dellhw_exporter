@@ -12,7 +12,7 @@ In particular the `dellhw_exporter`, since the underlying `omreport` calls produ
 
 ### Configuration
 
-As you may have seen in [the Configuration doc page](docs/configuration.md) there are two caching related configuration parameters for enablement and how long the cache should be valid.
+As you may have seen in [the Configuration doc page](configuration.md) there are two caching related configuration parameters for enablement and how long the cache should be valid.
 
 ```console
 --cache-enabled bool           Enable caching (default false)

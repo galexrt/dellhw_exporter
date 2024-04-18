@@ -10,7 +10,7 @@ Some metrics don't follow this pattern as they return, e.g., VDisk RAID level, "
 
 ### PDisk and VDisk States, VDisk Policy Values
 
-Can be found in the [`pkg/omreport/util.go` file](pkg/omreport/util.go).
+Can be found in the [`pkg/omreport/util.go` file](https://github.com/galexrt/dellhw_exporter/blob/main/pkg/omreport/util.go).
 
 ## Example Metrics Output
 

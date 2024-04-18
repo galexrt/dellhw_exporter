@@ -58,7 +58,7 @@ jobs:
       - name: Build
         run: |
           mkdocs build --clean
-          cp ../gh-pages/index.yaml ./site/
+          cp ./gh-pages/index.yaml ./site/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4

@@ -4,7 +4,7 @@ url: "/site-notice"
 toc: true
 ---
 
-The Privacy Policy / Datenschutz­erklärung can be found here: [Privacy Policy / Datenschutz­erklärung page](/privacy-policy/).
+The Privacy Policy / Datenschutz­erklärung can be found here: [Privacy Policy / Datenschutz­erklärung page](zprivacy-policy.md).
 
 **[German version of the Site Notice / Impressum below.](#impressum)**
 
