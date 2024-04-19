@@ -52,13 +52,14 @@ jobs:
           submodules: true
           sparse-checkout: |
             index.yaml
+            artifacthub-repo.yml
           ref: 'gh-pages'
           path: 'gh-pages'
 
       - name: Build
         run: |
           mkdocs build --clean
-          cp ./gh-pages/index.yaml ./site/
+          cp ./gh-pages/* ./site/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
