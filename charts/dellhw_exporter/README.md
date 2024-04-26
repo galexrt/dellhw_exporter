@@ -1,6 +1,6 @@
 # dellhw_exporter
 
-![Version: 0.2.9](https://img.shields.io/badge/Version-0.2.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.13.11](https://img.shields.io/badge/AppVersion-v1.13.11-informational?style=flat-square)
+![Version: 0.2.11](https://img.shields.io/badge/Version-0.2.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.13.11](https://img.shields.io/badge/AppVersion-v1.13.11-informational?style=flat-square)
 
 A Helm chart for the dellhw_exporter
 
@@ -11,7 +11,7 @@ A Helm chart for the dellhw_exporter
 | affinity | object | `{}` | Affinity for the DaemonSet |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | Override the `imagePullPolicy` |
-| image.repository | string | `"quay.io/galexrt/dellhw-exporter"` | Image repository |
+| image.repository | string | `"quay.io/galexrt/dellhw_exporter"` | Image repository |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | ImagePullSecrets to add to the DaemonSet |
 | nameOverride | string | `""` |  |
