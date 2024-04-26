@@ -3,6 +3,16 @@ entries:
   dellhw_exporter:
   - apiVersion: v2
     appVersion: v1.13.11
+    created: "2024-04-26T12:46:58.219370833Z"
+    description: A Helm chart for the dellhw_exporter
+    digest: b771ff494372cf5f5b62dcb576ad263508eafa114f7372fe9024219347af881e
+    name: dellhw_exporter
+    type: application
+    urls:
+    - https://github.com/galexrt/dellhw_exporter/releases/download/dellhw_exporter-0.2.11/dellhw_exporter-0.2.11.tgz
+    version: 0.2.11
+  - apiVersion: v2
+    appVersion: v1.13.11
     created: "2024-04-19T10:23:22.748191562Z"
     description: A Helm chart for the dellhw_exporter
     digest: f2c0978b4f76a687fe8679cb9ac62667c5c049d505ae1cf44b3d4736b4c1035c
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/galexrt/dellhw_exporter/releases/download/dellhw_exporter-0.2.10/dellhw_exporter-0.2.10.tgz
     version: 0.2.10
-generated: "2024-04-19T10:23:22.748203164Z"
+generated: "2024-04-26T12:46:58.219382896Z"
