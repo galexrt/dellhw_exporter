@@ -1,3 +1,8 @@
+## 1.13.12 / 2024-05-15
+
+* [SECURITY] update github.com/prometheus/client_golang to v1.19.1
+* [CHORE] update golang version to 1.22 in CI and 1.22.3 in go.mod
+
 ## 1.13.11 / 2024-04-15
 
 * [BUGFIX] add workaround for vdisk rebuilding progress causing parsing errors, see [#106](https://github.com/galexrt/dellhw_exporter/issues/106)

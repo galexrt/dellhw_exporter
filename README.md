@@ -127,6 +127,7 @@ Golang version `1.21` is used for testing and building the dellhw_exporter.
 1. Update the version.
     1. [`VERSION` file](VERSION)
     2. Helm chart: `charts/dellhw_exporter/Chart.yaml` `appVersion:` line and bump the Helm chart `version:` by a patch release version.
+       1. Make sure to run `make helm-docs` in the root of the repo to update the helm chart docs.
 2. Create an entry in the [`CHANGELOG.md` file](CHANGELOG.md).
     Example of a changelog entry:
 
