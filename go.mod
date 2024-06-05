@@ -2,7 +2,7 @@ module github.com/galexrt/dellhw_exporter
 
 go 1.22
 
-toolchain go1.22.3
+toolchain go1.22.4
 
 require (
 	github.com/kardianos/service v1.2.2
