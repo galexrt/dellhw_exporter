@@ -7,7 +7,7 @@ In case of docker there are certain specific environment variables, to help runn
 $ dellhw_exporter --help
 Usage of dellhw_exporter:
       --collectors-cmd-timeout int   Command execution timeout for omreport (default 15)
-      --collectors-enabled string    Comma separated list of active collectors (default "chassis,chassis_batteries,fans,firmwares,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,volts")
+      --collectors-enabled string    Comma separated list of active collectors (default "chassis,chassis_batteries,fans,firmwares,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,version,volts")
       --collectors-omreport string   Path to the omreport executable (based on the OS (linux or windows) default paths are used if unset) (default "/opt/dell/srvadmin/bin/omreport")
       --collectors-print             If true, print available collectors and exit.
       --log-level string             Set log level (default "INFO")

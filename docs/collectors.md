@@ -22,4 +22,5 @@ All collectors are enabled by default. You can disable collectors by specifying 
 | `storage_vdisk`        | Overall status of virtual disks.                                                 |
 | `system`               | Overall status of system components.                                             |
 | `temps`                | Overall temperatures (**in Celsius**) and status of system temperature readings. |
+| `version`              | Exporter version info with build info as labels.                                 |
 | `volts`                | Overall volts and status of power supply volt readings.                          |
