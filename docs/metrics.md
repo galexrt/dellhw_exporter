@@ -21,6 +21,9 @@ Can be found in the [`pkg/omreport/util.go` file](https://github.com/galexrt/del
     If you want to contribute a `/metrics` output of the exporter, please open an issue or a pull request, thanks!
 
 ```plain
+# HELP dell_hw_exporter_version Constant '1' value with version, revision, and branch labels from the dellhw_exporter version info.
+# TYPE dell_hw_exporter_version gauge
+dell_hw_exporter_version{branch="",revision="",version=""} 1
 # HELP dell_hw_bios Version info of firmwares/bios.
 # TYPE dell_hw_bios gauge
 dell_hw_bios{manufacturer="dell inc.",release_date="06/26/2020",version="2.8.1"} 0

@@ -1,3 +1,8 @@
+## 1.13.13 / 2024-09-02
+
+* [FEATURE] add exporter version metric `dell_hw_exporter_version`
+* [SECURITY] update go dependencies
+
 ## 1.13.12 / 2024-05-15
 
 * [SECURITY] update github.com/prometheus/client_golang to v1.19.1
