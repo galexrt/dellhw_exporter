@@ -56,7 +56,7 @@ jobs:
           ref: 'gh-pages'
           path: 'gh-pages'
 
-      - name: Build
+      - name: Build docs
         run: |
           mkdocs build --clean
           cp ./gh-pages/* ./site/
