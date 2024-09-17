@@ -1,5 +1,5 @@
 /*
-Copyright 2021 The dellhw_exporter Authors. All rights reserved.
+Copyright 2024 The dellhw_exporter Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"slices"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -36,6 +37,17 @@ import (
 	// global logrus logger instance
 	log "github.com/sirupsen/logrus"
 )
+
+type Output = []Report
+
+type Report struct {
+	Title       string
+	Description string
+
+	Lines []Line
+}
+
+type Line = map[string]string
 
 var (
 	// ErrPath is returned by Command if the program is not in the PATH.
@@ -162,9 +174,7 @@ func yesNoToBool(s string) string {
 	return "0"
 }
 
-var (
-	getNumberFromStringRegex = regexp.MustCompile("[0-9]+")
-)
+var getNumberFromStringRegex = regexp.MustCompile("[0-9]+")
 
 func getNumberFromString(s string) string {
 	result := getNumberFromStringRegex.FindString(s)
@@ -255,6 +265,7 @@ func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io
 		}
 		return fmt.Errorf("failed to execute command (\"%s %s\"). %w", name, args, err)
 	}
+
 	scanner := bufio.NewScanner(b)
 	for scanner.Scan() {
 		if err := line(scanner.Text()); err != nil {
@@ -264,10 +275,131 @@ func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io
 	if err := scanner.Err(); err != nil {
 		log.Errorf("failed to scan command (\"%s %s\") output. %v", name, args, err)
 	}
+
 	return nil
 }
 
 // SetCommandTimeout this function can be used to atomically set the command execution timeout
 func SetCommandTimeout(timeout int64) {
 	atomic.StoreInt64(&cmdTimeout, timeout)
+}
+
+func hasKeys(in map[string]string, fields ...string) bool {
+	for _, field := range fields {
+		field = normalizeName(field)
+		if _, ok := in[field]; !ok {
+			return false
+		}
+	}
+
+	return true
+}
+
+func parseOutput(input string) Output {
+	output := Output{
+		{},
+	}
+	ri := 0
+	gotTitle := false
+	kvSeparated := false
+
+	keyLine := ""
+	keys := []string{}
+
+	prevLine := ""
+	nextLine := ""
+
+	spl := strings.Split(input, "\n")
+	for i, line := range spl {
+		if i > 0 {
+			prevLine = spl[i-1]
+		}
+		if len(spl) > i+1 {
+			nextLine = spl[i+1]
+		} else {
+			nextLine = ""
+		}
+
+		line = clean(line)
+
+		if line == "" {
+			if strings.Contains(prevLine, ";") {
+				output = append(output, Report{})
+				ri++
+				gotTitle = false
+				kvSeparated = false
+				keyLine = ""
+				keys = []string{}
+			}
+			continue
+		}
+
+		if strings.HasPrefix(line, "For further help") {
+			continue
+		}
+
+		if !strings.Contains(line, ";") {
+			if !gotTitle {
+				output[ri].Title = line
+				gotTitle = true
+			} else {
+				output[ri].Description = line
+			}
+		} else {
+			sp := strings.Split(line, ";")
+
+			// Handle special cases..
+			if output[ri].Description == "Version Information" {
+				keyLine = line
+				keys = []string{"component", "version"}
+				kvSeparated = true
+			} else if output[ri].Title == "Amperage" {
+				keys = []string{"psu", "amperage"}
+			} else if output[ri].Title == "BIOS Information" {
+				kvSeparated = true
+			} else if strings.Count(line, ";") > 1 {
+				kvSeparated = true
+			}
+
+			if len(keys) == 0 {
+				keyLine = line
+				keys = append(keys, sp...)
+				// Normalize keys to lower case
+				for i := 0; i < len(keys); i++ {
+					keys[i] = normalizeName(keys[i])
+				}
+
+				if prevLine == "" && strings.Contains(nextLine, ";") && keyLine != line {
+					continue
+				}
+			}
+
+			if kvSeparated && strings.Count(line, ";") == 1 {
+				output[ri].Lines = append(output[ri].Lines, Line{
+					normalizeName(sp[0]): sp[1],
+				})
+			} else if keyLine != line {
+				l := Line{}
+				for i, s := range sp {
+					if i > len(keys)-1 {
+						continue
+					}
+
+					l[keys[i]] = s
+				}
+
+				output[ri].Lines = append(output[ri].Lines, l)
+			}
+		}
+	}
+
+	if len(output[ri].Lines) == 0 {
+		output = slices.Delete(output, ri, ri+1)
+	}
+
+	return output
+}
+
+func normalizeName(in string) string {
+	return strings.Replace(strings.ToLower(in), " ", "_", -1)
 }

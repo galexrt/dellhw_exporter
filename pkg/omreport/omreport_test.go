@@ -1,5 +1,5 @@
 /*
-Copyright 2021 The dellhw_exporter Authors. All rights reserved.
+Copyright 2024 The dellhw_exporter Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ limitations under the License.
 package omreport
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -30,14 +29,11 @@ type testResultOMReport struct {
 
 func getOMReport(input *string) *OMReport {
 	return &OMReport{
-		Reader: func(f func([]string), _ string, args ...string) error {
-			for _, line := range strings.Split(*input, "\n") {
-				sp := strings.Split(line, ";")
-				for i, s := range sp {
-					sp[i] = clean(s)
-				}
-				f(sp)
-			}
+		Reader: func(f func(Output), _ string, args ...string) error {
+			output := parseOutput(*input)
+
+			f(output)
+
 			return nil
 		},
 	}
@@ -186,87 +182,6 @@ func TestMemory(t *testing.T) {
 	for _, result := range memoryTests {
 		input = result.Input
 		values, _ := report.Memory()
-		assert.Equal(t, result.Values, values)
-	}
-}
-
-var nicTests = []testResultOMReport{
-	{
-		Input: `Network Interfaces Information
-
-Physical NIC Interface(s)
-
-Index;Interface Name;Vendor;Description;Connection Status;Slot
-0;eno1;Manufacturer;Device Spec;Connected;Embedded
-1;eno2;Manufacturer;Device Spec;Connected;Embedded
-2;eno3;Manufacturer;Device Spec;Disabled;Embedded
-3;eno4;Manufacturer;Device Spec;Disabled;Embedded
-
-Team Interface(s)
-
-Index;Interface Name;Vendor;Description;Redundancy Status
-0;bond0;Linux;Ethernet Channel Bonding;Full
-1;br0;Linux;Network Bridge;Not Applicable
-`,
-		Values: []Value{
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "eno1",
-					"id":     "0",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "eno2",
-					"id":     "1",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "1",
-				Labels: map[string]string{
-					"device": "eno3",
-					"id":     "2",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "1",
-				Labels: map[string]string{
-					"device": "eno4",
-					"id":     "3",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "bond0",
-					"id":     "0",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "br0",
-					"id":     "1",
-				},
-			},
-		},
-	},
-}
-
-func TestNic(t *testing.T) {
-	input := ""
-	report := getOMReport(&input)
-	for _, result := range nicTests {
-		input = result.Input
-		values, _ := report.Nics()
 		assert.Equal(t, result.Values, values)
 	}
 }
@@ -664,6 +579,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 			{
 				Name:  "storage_pdisk_remaining_rated_write_endurance",
 				Value: "100",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_storage_encrypted",
+				Value: "1",
 				Labels: map[string]string{
 					"controller":        "0",
 					"disk":              "0_1_0",
@@ -1078,6 +1002,87 @@ func TestStorageVdisk(t *testing.T) {
 	}
 }
 
+var nicTests = []testResultOMReport{
+	{
+		Input: `Network Interfaces Information
+
+Physical NIC Interface(s)
+
+Index;Interface Name;Vendor;Description;Connection Status;Slot
+0;eno1;Manufacturer;Device Spec;Connected;Embedded
+1;eno2;Manufacturer;Device Spec;Connected;Embedded
+2;eno3;Manufacturer;Device Spec;Disabled;Embedded
+3;eno4;Manufacturer;Device Spec;Disabled;Embedded
+
+Team Interface(s)
+
+Index;Interface Name;Vendor;Description;Redundancy Status
+0;bond0;Linux;Ethernet Channel Bonding;Full
+1;br0;Linux;Network Bridge;Not Applicable
+`,
+		Values: []Value{
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "eno1",
+					"id":     "0",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "eno2",
+					"id":     "1",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "1",
+				Labels: map[string]string{
+					"device": "eno3",
+					"id":     "2",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "1",
+				Labels: map[string]string{
+					"device": "eno4",
+					"id":     "3",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "bond0",
+					"id":     "0",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "br0",
+					"id":     "1",
+				},
+			},
+		},
+	},
+}
+
+func TestNic(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range nicTests {
+		input = result.Input
+		values, _ := report.Nics()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
 var psTests = []testResultOMReport{
 	{
 		Input: `Power Supplies Information
@@ -1234,6 +1239,13 @@ Index;Status;Connector Name;Processor Brand;Processor Version;Current Speed;Stat
 				Value: "0",
 				Labels: map[string]string{
 					"processor": "CPU1",
+				},
+			},
+			{
+				Name:  "chassis_processor_status",
+				Value: "1",
+				Labels: map[string]string{
+					"processor": "CPU2",
 				},
 			},
 		},
@@ -1430,6 +1442,24 @@ func TestVolts(t *testing.T) {
 	for _, result := range voltsTests {
 		input = result.Input
 		values, _ := report.Volts()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
+var chassisBatteriesTests = []testResultOMReport{
+	// TODO need to get an example outputs for tests
+	{
+		Input:  ``,
+		Values: []Value{},
+	},
+}
+
+func TestChassisBatteries(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range chassisBatteriesTests {
+		input = result.Input
+		values, _ := report.ChassisBatteries()
 		assert.Equal(t, result.Values, values)
 	}
 }
