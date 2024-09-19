@@ -84,25 +84,25 @@ var chassisInfoTests = []testResultOMReport{
 	{
 		Input: `Chassis Information
 
-		Index;0
-		Chassis Name;Main System Chassis
-		Host Name;hostname
-		iDRAC9 Version;x.x.x.x (Build 32)
-		Lifecycle Controller Version;x.x.x.00
-		Chassis Model;PowerEdge RXXXX
-		Chassis Lock;Present
-		Chassis Service Tag;ABC123456789
-		Express Service Code;123456789
-		Chassis Asset Tag;Unknown
-		Flash chassis identify LED state;Off
-		Flash chassis identify LED timeout value;300
+Index;0
+Chassis Name;Main System Chassis
+Host Name;hostname
+iDRAC9 Version;5.x.x.x (Build x)
+Lifecycle Controller Version;5.x.x.x
+Chassis Model;PowerEdge Rxxxx
+Chassis Lock;Present
+Chassis Service Tag;123XXX
+Express Service Code;123456
+Chassis Asset Tag;Unknown
+Flash chassis identify LED state;Off
+Flash chassis identify LED timeout value;300
 `,
 		Values: []Value{
 			{
 				Name:  "chassis_info",
 				Value: "0",
 				Labels: map[string]string{
-					"chassis_model": "PowerEdge_RXXXX",
+					"chassis_model": "PowerEdge_Rxxxx",
 				},
 			},
 		},
@@ -1442,13 +1442,13 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 	{
 		Input: `Voltage Probes Information
 
-		Health : Ok
+Health : Ok
 
 
-		Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Threshold;Minimum Failure Threshold;Maximum Failure Threshold
-		0;Ok;CPU1 VCORE PG;Good;[N/A];[N/A];[N/A];[N/A]
-		2;Ok;System Board 3.3V PG;Good;[N/A];[N/A];[N/A];[N/A]
-		31;Ok;System Board 2.5V AUX PG;Good;[N/A];[N/A];[N/A];[N/A]`,
+Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Threshold;Minimum Failure Threshold;Maximum Failure Threshold
+0;Ok;CPU1 VCORE PG;Good;[N/A];[N/A];[N/A];[N/A]
+2;Ok;System Board 3.3V PG;Good;[N/A];[N/A];[N/A];[N/A]
+31;Ok;System Board 2.5V AUX PG;Good;[N/A];[N/A];[N/A];[N/A]`,
 		Values: []Value{
 			{
 				Name:  "chassis_volts_status",
@@ -1507,10 +1507,10 @@ var chassisBiosTests = []testResultOMReport{
 	{
 		Input: `BIOS Information
 
-		Manufacturer;Dell Inc.
-		Version;2.10.5
-		Release Date;07/25/2019
-		`,
+Manufacturer;Dell Inc.
+Version;2.10.5
+Release Date;07/25/2019
+`,
 		Values: []Value{
 			{
 				Name:  "bios",
@@ -1539,10 +1539,10 @@ var chassisFirmwareTests = []testResultOMReport{
 	{
 		Input: `Firmware Information
 
-		Version Information
-		iDRAC8;2.70.70.70 (Build 45)
-		Lifecycle Controller;2.70.70.70
-		`,
+Version Information
+iDRAC8;2.70.70.70 (Build 45)
+Lifecycle Controller;2.70.70.70
+`,
 		Values: []Value{
 			{
 				Name:  "firmware",
