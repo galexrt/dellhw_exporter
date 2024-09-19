@@ -8,6 +8,7 @@ All collectors are enabled by default. You can disable collectors by specifying 
 | ---------------------- | -------------------------------------------------------------------------------- |
 | `chassis`              | Overall status of chassis components.                                            |
 | `chassis_batteries`    | Overall status of chassis CMOS batteries.                                        |
+| `chassis_info`         | Information about the chassis (currently chassis model).                         |
 | `fans`                 | Overall status of system fans.                                                   |
 | `firmwares`            | Information about some firmware versions (DRAC, BIOS)                            |
 | `memory`               | System RAM DIMM status.                                                          |

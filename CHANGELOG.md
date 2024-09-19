@@ -1,3 +1,8 @@
+## 2.0.0 / TBD
+
+* [FEATURE] rewrite the omreport parser to be more flexible and consistent across `omreport` versions
+* [CHORE] update golang version to 1.23
+
 ## 1.13.13 / 2024-09-02
 
 * [FEATURE] add exporter version metric `dell_hw_exporter_version`

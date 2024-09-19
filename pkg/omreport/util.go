@@ -18,7 +18,6 @@ package omreport
 
 // Command executes the named program with the given arguments. If it does not
 import (
-	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -244,17 +243,17 @@ func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string)
 	return b, err
 }
 
-// ReadCommand runs command name with args and calls line for each line from its
+// ReadCommand runs command name with args and calls fn for the output from
 // stdout. Command is interrupted (if supported by Go) after 10 seconds and
 // killed after 20 seconds.
-func readCommand(line func(string) error, name string, arg ...string) error {
+func readCommand(fn func(string) error, name string, arg ...string) error {
 	timeout := time.Duration(int(atomic.LoadInt64(&cmdTimeout)))
-	return readCommandTimeout(timeout*time.Second, line, nil, name, arg...)
+	return readCommandTimeout(timeout*time.Second, fn, nil, name, arg...)
 }
 
 // ReadCommandTimeout is the same as ReadCommand with a specifiable timeout.
 // It can also take a []byte as input (useful for chaining commands).
-func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io.Reader, name string, args ...string) error {
+func readCommandTimeout(timeout time.Duration, fn func(string) error, stdin io.Reader, name string, args ...string) error {
 	b, err := Command(timeout, stdin, name, args...)
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
@@ -266,14 +265,13 @@ func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io
 		return fmt.Errorf("failed to execute command (\"%s %s\"). %w", name, args, err)
 	}
 
-	scanner := bufio.NewScanner(b)
-	for scanner.Scan() {
-		if err := line(scanner.Text()); err != nil {
-			return fmt.Errorf("failed to read command (\"%s %s\") output. %w", name, args, err)
-		}
+	out, err := io.ReadAll(b)
+	if err != nil {
+		log.Errorf("failed to read command (\"%s %s\") output. %v", name, args, err)
 	}
-	if err := scanner.Err(); err != nil {
-		log.Errorf("failed to scan command (\"%s %s\") output. %v", name, args, err)
+
+	if err := fn(string(out[:])); err != nil {
+		return fmt.Errorf("failed to process command (\"%s %s\") output. %w", name, args, err)
 	}
 
 	return nil
@@ -295,7 +293,7 @@ func hasKeys(in map[string]string, fields ...string) bool {
 	return true
 }
 
-func parseOutput(input string) Output {
+func parseOutput(mode ReaderMode, input string) Output {
 	output := Output{
 		{},
 	}
@@ -364,6 +362,7 @@ func parseOutput(input string) Output {
 			if len(keys) == 0 {
 				keyLine = line
 				keys = append(keys, sp...)
+
 				// Normalize keys to lower case
 				for i := 0; i < len(keys); i++ {
 					keys[i] = normalizeName(keys[i])
@@ -374,11 +373,11 @@ func parseOutput(input string) Output {
 				}
 			}
 
-			if kvSeparated && strings.Count(line, ";") == 1 {
+			if (mode == KeyValueReaderMode || kvSeparated) && strings.Count(line, ";") == 1 {
 				output[ri].Lines = append(output[ri].Lines, Line{
 					normalizeName(sp[0]): sp[1],
 				})
-			} else if keyLine != line {
+			} else if mode <= TableReaderMode && keyLine != line {
 				l := Line{}
 				for i, s := range sp {
 					if i > len(keys)-1 {

@@ -29,8 +29,8 @@ type testResultOMReport struct {
 
 func getOMReport(input *string) *OMReport {
 	return &OMReport{
-		Reader: func(f func(Output), _ string, args ...string) error {
-			output := parseOutput(*input)
+		Reader: func(f func(Output), mode ReaderMode, _ string, args ...string) error {
+			output := parseOutput(mode, *input)
 
 			f(output)
 
@@ -76,6 +76,45 @@ func TestChassis(t *testing.T) {
 	for _, result := range chassisTests {
 		input = result.Input
 		values, _ := report.Chassis()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
+var chassisInfoTests = []testResultOMReport{
+	{
+		Input: `Chassis Information
+
+		Index;0
+		Chassis Name;Main System Chassis
+		Host Name;hostname
+		iDRAC9 Version;x.x.x.x (Build 32)
+		Lifecycle Controller Version;x.x.x.00
+		Chassis Model;PowerEdge RXXXX
+		Chassis Lock;Present
+		Chassis Service Tag;ABC123456789
+		Express Service Code;123456789
+		Chassis Asset Tag;Unknown
+		Flash chassis identify LED state;Off
+		Flash chassis identify LED timeout value;300
+`,
+		Values: []Value{
+			{
+				Name:  "chassis_info",
+				Value: "0",
+				Labels: map[string]string{
+					"chassis_model": "PowerEdge_RXXXX",
+				},
+			},
+		},
+	},
+}
+
+func TestChassisInfo(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range chassisInfoTests {
+		input = result.Input
+		values, _ := report.ChassisInfo()
 		assert.Equal(t, result.Values, values)
 	}
 }

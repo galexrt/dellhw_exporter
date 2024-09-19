@@ -35,6 +35,14 @@ const (
 	controllerNameLabel = "controller_name"
 )
 
+type ReaderMode int
+
+const (
+	DynamicReaderMode ReaderMode = iota
+	KeyValueReaderMode
+	TableReaderMode
+)
+
 // Options allow to set options for the OMReport package
 type Options struct {
 	OMReportExecutable string
@@ -43,7 +51,7 @@ type Options struct {
 // OMReport contains the Options and a Reader to mock outputs during development
 type OMReport struct {
 	Options *Options
-	Reader  func(func(Output), string, ...string) error
+	Reader  func(f func(Output), mode ReaderMode, cmd string, args ...string) error
 }
 
 // Value contains a metrics name, value and labels
@@ -53,28 +61,24 @@ type Value struct {
 	Labels map[string]string
 }
 
-// New returns a new *OMReport
+// New returns a new OMReport struct
 func New(opts *Options) *OMReport {
 	if opts.OMReportExecutable == "" {
 		opts.OMReportExecutable = DefaultOMReportExecutable
 	}
+
 	return &OMReport{
 		Options: opts,
 		Reader:  readOmreport,
 	}
 }
 
-func readOmreport(f func(Output), omreportExecutable string, args ...string) error {
+func readOmreport(f func(Output), mode ReaderMode, omreportExecutable string, args ...string) error {
 	args = append(args, "-fmt", "ssv")
-	return readCommand(func(line string) error {
-		rs := Output{}
+	return readCommand(func(input string) error {
+		output := parseOutput(mode, input)
 
-		sp := strings.Split(line, ";")
-		for i, s := range sp {
-			sp[i] = clean(s)
-		}
-
-		f(rs)
+		f(output)
 
 		return nil
 	}, omreportExecutable, args...)
@@ -88,8 +92,8 @@ func (or *OMReport) getOMReportExecutable() string {
 	return DefaultOMReportExecutable
 }
 
-func (or *OMReport) readReport(f func(Output), omreportExecutable string, args ...string) error {
-	return or.Reader(f, omreportExecutable, args...)
+func (or *OMReport) readReport(f func(Output), mode ReaderMode, omreportExecutable string, args ...string) error {
+	return or.Reader(f, mode, omreportExecutable, args...)
 }
 
 // Chassis returns the chassis status
@@ -110,7 +114,29 @@ func (or *OMReport) Chassis() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis")
+	return values, err
+}
+
+// ChassisInfo returns the chassis information
+func (or *OMReport) ChassisInfo() ([]Value, error) {
+	values := []Value{}
+	err := or.readReport(func(outputs Output) {
+		for _, output := range outputs {
+			for _, fields := range output.Lines {
+				if !hasKeys(fields, "chassis_model") {
+					continue
+				}
+
+				model := strings.Replace(fields["chassis_model"], " ", "_", -1)
+				values = append(values, Value{
+					Name:   "chassis_info",
+					Value:  "0",
+					Labels: map[string]string{"chassis_model": model},
+				})
+			}
+		}
+	}, KeyValueReaderMode, or.getOMReportExecutable(), "chassis", "information")
 	return values, err
 }
 
@@ -141,7 +167,7 @@ func (or *OMReport) Fans() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "fans")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "fans")
 	return values, err
 }
 
@@ -167,7 +193,7 @@ func (or *OMReport) Memory() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "memory")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "memory")
 	return values, err
 }
 
@@ -188,7 +214,7 @@ func (or *OMReport) System() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "system")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "system")
 	return values, err
 }
 
@@ -219,7 +245,7 @@ func (or *OMReport) StorageBattery() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "storage", "battery")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "storage", "battery")
 	return values, err
 }
 
@@ -247,7 +273,7 @@ func (or *OMReport) StorageController() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "storage", "controller")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "storage", "controller")
 	return values, err
 }
 
@@ -279,7 +305,7 @@ func (or *OMReport) StorageEnclosure() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "storage", "enclosure")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "storage", "enclosure")
 	return values, err
 }
 
@@ -357,7 +383,7 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
+	}, DynamicReaderMode, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
 	return values, err
 }
 
@@ -446,7 +472,7 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "storage", "vdisk")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "storage", "vdisk")
 	return values, err
 }
 
@@ -504,7 +530,7 @@ func (or *OMReport) Nics(nicList ...string) ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "nics")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "nics")
 	return values, err
 }
 
@@ -551,7 +577,7 @@ func (or *OMReport) Ps() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "pwrsupplies")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "pwrsupplies")
 	return values, err
 }
 
@@ -600,7 +626,7 @@ func (or *OMReport) PsAmpsSysboardPwr() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "pwrmonitoring")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "pwrmonitoring")
 	return values, err
 }
 
@@ -625,7 +651,7 @@ func (or *OMReport) Processors() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "processors")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "processors")
 	return values, err
 }
 
@@ -694,7 +720,7 @@ func (or *OMReport) Temps() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "temps")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "temps")
 	return values, err
 }
 
@@ -727,7 +753,7 @@ func (or *OMReport) Volts() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "volts")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "volts")
 	return values, err
 }
 
@@ -751,7 +777,7 @@ func (or *OMReport) ChassisBatteries() ([]Value, error) {
 				})
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "batteries")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "batteries")
 	return values, err
 }
 
@@ -777,7 +803,7 @@ func (or *OMReport) ChassisBios() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "bios")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "bios")
 
 	values := []Value{}
 	values = append(values, value)
@@ -807,7 +833,7 @@ func (or *OMReport) ChassisFirmware() ([]Value, error) {
 				}
 			}
 		}
-	}, or.getOMReportExecutable(), "chassis", "firmware")
+	}, DynamicReaderMode, or.getOMReportExecutable(), "chassis", "firmware")
 
 	values := []Value{}
 	values = append(values, value)

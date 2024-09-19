@@ -168,7 +168,7 @@ func (p *program) Start(s service.Service) error {
 	collector.SetLogger(log)
 	collector.SetOMReport(omreport.New(omrOpts))
 
-	collectors, err := loadCollectors(opts.enabledCollectors, opts.monitoredNics)
+	collectors, err := loadCollectors(opts.enabledCollectors)
 	if err != nil {
 		log.Fatalf("Couldn't load collectors: %v", err)
 	}
@@ -356,7 +356,7 @@ func getCollectorConfig() *collector.Config {
 	}
 }
 
-func loadCollectors(list string, nicList []string) (map[string]collector.Collector, error) {
+func loadCollectors(list string) (map[string]collector.Collector, error) {
 	cfg := getCollectorConfig()
 
 	collectors := map[string]collector.Collector{}
