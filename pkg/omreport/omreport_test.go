@@ -1486,10 +1486,60 @@ func TestVolts(t *testing.T) {
 }
 
 var chassisBatteriesTests = []testResultOMReport{
-	// TODO need to get an example outputs for tests
 	{
-		Input:  ``,
-		Values: []Value{},
+		Input: `Batteries
+
+Health;Ok
+		
+Individual Battery Elements
+		
+Index;Status;Probe Name;Reading
+0;Ok;System Board CMOS Battery;Good`,
+		Values: []Value{
+			{
+				Name:  "cmos_batteries_status",
+				Value: "0",
+				Labels: map[string]string{
+					"index": "0",
+				},
+			},
+		},
+	},
+	{
+		Input: `Batteries
+
+Health;Ok
+		
+Individual Battery Elements
+		
+Index;Status;Probe Name;Reading
+0;Ok;System Board CMOS Battery;Good
+1;Critical;System Board CMOS Battery;Good
+2;Ok;System Board CMOS Battery;Good
+`,
+		Values: []Value{
+			{
+				Name:  "cmos_batteries_status",
+				Value: "0",
+				Labels: map[string]string{
+					"index": "0",
+				},
+			},
+			{
+				Name:  "cmos_batteries_status",
+				Value: "1",
+				Labels: map[string]string{
+					"index": "1",
+				},
+			},
+			{
+				Name:  "cmos_batteries_status",
+				Value: "0",
+				Labels: map[string]string{
+					"index": "2",
+				},
+			},
+		},
 	},
 }
 

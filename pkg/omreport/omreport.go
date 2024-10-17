@@ -767,12 +767,12 @@ func (or *OMReport) ChassisBatteries() ([]Value, error) {
 					continue
 				}
 
-				id := strings.Replace(fields["id"], ":", "_", -1)
-				ts := map[string]string{"id": id}
+				index := strings.Replace(fields["index"], ":", "_", -1)
+				ts := map[string]string{"index": index}
 
 				values = append(values, Value{
 					Name:   "cmos_batteries_status",
-					Value:  severity("status"),
+					Value:  severity(fields["status"]),
 					Labels: ts,
 				})
 			}
