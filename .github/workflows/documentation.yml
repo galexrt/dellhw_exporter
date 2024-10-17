@@ -59,7 +59,7 @@ jobs:
       - name: Build docs
         run: |
           mkdocs build --clean
-          cp -f ./gh-pages/* ./site/
+          { cd ./gh-pages/ && cp -f * ./site/ || true; }
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
