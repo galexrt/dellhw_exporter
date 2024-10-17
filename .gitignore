@@ -39,3 +39,6 @@ RPMBUILD
 
 # Docs
 site/
+
+# Nix
+.direnv/
