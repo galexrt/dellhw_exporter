@@ -1,6 +1,6 @@
 # Based upon https://github.com/the-nix-way/dev-templates
 {
-  description = "Basic flake for Go development";
+  description = "Basic flake for development of dellhw_exporter";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
