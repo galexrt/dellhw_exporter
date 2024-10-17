@@ -36,7 +36,7 @@ jobs:
     needs: helm-release
     runs-on: ubuntu-latest
     container:
-      image: "squidfunk/mkdocs-material:latest"
+      image: "docker.io/squidfunk/mkdocs-material:9.5.41"
     permissions:
       contents: write
     concurrency:
@@ -59,7 +59,7 @@ jobs:
       - name: Build docs
         run: |
           mkdocs build --clean
-          cp ./gh-pages/* ./site/
+          cp -f ./gh-pages/* ./site/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
