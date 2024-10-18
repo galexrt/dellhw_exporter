@@ -59,7 +59,7 @@ jobs:
       - name: Build docs
         run: |
           mkdocs build --clean
-          { cd ./gh-pages/ && cp -f * ./site/ || true; }
+          { for file in index.yaml artifacthub-repo.yml; do cp -v -f "./gh-pages/$file" ./site/ || true; done; }
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
