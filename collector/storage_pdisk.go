@@ -20,6 +20,7 @@ import (
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"go.uber.org/zap"
 )
 
 type storagePdiskCollector struct {
@@ -42,19 +43,21 @@ func (c *storagePdiskCollector) Update(ch chan<- prometheus.Metric) error {
 		return err
 	}
 	for cid := range controllers {
-		logger := log.WithField("controller", cid)
-		logger.Debugf("collecting pdisks from controller")
+		logger := logger.With(zap.Int("controller", cid))
+		logger.Debug("collecting pdisks from controller")
 
 		storagePdisk, err := or.StoragePdisk(strconv.Itoa(cid))
 		if err != nil {
 			return err
 		}
-		logger.Debugf("iterating pdisks from controller %d, data: %+v", cid, storagePdisk)
+
 		for _, value := range storagePdisk {
+			logger.Debug("iterating pdisks from controller", zap.Stringer("pdisk", value))
 			float, err := strconv.ParseFloat(value.Value, 64)
 			if err != nil {
 				return err
 			}
+
 			c.current = prometheus.NewDesc(
 				prometheus.BuildFQName(Namespace, "", value.Name),
 				"Overall status of physical disks + failure prediction (if available).",

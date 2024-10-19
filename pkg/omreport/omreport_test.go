@@ -1,5 +1,5 @@
 /*
-Copyright 2021 The dellhw_exporter Authors. All rights reserved.
+Copyright 2024 The dellhw_exporter Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ limitations under the License.
 package omreport
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -30,14 +29,11 @@ type testResultOMReport struct {
 
 func getOMReport(input *string) *OMReport {
 	return &OMReport{
-		Reader: func(f func([]string), _ string, args ...string) error {
-			for _, line := range strings.Split(*input, "\n") {
-				sp := strings.Split(line, ";")
-				for i, s := range sp {
-					sp[i] = clean(s)
-				}
-				f(sp)
-			}
+		Reader: func(f func(Output), mode ReaderMode, _ string, args ...string) error {
+			output := parseOutput(mode, *input)
+
+			f(output)
+
 			return nil
 		},
 	}
@@ -80,6 +76,45 @@ func TestChassis(t *testing.T) {
 	for _, result := range chassisTests {
 		input = result.Input
 		values, _ := report.Chassis()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
+var chassisInfoTests = []testResultOMReport{
+	{
+		Input: `Chassis Information
+
+Index;0
+Chassis Name;Main System Chassis
+Host Name;hostname
+iDRAC9 Version;5.x.x.x (Build x)
+Lifecycle Controller Version;5.x.x.x
+Chassis Model;PowerEdge Rxxxx
+Chassis Lock;Present
+Chassis Service Tag;123XXX
+Express Service Code;123456
+Chassis Asset Tag;Unknown
+Flash chassis identify LED state;Off
+Flash chassis identify LED timeout value;300
+`,
+		Values: []Value{
+			{
+				Name:  "chassis_info",
+				Value: "0",
+				Labels: map[string]string{
+					"chassis_model": "PowerEdge_Rxxxx",
+				},
+			},
+		},
+	},
+}
+
+func TestChassisInfo(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range chassisInfoTests {
+		input = result.Input
+		values, _ := report.ChassisInfo()
 		assert.Equal(t, result.Values, values)
 	}
 }
@@ -186,87 +221,6 @@ func TestMemory(t *testing.T) {
 	for _, result := range memoryTests {
 		input = result.Input
 		values, _ := report.Memory()
-		assert.Equal(t, result.Values, values)
-	}
-}
-
-var nicTests = []testResultOMReport{
-	{
-		Input: `Network Interfaces Information
-
-Physical NIC Interface(s)
-
-Index;Interface Name;Vendor;Description;Connection Status;Slot
-0;eno1;Manufacturer;Device Spec;Connected;Embedded
-1;eno2;Manufacturer;Device Spec;Connected;Embedded
-2;eno3;Manufacturer;Device Spec;Disabled;Embedded
-3;eno4;Manufacturer;Device Spec;Disabled;Embedded
-
-Team Interface(s)
-
-Index;Interface Name;Vendor;Description;Redundancy Status
-0;bond0;Linux;Ethernet Channel Bonding;Full
-1;br0;Linux;Network Bridge;Not Applicable
-`,
-		Values: []Value{
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "eno1",
-					"id":     "0",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "eno2",
-					"id":     "1",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "1",
-				Labels: map[string]string{
-					"device": "eno3",
-					"id":     "2",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "1",
-				Labels: map[string]string{
-					"device": "eno4",
-					"id":     "3",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "bond0",
-					"id":     "0",
-				},
-			},
-			{
-				Name:  "nic_status",
-				Value: "0",
-				Labels: map[string]string{
-					"device": "br0",
-					"id":     "1",
-				},
-			},
-		},
-	},
-}
-
-func TestNic(t *testing.T) {
-	input := ""
-	report := getOMReport(&input)
-	for _, result := range nicTests {
-		input = result.Input
-		values, _ := report.Nics()
 		assert.Equal(t, result.Values, values)
 	}
 }
@@ -664,6 +618,15 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 			{
 				Name:  "storage_pdisk_remaining_rated_write_endurance",
 				Value: "100",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H330 Mini (Embedded)",
+				},
+			},
+			{
+				Name:  "storage_pdisk_storage_encrypted",
+				Value: "1",
 				Labels: map[string]string{
 					"controller":        "0",
 					"disk":              "0_1_0",
@@ -1078,6 +1041,87 @@ func TestStorageVdisk(t *testing.T) {
 	}
 }
 
+var nicTests = []testResultOMReport{
+	{
+		Input: `Network Interfaces Information
+
+Physical NIC Interface(s)
+
+Index;Interface Name;Vendor;Description;Connection Status;Slot
+0;eno1;Manufacturer;Device Spec;Connected;Embedded
+1;eno2;Manufacturer;Device Spec;Connected;Embedded
+2;eno3;Manufacturer;Device Spec;Disabled;Embedded
+3;eno4;Manufacturer;Device Spec;Disabled;Embedded
+
+Team Interface(s)
+
+Index;Interface Name;Vendor;Description;Redundancy Status
+0;bond0;Linux;Ethernet Channel Bonding;Full
+1;br0;Linux;Network Bridge;Not Applicable
+`,
+		Values: []Value{
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "eno1",
+					"id":     "0",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "eno2",
+					"id":     "1",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "1",
+				Labels: map[string]string{
+					"device": "eno3",
+					"id":     "2",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "1",
+				Labels: map[string]string{
+					"device": "eno4",
+					"id":     "3",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "bond0",
+					"id":     "0",
+				},
+			},
+			{
+				Name:  "nic_status",
+				Value: "0",
+				Labels: map[string]string{
+					"device": "br0",
+					"id":     "1",
+				},
+			},
+		},
+	},
+}
+
+func TestNic(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range nicTests {
+		input = result.Input
+		values, _ := report.Nics()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
 var psTests = []testResultOMReport{
 	{
 		Input: `Power Supplies Information
@@ -1236,6 +1280,13 @@ Index;Status;Connector Name;Processor Brand;Processor Version;Current Speed;Stat
 					"processor": "CPU1",
 				},
 			},
+			{
+				Name:  "chassis_processor_status",
+				Value: "1",
+				Labels: map[string]string{
+					"processor": "CPU2",
+				},
+			},
 		},
 	},
 }
@@ -1391,13 +1442,13 @@ Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Thresh
 	{
 		Input: `Voltage Probes Information
 
-		Health : Ok
+Health : Ok
 
 
-		Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Threshold;Minimum Failure Threshold;Maximum Failure Threshold
-		0;Ok;CPU1 VCORE PG;Good;[N/A];[N/A];[N/A];[N/A]
-		2;Ok;System Board 3.3V PG;Good;[N/A];[N/A];[N/A];[N/A]
-		31;Ok;System Board 2.5V AUX PG;Good;[N/A];[N/A];[N/A];[N/A]`,
+Index;Status;Probe Name;Reading;Minimum Warning Threshold;Maximum Warning Threshold;Minimum Failure Threshold;Maximum Failure Threshold
+0;Ok;CPU1 VCORE PG;Good;[N/A];[N/A];[N/A];[N/A]
+2;Ok;System Board 3.3V PG;Good;[N/A];[N/A];[N/A];[N/A]
+31;Ok;System Board 2.5V AUX PG;Good;[N/A];[N/A];[N/A];[N/A]`,
 		Values: []Value{
 			{
 				Name:  "chassis_volts_status",
@@ -1434,14 +1485,82 @@ func TestVolts(t *testing.T) {
 	}
 }
 
+var chassisBatteriesTests = []testResultOMReport{
+	{
+		Input: `Batteries
+
+Health;Ok
+		
+Individual Battery Elements
+		
+Index;Status;Probe Name;Reading
+0;Ok;System Board CMOS Battery;Good`,
+		Values: []Value{
+			{
+				Name:  "cmos_batteries_status",
+				Value: "0",
+				Labels: map[string]string{
+					"index": "0",
+				},
+			},
+		},
+	},
+	{
+		Input: `Batteries
+
+Health;Ok
+		
+Individual Battery Elements
+		
+Index;Status;Probe Name;Reading
+0;Ok;System Board CMOS Battery;Good
+1;Critical;System Board CMOS Battery;Good
+2;Ok;System Board CMOS Battery;Good
+`,
+		Values: []Value{
+			{
+				Name:  "cmos_batteries_status",
+				Value: "0",
+				Labels: map[string]string{
+					"index": "0",
+				},
+			},
+			{
+				Name:  "cmos_batteries_status",
+				Value: "1",
+				Labels: map[string]string{
+					"index": "1",
+				},
+			},
+			{
+				Name:  "cmos_batteries_status",
+				Value: "0",
+				Labels: map[string]string{
+					"index": "2",
+				},
+			},
+		},
+	},
+}
+
+func TestChassisBatteries(t *testing.T) {
+	input := ""
+	report := getOMReport(&input)
+	for _, result := range chassisBatteriesTests {
+		input = result.Input
+		values, _ := report.ChassisBatteries()
+		assert.Equal(t, result.Values, values)
+	}
+}
+
 var chassisBiosTests = []testResultOMReport{
 	{
 		Input: `BIOS Information
 
-		Manufacturer;Dell Inc.
-		Version;2.10.5
-		Release Date;07/25/2019
-		`,
+Manufacturer;Dell Inc.
+Version;2.10.5
+Release Date;07/25/2019
+`,
 		Values: []Value{
 			{
 				Name:  "bios",
@@ -1470,10 +1589,10 @@ var chassisFirmwareTests = []testResultOMReport{
 	{
 		Input: `Firmware Information
 
-		Version Information
-		iDRAC8;2.70.70.70 (Build 45)
-		Lifecycle Controller;2.70.70.70
-		`,
+Version Information
+iDRAC8;2.70.70.70 (Build 45)
+Lifecycle Controller;2.70.70.70
+`,
 		Values: []Value{
 			{
 				Name:  "firmware",

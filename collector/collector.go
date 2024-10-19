@@ -19,15 +19,15 @@ package collector
 import (
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 // Namespace holds the metrics namespace/first part
 const Namespace = "dell_hw"
 
 var (
-	or  *omreport.OMReport
-	log = logrus.New()
+	or     *omreport.OMReport
+	logger = zap.NewNop()
 )
 
 type Config struct {
@@ -49,10 +49,6 @@ func SetOMReport(omrep *omreport.OMReport) {
 }
 
 // SetLogger
-func SetLogger(logger *logrus.Logger) {
-	log = logger
-}
-
-func init() {
-	log.SetLevel(logrus.ErrorLevel)
+func SetLogger(l *zap.Logger) {
+	logger = l
 }

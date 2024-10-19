@@ -1,5 +1,5 @@
 /*
-Copyright 2021 The dellhw_exporter Authors. All rights reserved.
+Copyright 2024 The dellhw_exporter Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package omreport
 
 // Command executes the named program with the given arguments. If it does not
 import (
-	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -26,24 +25,37 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"slices"
 	"strings"
 	"sync/atomic"
 	"time"
 	"unicode"
 	"unicode/utf8"
 
-	// TODO this is bad, we should at least use a passed in logger instead of the
-	// global logrus logger instance
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
+
+type Output = []Report
+
+type Report struct {
+	Title       string
+	Description string
+
+	Lines []Line
+}
+
+type Line = map[string]string
 
 var (
 	// ErrPath is returned by Command if the program is not in the PATH.
 	ErrPath = errors.New("program not in PATH")
 	// ErrTimeout is returned by Command if the program timed out.
 	ErrTimeout = errors.New("program killed after timeout")
+
 	// cmdTimeout configurable timeout for commands.
 	cmdTimeout int64 = 10
+
+	logger = zap.NewNop()
 )
 
 // clean concatenates arguments with a space and removes extra whitespace.
@@ -162,9 +174,7 @@ func yesNoToBool(s string) string {
 	return "0"
 }
 
-var (
-	getNumberFromStringRegex = regexp.MustCompile("[0-9]+")
-)
+var getNumberFromStringRegex = regexp.MustCompile("[0-9]+")
 
 func getNumberFromString(s string) string {
 	result := getNumberFromStringRegex.FindString(s)
@@ -202,12 +212,12 @@ func Replace(s, replacement string) (string, error) {
 
 // Command exit within timeout, it is sent SIGINT (if supported by Go). After
 // another timeout, it is killed.
-func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string) (io.Reader, error) {
+func Command(timeout time.Duration, stdin io.Reader, name string, args ...string) (io.Reader, error) {
 	if _, err := exec.LookPath(name); err != nil {
 		return nil, ErrPath
 	}
-	log.Debug("executing command: ", name, arg)
-	c := exec.Command(name, arg...)
+	logger.Debug("executing command", zap.String("command", name), zap.Strings("args", args))
+	c := exec.Command(name, args...)
 	b := &bytes.Buffer{}
 	c.Stdout = b
 	c.Stdin = stdin
@@ -216,12 +226,12 @@ func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string)
 	}
 	timedOut := false
 	intTimer := time.AfterFunc(timeout, func() {
-		log.Error("Process taking too long. Interrupting: ", name, strings.Join(arg, " "))
+		logger.Error("process taking too long, interrupting: ", zap.String("command", name), zap.Strings("args", args))
 		c.Process.Signal(os.Interrupt)
 		timedOut = true
 	})
 	killTimer := time.AfterFunc(timeout, func() {
-		log.Error("Process taking too long. Killing: ", name, strings.Join(arg, " "))
+		logger.Error("process taking too long, killing", zap.String("command", name), zap.Strings("args", args))
 		c.Process.Signal(os.Interrupt)
 		timedOut = true
 	})
@@ -234,17 +244,17 @@ func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string)
 	return b, err
 }
 
-// ReadCommand runs command name with args and calls line for each line from its
+// ReadCommand runs command name with args and calls fn for the output from
 // stdout. Command is interrupted (if supported by Go) after 10 seconds and
 // killed after 20 seconds.
-func readCommand(line func(string) error, name string, arg ...string) error {
+func readCommand(fn func(string) error, name string, arg ...string) error {
 	timeout := time.Duration(int(atomic.LoadInt64(&cmdTimeout)))
-	return readCommandTimeout(timeout*time.Second, line, nil, name, arg...)
+	return readCommandTimeout(timeout*time.Second, fn, nil, name, arg...)
 }
 
 // ReadCommandTimeout is the same as ReadCommand with a specifiable timeout.
 // It can also take a []byte as input (useful for chaining commands).
-func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io.Reader, name string, args ...string) error {
+func readCommandTimeout(timeout time.Duration, fn func(string) error, stdin io.Reader, name string, args ...string) error {
 	b, err := Command(timeout, stdin, name, args...)
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
@@ -255,19 +265,141 @@ func readCommandTimeout(timeout time.Duration, line func(string) error, stdin io
 		}
 		return fmt.Errorf("failed to execute command (\"%s %s\"). %w", name, args, err)
 	}
-	scanner := bufio.NewScanner(b)
-	for scanner.Scan() {
-		if err := line(scanner.Text()); err != nil {
-			return fmt.Errorf("failed to read command (\"%s %s\") output. %w", name, args, err)
-		}
+
+	out, err := io.ReadAll(b)
+	if err != nil {
+		logger.Error("failed to read command output", zap.String("command", name), zap.Strings("args", args), zap.Error(err))
 	}
-	if err := scanner.Err(); err != nil {
-		log.Errorf("failed to scan command (\"%s %s\") output. %v", name, args, err)
+
+	if err := fn(string(out[:])); err != nil {
+		return fmt.Errorf("failed to process command (\"%s %s\") output. %w", name, args, err)
 	}
+
 	return nil
 }
 
 // SetCommandTimeout this function can be used to atomically set the command execution timeout
 func SetCommandTimeout(timeout int64) {
 	atomic.StoreInt64(&cmdTimeout, timeout)
+}
+
+func hasKeys(in map[string]string, fields ...string) bool {
+	for _, field := range fields {
+		field = normalizeName(field)
+		if _, ok := in[field]; !ok {
+			return false
+		}
+	}
+
+	return true
+}
+
+func parseOutput(mode ReaderMode, input string) Output {
+	output := Output{
+		{},
+	}
+	ri := 0
+	gotTitle := false
+	kvSeparated := false
+
+	keyLine := ""
+	keys := []string{}
+
+	prevLine := ""
+	nextLine := ""
+
+	spl := strings.Split(input, "\n")
+	for i, line := range spl {
+		if i > 0 {
+			prevLine = spl[i-1]
+		}
+		if len(spl) > i+1 {
+			nextLine = spl[i+1]
+		} else {
+			nextLine = ""
+		}
+
+		line = clean(line)
+
+		if line == "" {
+			if strings.Contains(prevLine, ";") {
+				output = append(output, Report{})
+				ri++
+				gotTitle = false
+				kvSeparated = false
+				keyLine = ""
+				keys = []string{}
+			}
+			continue
+		}
+
+		if strings.HasPrefix(line, "For further help") {
+			continue
+		}
+
+		if !strings.Contains(line, ";") {
+			if !gotTitle {
+				output[ri].Title = line
+				gotTitle = true
+			} else {
+				output[ri].Description = line
+			}
+		} else {
+			sp := strings.Split(line, ";")
+
+			// Handle special cases..
+			if output[ri].Description == "Version Information" {
+				keyLine = line
+				keys = []string{"component", "version"}
+				kvSeparated = true
+			} else if output[ri].Title == "Amperage" {
+				keys = []string{"psu", "amperage"}
+			} else if output[ri].Title == "BIOS Information" {
+				kvSeparated = true
+			} else if strings.Count(line, ";") > 1 {
+				kvSeparated = true
+			}
+
+			if len(keys) == 0 {
+				keyLine = line
+				keys = append(keys, sp...)
+
+				// Normalize keys to lower case
+				for i := 0; i < len(keys); i++ {
+					keys[i] = normalizeName(keys[i])
+				}
+
+				if prevLine == "" && strings.Contains(nextLine, ";") && keyLine != line {
+					continue
+				}
+			}
+
+			if (mode == KeyValueReaderMode || kvSeparated) && strings.Count(line, ";") == 1 {
+				output[ri].Lines = append(output[ri].Lines, Line{
+					normalizeName(sp[0]): sp[1],
+				})
+			} else if mode <= TableReaderMode && keyLine != line {
+				l := Line{}
+				for i, s := range sp {
+					if i > len(keys)-1 {
+						continue
+					}
+
+					l[keys[i]] = s
+				}
+
+				output[ri].Lines = append(output[ri].Lines, l)
+			}
+		}
+	}
+
+	if len(output[ri].Lines) == 0 {
+		output = slices.Delete(output, ri, ri+1)
+	}
+
+	return output
+}
+
+func normalizeName(in string) string {
+	return strings.Replace(strings.ToLower(in), " ", "_", -1)
 }
