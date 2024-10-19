@@ -1,7 +1,14 @@
-## 2.0.0 / TBD
+## 2.0.0-rc.1 / TBD
 
-* [FEATURE] rewrite the omreport parser to be more flexible and consistent across `omreport` versions
+* [CHORE] add a basic nix flake to make development easier for me :-)
+* [CHORE] replace logrus with zap logger
+* [CHORE] update dependencies
 * [CHORE] update golang version to 1.23
+* [FEATURE] add `--collectors-additional` flag to allow enabling a disabled exporter on top of the `--collectors-enabled` flag
+* [FEATURE] Helm chart: add `additionalEnv` list and update chart documentation
+* [FEATURE] rewrite the omreport parser logic to be more flexible and consistent across `omreport` commands and versions (fixes #115 and other parsing related issues)
+* [FIX] fix docs page not working (404 errors when opening any page)
+* [FIX] updated documentation for new changes and added a FAQ page
 
 ## 1.13.13 / 2024-09-02
 

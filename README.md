@@ -138,7 +138,7 @@ Golang version `1.21` is used for testing and building the dellhw_exporter.
     * [BUGFIX] ci: fix build routine issues
     ```
 
-    The following "kinds" of entries can be added:
+    The following "kinds" of entries can be used:
 
     * `CHANGE`
     * `FEATURE`
