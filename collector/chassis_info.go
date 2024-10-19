@@ -30,7 +30,7 @@ func init() {
 
 // NewChassisCollector returns a new chassisInfoCollector
 func NewChassisInfoCollector(cfg *Config) (Collector, error) {
-	return &chassisCollector{}, nil
+	return &chassisInfoCollector{}, nil
 }
 
 // Update Prometheus metrics

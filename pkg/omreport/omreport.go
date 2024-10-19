@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 const (
@@ -59,6 +61,20 @@ type Value struct {
 	Name   string
 	Value  string
 	Labels map[string]string
+}
+
+func (v Value) String() string {
+	labels := []string{}
+	for k, v := range v.Labels {
+		labels = append(labels, fmt.Sprintf("%s=%s", k, v))
+	}
+
+	return fmt.Sprintf("%q{%q}=%s", v.Name, labels, v.Value)
+}
+
+// SetLogger
+func SetLogger(l *zap.Logger) {
+	logger = l
 }
 
 // New returns a new OMReport struct

@@ -32,9 +32,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	// TODO this is bad, we should at least use a passed in logger instead of the
-	// global logrus logger instance
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type Output = []Report
@@ -53,8 +51,11 @@ var (
 	ErrPath = errors.New("program not in PATH")
 	// ErrTimeout is returned by Command if the program timed out.
 	ErrTimeout = errors.New("program killed after timeout")
+
 	// cmdTimeout configurable timeout for commands.
 	cmdTimeout int64 = 10
+
+	logger = zap.NewNop()
 )
 
 // clean concatenates arguments with a space and removes extra whitespace.
@@ -211,12 +212,12 @@ func Replace(s, replacement string) (string, error) {
 
 // Command exit within timeout, it is sent SIGINT (if supported by Go). After
 // another timeout, it is killed.
-func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string) (io.Reader, error) {
+func Command(timeout time.Duration, stdin io.Reader, name string, args ...string) (io.Reader, error) {
 	if _, err := exec.LookPath(name); err != nil {
 		return nil, ErrPath
 	}
-	log.Debug("executing command: ", name, arg)
-	c := exec.Command(name, arg...)
+	logger.Debug("executing command", zap.String("command", name), zap.Strings("args", args))
+	c := exec.Command(name, args...)
 	b := &bytes.Buffer{}
 	c.Stdout = b
 	c.Stdin = stdin
@@ -225,12 +226,12 @@ func Command(timeout time.Duration, stdin io.Reader, name string, arg ...string)
 	}
 	timedOut := false
 	intTimer := time.AfterFunc(timeout, func() {
-		log.Error("Process taking too long. Interrupting: ", name, strings.Join(arg, " "))
+		logger.Error("process taking too long, interrupting: ", zap.String("command", name), zap.Strings("args", args))
 		c.Process.Signal(os.Interrupt)
 		timedOut = true
 	})
 	killTimer := time.AfterFunc(timeout, func() {
-		log.Error("Process taking too long. Killing: ", name, strings.Join(arg, " "))
+		logger.Error("process taking too long, killing", zap.String("command", name), zap.Strings("args", args))
 		c.Process.Signal(os.Interrupt)
 		timedOut = true
 	})
@@ -267,7 +268,7 @@ func readCommandTimeout(timeout time.Duration, fn func(string) error, stdin io.R
 
 	out, err := io.ReadAll(b)
 	if err != nil {
-		log.Errorf("failed to read command (\"%s %s\") output. %v", name, args, err)
+		logger.Error("failed to read command output", zap.String("command", name), zap.Strings("args", args), zap.Error(err))
 	}
 
 	if err := fn(string(out[:])); err != nil {
