@@ -1029,6 +1029,130 @@ ID;Status;Name;State;Hot Spare Policy violated;Encrypted;Progress;Layout;Size;T1
 			},
 		},
 	},
+	{
+		Input: `List of Virtual Disks in the System
+
+Controller PERC H740P Adapter  (Slot 6)
+
+ID;Status;Name;State;Hot Spare Policy violated;Virtual Disk Bad Blocks;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Strip Element Size;Disk Cache Policy
+0;Ok;DATA;Ready;Not Applicable;No;No;RAID-0;7,153.38 GiB (7680877920256 bytes);No;Not Applicable;/dev/sda;SAS;SSD;Read Ahead;Write Back;Not Applicable;512 KB;Unchanged
+1;Critical;STORAGE;Ready;Not Assigned;Yes;No;RAID-5;49,170.00 GiB (52795885486080 bytes);No;Not Applicable;/dev/sdb;SAS;HDD;Read Ahead;Write Back;Not Applicable;512 KB;Unchanged
+
+ID;Status;Name;State;Hot Spare Policy violated;Virtual Disk Bad Blocks;Encrypted;Layout;Size;T10 Protection Information Status;Associated Fluid Cache State ;Device Name;Bus Protocol;Media;Read Policy;Write Policy;Cache Policy;Strip Element Size;Disk Cache Policy
+`,
+		Values: []Value{
+			// 1st Disk
+			{
+				Name:  "storage_vdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "DATA",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "DATA",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "DATA",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "DATA",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "7",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "DATA",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "0",
+					"vdisk_name":        "DATA",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			// 2nd Disk
+			{
+				Name:  "storage_vdisk_status",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "STORAGE",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "STORAGE",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_raidlevel",
+				Value: "5",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "STORAGE",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_read_policy",
+				Value: "1",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "STORAGE",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_write_policy",
+				Value: "7",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "STORAGE",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+			{
+				Name:  "storage_vdisk_cache_policy",
+				Value: "0",
+				Labels: map[string]string{
+					"vdisk":             "1",
+					"vdisk_name":        "STORAGE",
+					controllerNameLabel: "PERC H740P Adapter (Slot 6)",
+				},
+			},
+		},
+	},
 }
 
 func TestStorageVdisk(t *testing.T) {
