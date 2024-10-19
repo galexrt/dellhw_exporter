@@ -159,7 +159,7 @@ docs-build:
 	docker run --net=host --volume "$$(pwd)":"$$(pwd)" --workdir "$$(pwd)" -it squidfunk/mkdocs-material build --clean
 
 helm-docs-binary:
-	GO111MODULE=on $(GO) get github.com/norwoodj/helm-docs/cmd/helm-docs
+	GO111MODULE=on $(GO) install github.com/norwoodj/helm-docs/cmd/helm-docs@v1.11.0
 
 helm-docs: helm-docs-binary
 	helm-docs

@@ -1,0 +1,54 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.badgesSection" . }}
+
+## Get Repo Info
+
+```console
+helm repo add dellhw_exporter https://galexrt.github.io/dellhw_exporter
+helm repo update
+```
+
+_See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
+
+## Install Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+helm install --namespace <your-cluster-namespace> my-release dellhw_exporter/dellhw_exporter 
+```
+
+The command deploys dellhw_exporter on the Kubernetes cluster in the default configuration.
+
+_See [configuration](#configuration) below._
+
+_See [helm install](https://helm.sh/docs/helm/helm_install/) for command documentation._
+
+### Development Build
+
+To deploy from a local build from your development environment:
+
+```console
+cd charts/dellhw_exporter
+helm install --namespace <your-cluster-namespace> my-release . -f values.yaml
+```
+
+## Uninstall Chart
+
+To uninstall/delete the my-release deployment:
+
+```console
+helm delete --namespace <your-cluster-namespace> my-release
+```
+
+This removes all the Kubernetes components associated with the chart and deletes the release.
+
+_See [helm uninstall](https://helm.sh/docs/helm/helm_uninstall/) for command documentation._
+
+{{ template "chart.requirementsSection" . }}
+
+## Configuration
+
+{{ template "chart.valuesTable" . }}

@@ -13,7 +13,9 @@ image:
 # -- ImagePullSecrets to add to the DaemonSet
 imagePullSecrets: []
 
+# -- Override chart name
 nameOverride: ""
+# -- Override fully-qualified app name
 fullnameOverride: ""
 
 serviceAccount:
@@ -55,9 +57,12 @@ psp:
       - secret
 
 service:
+  # -- Service type
   type: ClusterIP
+  # -- Service port
   port: 9137
 
+# -- Resources for the dellhw_exporter container
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -85,13 +90,17 @@ serviceMonitor:
   # -- Additional Labels for the ServiceMonitor object
   additionalLabels: {}
   #namespace: "monitoring"
+  # -- ServiceMonitor namespace selector (check the comments below for examples)
   namespaceSelector:
   # Default: scrape .Release.Namespace only
   # To scrape all, use the following:
   #  matchNames:
   #    - monitoring
   #   any: true
+  # -- (duration) Interval at which metrics should be scraped
   scrapeInterval: 30s
+  # -- (duration) Timeout for scraping
+  scrapeTimeout: 20s
   # honorLabels: true
 
 prometheusRule:
@@ -101,5 +110,14 @@ prometheusRule:
   additionalLabels: {}
   # Default: .Release.Namespace
   # namespace: ""
-  # prometheusRule.rules -- Checkout the `/contrib/prometheus-alerts/prometheus-alerts.yml` file for example alerts
+  # -- Checkout the https://github.com/galexrt/dellhw_exporter/blob/main/contrib/monitoring/prometheus-alerts/prometheus-alerts.yml for example alerts
   rules: []
+
+# -- Additional environments to be added to the dellhw_exporter container, use this to configure the exporter (see https://github.com/galexrt/dellhw_exporter/blob/main/docs/configuration.md#environment-variables)
+additionalEnv: []
+# E.g., to enable the `chassis_info` collector you can add this env var
+# - name: DELLHW_EXPORTER_COLLECTORS_ADDITIONAL
+#   value: "chassis_info"
+# List of nics to monitor
+# - name: DELLHW_EXPORTER_MONITORED_NICS
+#   value: "nic1,nic2"

@@ -15,6 +15,7 @@ spec:
   endpoints:
     - port: http-metrics
       interval: {{ .Values.serviceMonitor.scrapeInterval }}
+      scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout }}
     {{- if .Values.serviceMonitor.honorLabels }}
       honorLabels: true
     {{- end }}

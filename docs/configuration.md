@@ -33,14 +33,13 @@ DELLHW_EXPORTER_COLLECTORS_ADDITIONAL
 DELLHW_EXPORTER_COLLECTORS_CMD_TIMEOUT
 DELLHW_EXPORTER_COLLECTORS_ENABLED
 DELLHW_EXPORTER_COLLECTORS_OMREPORT
-DELLHW_EXPORTER_COLLECTORS_PRINT
 DELLHW_EXPORTER_LOG_LEVEL
 DELLHW_EXPORTER_MONITORED_NICS
 DELLHW_EXPORTER_WEB_LISTEN_ADDRESS
 DELLHW_EXPORTER_WEB_TELEMETRY_PATH
 ```
 
-### Docker Image specific Environment Variables
+### Container Image specific Environment Variables
 
 | Env                            | Default | Description                                                                             |
 | ------------------------------ | ------- | --------------------------------------------------------------------------------------- |
