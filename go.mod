@@ -5,7 +5,7 @@ go 1.23.1
 require (
 	github.com/kardianos/service v1.2.2
 	github.com/prometheus/client_golang v1.20.5
-	github.com/prometheus/common v0.61.0
+	github.com/prometheus/common v0.62.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/zap v1.27.0
@@ -22,6 +22,6 @@ require (
 	github.com/prometheus/procfs v0.15.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
-	google.golang.org/protobuf v1.35.2 // indirect
+	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
