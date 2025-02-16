@@ -6,7 +6,7 @@ require (
 	github.com/kardianos/service v1.2.2
 	github.com/prometheus/client_golang v1.20.5
 	github.com/prometheus/common v0.62.0
-	github.com/spf13/pflag v1.0.5
+	github.com/spf13/pflag v1.0.6
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/zap v1.27.0
 )
