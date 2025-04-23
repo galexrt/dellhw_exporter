@@ -1,8 +1,8 @@
-# dellhw_exporter
+# prometheus-dellhw-exporter
 
 A Helm chart for the dellhw_exporter
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.1](https://img.shields.io/badge/AppVersion-v2.0.0--rc.1-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.1](https://img.shields.io/badge/AppVersion-v2.0.0--rc.1-informational?style=flat-square)
 
 ## Get Repo Info
 
