@@ -48,7 +48,7 @@ securityContext:
 
 psp:
   # -- Specifies whether a PodSecurityPolicy (PSP) should be created
-  create: true
+  create: false
   # -- PodSecurityPolicy spec
   spec:
     privileged: true
