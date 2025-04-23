@@ -11,7 +11,7 @@ helm repo update
 
 ## dellhw_exporter
 
-The [dellhw_exporter/](dellhw_exporter/) chart.
+The [prometheus-dellhw-exporter/](prometheus-dellhw-exporter/) chart.
 
 ***
 

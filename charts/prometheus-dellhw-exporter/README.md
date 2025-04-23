@@ -1,8 +1,8 @@
-# dellhw_exporter
+# prometheus-dellhw-exporter
 
 A Helm chart for the dellhw_exporter
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.1](https://img.shields.io/badge/AppVersion-v2.0.0--rc.1-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.1](https://img.shields.io/badge/AppVersion-v2.0.0--rc.1-informational?style=flat-square)
 
 ## Get Repo Info
 
@@ -18,7 +18,7 @@ _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation
 To install the chart with the release name `my-release`:
 
 ```console
-helm install --namespace <your-cluster-namespace> my-release dellhw_exporter/dellhw_exporter
+helm install --namespace <your-cluster-namespace> my-release dellhw_exporter/prometheus-dellhw-exporter
 ```
 
 The command deploys dellhw_exporter on the Kubernetes cluster in the default configuration.
@@ -32,7 +32,7 @@ _See [helm install](https://helm.sh/docs/helm/helm_install/) for command documen
 To deploy from a local build from your development environment:
 
 ```console
-cd charts/dellhw_exporter
+cd charts/prometheus-dellhw-exporter
 helm install --namespace <your-cluster-namespace> my-release . -f values.yaml
 ```
 

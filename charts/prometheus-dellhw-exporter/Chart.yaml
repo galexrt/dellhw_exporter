@@ -1,5 +1,5 @@
 apiVersion: v2
-name: dellhw_exporter
+name: prometheus-dellhw-exporter
 description: A Helm chart for the dellhw_exporter
 
 # A chart can be either an 'application' or a 'library' chart.

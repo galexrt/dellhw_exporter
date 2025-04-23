@@ -17,7 +17,7 @@ _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation
 To install the chart with the release name `my-release`:
 
 ```console
-helm install --namespace <your-cluster-namespace> my-release dellhw_exporter/dellhw_exporter 
+helm install --namespace <your-cluster-namespace> my-release dellhw_exporter/prometheus-dellhw-exporter 
 ```
 
 The command deploys dellhw_exporter on the Kubernetes cluster in the default configuration.
@@ -31,7 +31,7 @@ _See [helm install](https://helm.sh/docs/helm/helm_install/) for command documen
 To deploy from a local build from your development environment:
 
 ```console
-cd charts/dellhw_exporter
+cd charts/prometheus-dellhw-exporter
 helm install --namespace <your-cluster-namespace> my-release . -f values.yaml
 ```
 
