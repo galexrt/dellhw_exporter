@@ -2,7 +2,7 @@
 
 A Helm chart for the dellhw_exporter
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.1](https://img.shields.io/badge/AppVersion-v2.0.0--rc.1-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.1](https://img.shields.io/badge/AppVersion-v2.0.0--rc.1-informational?style=flat-square)
 
 ## Get Repo Info
 
@@ -67,7 +67,7 @@ _See [helm uninstall](https://helm.sh/docs/helm/helm_uninstall/) for command doc
 | prometheusRule.additionalLabels | object | `{}` | Additional Labels for the PrometheusRule object |
 | prometheusRule.enabled | bool | `false` | Specifies whether a prometheus-operator PrometheusRule should be created |
 | prometheusRule.rules | list | `[]` | Checkout the https://github.com/galexrt/dellhw_exporter/blob/main/contrib/monitoring/prometheus-alerts/prometheus-alerts.yml for example alerts |
-| psp.create | bool | `true` | Specifies whether a PodSecurityPolicy (PSP) should be created |
+| psp.create | bool | `false` | Specifies whether a PodSecurityPolicy (PSP) should be created |
 | psp.spec | object | `{"allowedHostPaths":[],"privileged":true,"volumes":["secret"]}` | PodSecurityPolicy spec |
 | resources | object | `{}` | Resources for the dellhw_exporter container |
 | securityContext | object | `{"privileged":true}` | SecurityContext for the container |
