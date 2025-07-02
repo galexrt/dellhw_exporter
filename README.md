@@ -73,6 +73,14 @@ docker pull ghcr.io/galexrt/dellhw_exporter
 docker run -d --name dellhw_exporter --privileged -p 9137:9137 quay.io/galexrt/dellhw_exporter
 ```
 
+I can recommend adding the following flags to the `docker run` command:
+
+* `--restart=always` to ensure the container is restarted on failure or system reboot.
+* `-v /etc/hostname:/etc/hostname:ro -e HOSTNAME=$(cat /etc/hostname)` to set the container's hostname to the host's hostname (this is useful for Omreport data/Prometheus labels).
+* `-v /etc/os-release:/etc/os-release:ro` to ensure the container has access to the host's OS release information (this is useful for Omreport data/Prometheus labels).
+
+Podman should also be able to be used.
+
 ## Running without Docker / Podman
 
 To run without Docker / Podman either download a [release binary](https://github.com/galexrt/dellhw_exporter/releases) or build it (using `make build` command):
