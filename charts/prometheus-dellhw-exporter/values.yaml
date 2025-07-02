@@ -120,12 +120,12 @@ additionalEnv: []
   #  valueFrom:
   #    fieldRef:
   #      fieldPath: spec.nodeName
-# E.g., to enable the `chassis_info` collector you can add this env var
-# - name: DELLHW_EXPORTER_COLLECTORS_ADDITIONAL
-#   value: "chassis_info"
-# List of nics to monitor
-# - name: DELLHW_EXPORTER_MONITORED_NICS
-#   value: "nic1,nic2"
+  # E.g., to enable the `chassis_info` collector you can add this env var
+  #- name: DELLHW_EXPORTER_COLLECTORS_ADDITIONAL
+  #  value: "chassis_info"
+  # List of nics to monitor
+  #- name: DELLHW_EXPORTER_MONITORED_NICS
+  #  value: "nic1,nic2"
 
 # -- Additional volumes to be mounted in the dellhw_exporter container.
 additionalVolumes: []
