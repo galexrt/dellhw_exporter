@@ -22,6 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"os/exec"
 	"regexp"
@@ -31,8 +32,6 @@ import (
 	"time"
 	"unicode"
 	"unicode/utf8"
-
-	"go.uber.org/zap"
 )
 
 type Output = []Report
@@ -55,7 +54,7 @@ var (
 	// cmdTimeout configurable timeout for commands.
 	cmdTimeout int64 = 10
 
-	logger = zap.NewNop()
+	logger = slog.New(slog.NewTextHandler(io.Discard, &slog.HandlerOptions{Level: slog.LevelError}))
 )
 
 // clean concatenates arguments with a space and removes extra whitespace.
@@ -216,7 +215,7 @@ func Command(timeout time.Duration, stdin io.Reader, name string, args ...string
 	if _, err := exec.LookPath(name); err != nil {
 		return nil, ErrPath
 	}
-	logger.Debug("executing command", zap.String("command", name), zap.Strings("args", args))
+	logger.Debug("executing command", "command", name, "args", args)
 	c := exec.Command(name, args...)
 	b := &bytes.Buffer{}
 	c.Stdout = b
@@ -226,12 +225,12 @@ func Command(timeout time.Duration, stdin io.Reader, name string, args ...string
 	}
 	timedOut := false
 	intTimer := time.AfterFunc(timeout, func() {
-		logger.Error("process taking too long, interrupting: ", zap.String("command", name), zap.Strings("args", args))
+		logger.Error("process taking too long, interrupting: ", "command", name, "args", args)
 		c.Process.Signal(os.Interrupt)
 		timedOut = true
 	})
 	killTimer := time.AfterFunc(timeout, func() {
-		logger.Error("process taking too long, killing", zap.String("command", name), zap.Strings("args", args))
+		logger.Error("process taking too long, killing", "command", name, "args", args)
 		c.Process.Signal(os.Interrupt)
 		timedOut = true
 	})
@@ -268,7 +267,7 @@ func readCommandTimeout(timeout time.Duration, fn func(string) error, stdin io.R
 
 	out, err := io.ReadAll(b)
 	if err != nil {
-		logger.Error("failed to read command output", zap.String("command", name), zap.Strings("args", args), zap.Error(err))
+		logger.Error("failed to read command output", "command", name, "args", args, "error", err.Error())
 	}
 
 	if err := fn(string(out[:])); err != nil {

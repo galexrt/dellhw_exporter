@@ -28,8 +28,6 @@ import (
 	"time"
 
 	flag "github.com/spf13/pflag"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 
 	"github.com/galexrt/dellhw_exporter/collector"
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
@@ -98,7 +96,7 @@ type CmdLineOpts struct {
 }
 
 var (
-	logger *zap.Logger
+	logger *slog.Logger
 	opts   CmdLineOpts
 	flags  = flag.NewFlagSet("dellhw_exporter", flag.ExitOnError)
 )
@@ -126,35 +124,39 @@ func main() {
 	prg := &program{}
 	s, err := service.New(prg, svcConfig)
 	if err != nil {
-		logger.Fatal("failed to create service", zap.Error(err))
+		logger.Error("failed to create service", "error", err.Error())
+		os.Exit(1)
 	}
 
 	err = s.Run()
 	if err != nil {
-		logger.Error("error while running exporter", zap.Error(err))
+		logger.Error("error while running exporter", "error", err.Error())
 	}
 }
 
-func setupLogger() *zap.Logger {
-	loggerConfig := zap.NewProductionConfig()
-	level, err := zapcore.ParseLevel(opts.logLevel)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, fmt.Errorf("unable to parse log level. %w", err))
-		os.Exit(1)
+func setupLogger() *slog.Logger {
+	var logLevel slog.Level
+	switch opts.logLevel {
+	case "debug", "DEBUG":
+		logLevel = slog.LevelDebug
+	case "error", "ERROR":
+		logLevel = slog.LevelError
+	case "warning", "WARNING":
+		logLevel = slog.LevelWarn
+	default:
+		logLevel = slog.LevelInfo
 	}
-	loggerConfig.Level.SetLevel(level)
 
-	logger, err := loggerConfig.Build()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, fmt.Errorf("failed to set up logger. %w", err))
-		os.Exit(1)
-	}
+	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})
+	logger := slog.New(logHandler)
+
 	return logger
 }
 
 func (p *program) Start(s service.Service) error {
 	if err := parseFlagsAndEnvVars(); err != nil {
-		logger.Fatal("failed to parse flags and env vars", zap.Error(err))
+		logger.Error("failed to parse flags and env vars", "error", err.Error())
+		os.Exit(1)
 	}
 
 	if opts.version {
@@ -177,18 +179,18 @@ func (p *program) Start(s service.Service) error {
 
 	logger = setupLogger()
 
-	logger.Info("starting dellhw_exporter", zap.String("version", version.Info()))
+	logger.Info("starting dellhw_exporter", "version", version.Info())
 	logger.Info(fmt.Sprintf("build context: %s", version.BuildContext()))
 
 	if opts.cmdTimeout > 0 {
-		logger.Debug("setting command timeout", zap.Int64("cmd_timeout", opts.cmdTimeout))
+		logger.Debug("setting command timeout", "cmd_timeout", opts.cmdTimeout)
 		omreport.SetCommandTimeout(opts.cmdTimeout)
 	} else {
 		logger.Warn("not setting command timeout because it is zero")
 	}
 
 	if opts.cachingEnabled {
-		logger.Info("caching enabled. Cache Duration", zap.String("cache_duration", fmt.Sprintf("%ds", opts.cacheDuration)))
+		logger.Info("caching enabled. Cache Duration", "cache_duration", fmt.Sprintf("%ds", opts.cacheDuration))
 	} else {
 		logger.Info("caching is disabled by default")
 	}
@@ -203,12 +205,14 @@ func (p *program) Start(s service.Service) error {
 	enabledCollectors := append(opts.enabledCollectors, opts.additionalCollectors...)
 	collectors, err := loadCollectors(enabledCollectors)
 	if err != nil {
-		logger.Fatal("couldn't load collectors", zap.Error(err))
+		logger.Error("couldn't load collectors", "error", err.Error())
+		os.Exit(1)
 	}
-	logger.Info("enabled collectors", zap.Strings("collectors", enabledCollectors))
+	logger.Info("enabled collectors", "collectors", enabledCollectors)
 
 	if err = prometheus.Register(NewDellHWCollector(collectors, opts.cachingEnabled, opts.cacheDuration)); err != nil {
-		logger.Fatal("couldn't register collector", zap.Error(err))
+		logger.Error("couldn't register collector", "error", err.Error())
+		os.Exit(1)
 	}
 
 	// non-blocking start
@@ -372,10 +376,10 @@ func execute(name string, c collector.Collector, ch chan<- prometheus.Metric) {
 	var success float64
 
 	if err != nil {
-		logger.Error("collector failed", zap.String("collector", name), zap.Duration("duration", duration), zap.Error(err))
+		logger.Error("collector failed", "collector", name, "duration", duration.String(), "error", err.Error())
 		success = 0
 	} else {
-		logger.Debug("collector succeeded", zap.String("collector", name), zap.Duration("duration", duration))
+		logger.Debug("collector succeeded", "collector", name, "duration", duration.String())
 		success = 1
 	}
 	ch <- prometheus.MustNewConstMetric(scrapeDurationDesc, prometheus.GaugeValue, duration.Seconds(), name)
@@ -422,7 +426,7 @@ func (p *program) run() {
 	// Background work
 	handler := promhttp.HandlerFor(prometheus.DefaultGatherer,
 		promhttp.HandlerOpts{
-			ErrorLog:      zap.NewStdLog(logger),
+			ErrorLog:      slog.NewLogLogger(logger.Handler(), slog.LevelError),
 			ErrorHandling: promhttp.ContinueOnError,
 		})
 
