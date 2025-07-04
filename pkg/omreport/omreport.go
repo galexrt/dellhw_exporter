@@ -18,10 +18,9 @@ package omreport
 
 import (
 	"fmt"
+	"log/slog"
 	"strconv"
 	"strings"
-
-	"go.uber.org/zap"
 )
 
 const (
@@ -73,7 +72,7 @@ func (v Value) String() string {
 }
 
 // SetLogger
-func SetLogger(l *zap.Logger) {
+func SetLogger(l *slog.Logger) {
 	logger = l
 }
 

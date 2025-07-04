@@ -20,7 +20,6 @@ import (
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"go.uber.org/zap"
 )
 
 type storageVdiskCollector struct {
@@ -44,7 +43,7 @@ func (c *storageVdiskCollector) Update(ch chan<- prometheus.Metric) error {
 	}
 	for _, value := range storageVdisk {
 		logger.
-			With(zap.Stringer("vdisk", value)).
+			With("vdisk", value).
 			Debug("iterating vdisk values")
 		float, err := strconv.ParseFloat(value.Value, 64)
 		if err != nil {
