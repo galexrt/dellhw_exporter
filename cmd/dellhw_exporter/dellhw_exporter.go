@@ -87,6 +87,7 @@ type CmdLineOpts struct {
 
 	metricsAddr          string
 	metricsPath          string
+	webConfigPath        string
 	enabledCollectors    []string
 	additionalCollectors []string
 	monitoredNics        []string
@@ -248,6 +249,7 @@ func init() {
 
 	flags.StringVar(&opts.metricsAddr, "web-listen-address", ":9137", "The address to listen on for HTTP requests")
 	flags.StringVar(&opts.metricsPath, "web-telemetry-path", "/metrics", "Path the metrics will be exposed under")
+	flags.StringVar(&opts.webConfigPath, "web-config-file", "", "[EXPERIMENTAL] Path to configuration file that can enable TLS or authentication.")
 
 	flags.BoolVar(&opts.cachingEnabled, "cache-enabled", false, "Enable metrics caching to reduce load")
 	flags.Int64Var(&opts.cacheDuration, "cache-duration", 20, "Cache duration in seconds")
@@ -445,9 +447,7 @@ func (p *program) run() {
 	})
 
 	server := &http.Server{}
-	configFile := ""
-	newLog := slog.Default()
-	if err := web.ListenAndServe(server, &web.FlagConfig{WebListenAddresses: &[]string{opts.metricsAddr}, WebConfigFile: &configFile}, newLog); err != nil {
+	if err := web.ListenAndServe(server, &web.FlagConfig{WebListenAddresses: &[]string{opts.metricsAddr}, WebConfigFile: &opts.webConfigPath}, logger); err != nil {
 		panic(err)
 	}
 }
