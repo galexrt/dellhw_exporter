@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"runtime"
@@ -36,6 +37,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/version"
+	"github.com/prometheus/exporter-toolkit/web"
 )
 
 var defaultCollectors = []string{
@@ -438,7 +440,10 @@ func (p *program) run() {
 </html>`))
 	})
 
-	if err := http.ListenAndServe(opts.metricsAddr, nil); err != nil {
-		logger.Fatal("error during listen and serve", zap.Error(err))
+	server := &http.Server{}
+	configFile := ""
+	newLog := slog.Default()
+	if err := web.ListenAndServe(server, &web.FlagConfig{WebListenAddresses: &[]string{opts.metricsAddr}, WebConfigFile: &configFile}, newLog); err != nil {
+		panic(err)
 	}
 }
