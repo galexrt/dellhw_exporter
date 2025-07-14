@@ -448,6 +448,6 @@ func (p *program) run() {
 
 	server := &http.Server{}
 	if err := web.ListenAndServe(server, &web.FlagConfig{WebListenAddresses: &[]string{opts.metricsAddr}, WebConfigFile: &opts.webConfigPath}, logger); err != nil {
-		panic(err)
+		logger.Error("error while serving request", "error", err.Error())
 	}
 }
