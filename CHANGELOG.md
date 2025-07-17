@@ -1,3 +1,9 @@
+## 2.0.0-rc.2 / 2025-07-17
+
+* [ENHANCEMENT] Exporter Toolkit: Allows you to easily use TLS and basic auth for the exporter, click here for more details. Thanks to [@AlexandarY](https://github.com/AlexandarY) for implementing this!
+* [FIX] Helm Chart: Disable Pod Security Policies by default as they have been deprecated in Kubernetes 1.21+ and removed in 1.25+
+* [ENHANCEMENT] Helm Chart: Add `additionalVolumeMounts` and `additionalVolumes` to allow adding additional volumes and mounts to the exporter pods.
+
 ## 2.0.0-rc.1 / 2024-10-19
 
 * [CHORE] add a basic nix flake to make development easier for me :-)
