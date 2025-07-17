@@ -20,7 +20,6 @@ import (
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"go.uber.org/zap"
 )
 
 type storagePdiskCollector struct {
@@ -43,7 +42,7 @@ func (c *storagePdiskCollector) Update(ch chan<- prometheus.Metric) error {
 		return err
 	}
 	for cid := range controllers {
-		logger := logger.With(zap.Int("controller", cid))
+		logger := logger.With("controller", cid)
 		logger.Debug("collecting pdisks from controller")
 
 		storagePdisk, err := or.StoragePdisk(strconv.Itoa(cid))
@@ -52,7 +51,7 @@ func (c *storagePdiskCollector) Update(ch chan<- prometheus.Metric) error {
 		}
 
 		for _, value := range storagePdisk {
-			logger.Debug("iterating pdisks from controller", zap.Stringer("pdisk", value))
+			logger.Debug("iterating pdisks from controller", "pdisk", value)
 			float, err := strconv.ParseFloat(value.Value, 64)
 			if err != nil {
 				return err

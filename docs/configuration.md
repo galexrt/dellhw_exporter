@@ -18,9 +18,20 @@ Usage of dellhw_exporter:
       --version                         Show version information
       --web-listen-address string       The address to listen on for HTTP requests (default ":9137")
       --web-telemetry-path string       Path the metrics will be exposed under (default "/metrics")
+      --web-config-file string          [EXPERIMENTAL] Path to configuration file that can enable TLS or authentication.
 pflag: help requested
 exit status 2
 ```
+
+The `--web-config-file` instructs the exporter to load a separate YAML config file that provides the following abilities:
+ - HTTPS
+ - TLS cert authentication
+ - HTTP2
+ - Basic Authentication
+ - TLS versions and cipher suites
+ - Headers like `Strict-Transport-Security`, `X-XSS-Protection`, `X-Frame-Options`, etc.
+
+The exact format of the file and all its options can be found [here](https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md).
 
 ## Environment Variables
 
@@ -37,6 +48,7 @@ DELLHW_EXPORTER_LOG_LEVEL
 DELLHW_EXPORTER_MONITORED_NICS
 DELLHW_EXPORTER_WEB_LISTEN_ADDRESS
 DELLHW_EXPORTER_WEB_TELEMETRY_PATH
+DELLHW_EXPORTER_WEB_CONFIG_FILE
 ```
 
 ### Container Image specific Environment Variables
@@ -44,4 +56,3 @@ DELLHW_EXPORTER_WEB_TELEMETRY_PATH
 | Env                            | Default | Description                                                                             |
 | ------------------------------ | ------- | --------------------------------------------------------------------------------------- |
 | `START_DELL_SRVADMIN_SERVICES` | `true`  | Set to false if you don't want the srvadmin services to be started inside the container |
-

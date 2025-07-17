@@ -17,9 +17,11 @@ limitations under the License.
 package collector
 
 import (
+	"io"
+	"log/slog"
+
 	"github.com/galexrt/dellhw_exporter/pkg/omreport"
 	"github.com/prometheus/client_golang/prometheus"
-	"go.uber.org/zap"
 )
 
 // Namespace holds the metrics namespace/first part
@@ -27,7 +29,7 @@ const Namespace = "dell_hw"
 
 var (
 	or     *omreport.OMReport
-	logger = zap.NewNop()
+	logger = slog.New(slog.NewTextHandler(io.Discard, nil))
 )
 
 type Config struct {
@@ -49,6 +51,6 @@ func SetOMReport(omrep *omreport.OMReport) {
 }
 
 // SetLogger
-func SetLogger(l *zap.Logger) {
+func SetLogger(l *slog.Logger) {
 	logger = l
 }
