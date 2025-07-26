@@ -36,7 +36,7 @@ jobs:
     needs: helm-release
     runs-on: ubuntu-latest
     container:
-      image: "docker.io/squidfunk/mkdocs-material:9.6.15"
+      image: "docker.io/squidfunk/mkdocs-material:9.6.16"
     permissions:
       contents: write
     concurrency:
