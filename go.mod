@@ -4,7 +4,7 @@ go 1.23.1
 
 require (
 	github.com/kardianos/service v1.2.4
-	github.com/prometheus/client_golang v1.23.0
+	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.66.1
 	github.com/prometheus/exporter-toolkit v0.14.1
 	github.com/spf13/pflag v1.0.7
