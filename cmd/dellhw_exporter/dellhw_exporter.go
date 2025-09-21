@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"slices"
 	"sort"
 	"strings"
 	"sync"
@@ -66,6 +67,7 @@ var (
 		[]string{"collector"},
 		nil,
 	)
+
 	scrapeSuccessDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(collector.Namespace, "scrape", "collector_success"),
 		"dellhw_exporter: Whether a collector succeeded.",
@@ -84,6 +86,8 @@ type CmdLineOpts struct {
 
 	omReportExecutable string
 	cmdTimeout         int64
+
+	checkCollectors []string
 
 	metricsAddr          string
 	metricsPath          string
@@ -204,7 +208,7 @@ func (p *program) Start(s service.Service) error {
 	collector.SetOMReport(omreport.New(omrOpts))
 
 	enabledCollectors := append(opts.enabledCollectors, opts.additionalCollectors...)
-	collectors, err := loadCollectors(enabledCollectors)
+	collectors, err := loadCollectors(enabledCollectors, opts.checkCollectors)
 	if err != nil {
 		logger.Error("couldn't load collectors", "error", err.Error())
 		os.Exit(1)
@@ -246,6 +250,7 @@ func init() {
 	flags.StringSliceVar(&opts.monitoredNics, "monitored-nics", []string{}, "Comma separated list of nics to monitor (default, empty list, is to monitor all)")
 	flags.StringVar(&opts.omReportExecutable, "collectors-omreport", getDefaultOmReportPath(), "Path to the omreport executable (based on the OS (linux or windows) default paths are used if unset)")
 	flags.Int64Var(&opts.cmdTimeout, "collectors-cmd-timeout", 15, "Command execution timeout for omreport")
+	flag.StringSliceVar(&opts.checkCollectors, "collectors-check", []string{}, "Check if the specified collectors are applicable to the system and disable it otherwise. E.g., chassis_batteries ")
 
 	flags.StringVar(&opts.metricsAddr, "web-listen-address", ":9137", "The address to listen on for HTTP requests")
 	flags.StringVar(&opts.metricsPath, "web-telemetry-path", "/metrics", "Path the metrics will be exposed under")
@@ -334,9 +339,8 @@ func (n *DellHWCollector) Collect(outgoingCh chan<- prometheus.Metric) {
 	metricsCh := make(chan prometheus.Metric)
 
 	// Wait to ensure outgoingCh is not closed before the goroutine is finished
-	wgOutgoing := sync.WaitGroup{}
-	wgOutgoing.Add(1)
-	go func() {
+	var wgOutgoing sync.WaitGroup
+	wgOutgoing.Go(func() {
 		for metric := range metricsCh {
 			outgoingCh <- metric
 			if n.cachingEnabled {
@@ -345,16 +349,14 @@ func (n *DellHWCollector) Collect(outgoingCh chan<- prometheus.Metric) {
 			}
 		}
 		logger.Debug("finished pushing metrics from metricsCh to outgoingCh")
-		wgOutgoing.Done()
-	}()
+	})
 
-	wgCollection := sync.WaitGroup{}
-	wgCollection.Add(len(n.collectors))
+	var wgCollection sync.WaitGroup
 	for name, coll := range n.collectors {
-		go func(name string, coll collector.Collector) {
+		wgCollection.Go(func() {
 			execute(name, coll, metricsCh)
 			wgCollection.Done()
-		}(name, coll)
+		})
 	}
 
 	logger.Debug("waiting for collectors")
@@ -394,7 +396,7 @@ func getCollectorConfig() *collector.Config {
 	}
 }
 
-func loadCollectors(list []string) (map[string]collector.Collector, error) {
+func loadCollectors(list []string, check []string) (map[string]collector.Collector, error) {
 	cfg := getCollectorConfig()
 
 	collectors := map[string]collector.Collector{}
@@ -410,6 +412,17 @@ func loadCollectors(list []string) (map[string]collector.Collector, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		if slices.Contains(check, name) {
+			if cc, ok := c.(collector.IsAvailable); ok {
+				if !cc.IsAvailable() {
+					logger.Warn("disabling collector because it is not applicable to the system", "collector", name)
+				}
+				continue
+			}
+			logger.Debug("collector is applicable to the system", "collector", name)
+		}
+
 		collectors[name] = c
 	}
 

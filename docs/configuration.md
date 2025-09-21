@@ -16,20 +16,19 @@ Usage of dellhw_exporter:
       --log-level string                Set log level (default "INFO")
       --monitored-nics strings          Comma separated list of nics to monitor (default, empty list, is to monitor all)
       --version                         Show version information
+      --web-config-file string          [EXPERIMENTAL] Path to configuration file that can enable TLS or authentication.
       --web-listen-address string       The address to listen on for HTTP requests (default ":9137")
       --web-telemetry-path string       Path the metrics will be exposed under (default "/metrics")
-      --web-config-file string          [EXPERIMENTAL] Path to configuration file that can enable TLS or authentication.
-pflag: help requested
-exit status 2
 ```
 
 The `--web-config-file` instructs the exporter to load a separate YAML config file that provides the following abilities:
- - HTTPS
- - TLS cert authentication
- - HTTP2
- - Basic Authentication
- - TLS versions and cipher suites
- - Headers like `Strict-Transport-Security`, `X-XSS-Protection`, `X-Frame-Options`, etc.
+
+- HTTPS
+- TLS cert authentication
+- HTTP2
+- Basic Authentication
+- TLS versions and cipher suites
+- Headers like `Strict-Transport-Security`, `X-XSS-Protection`, `X-Frame-Options`, etc.
 
 The exact format of the file and all its options can be found [here](https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md).
 

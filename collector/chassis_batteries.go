@@ -18,6 +18,7 @@ package collector
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -55,4 +56,15 @@ func (c *chassisBatteriesCollector) Update(ch chan<- prometheus.Metric) error {
 	}
 
 	return nil
+}
+
+// IsAvailable if the collector is available
+func (c *chassisBatteriesCollector) IsAvailable() bool {
+	_, err := or.ChassisBatteries()
+	if err == nil {
+		return true
+	}
+
+	e := strings.ToLower(err.Error())
+	return strings.Contains(e, "no battery probes found on this system")
 }

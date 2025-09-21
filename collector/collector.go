@@ -45,6 +45,11 @@ type Collector interface {
 	Update(ch chan<- prometheus.Metric) error
 }
 
+type IsAvailable interface {
+	// IsAvailable checks if the collector is available for the current system.
+	IsAvailable() bool
+}
+
 // SetOMReport a given OMReport for the collectors
 func SetOMReport(omrep *omreport.OMReport) {
 	or = omrep
