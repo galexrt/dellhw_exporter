@@ -12,9 +12,7 @@
 <span class=normal>12</span>
 <span class=normal>13</span>
 <span class=normal>14</span>
-<span class=normal>15</span>
-<span class=normal>16</span>
-<span class=normal>17</span></pre></div></td><td class=code><div><pre><span></span><code><span class=gp>$ </span>dellhw_exporter<span class=w> </span>--help
+<span class=normal>15</span></pre></div></td><td class=code><div><pre><span></span><code><span class=gp>$ </span>dellhw_exporter<span class=w> </span>--help
 <span class=go>Usage of dellhw_exporter:</span>
 <span class=go>      --cache-duration int              Cache duration in seconds (default 20)</span>
 <span class=go>      --cache-enabled                   Enable metrics caching to reduce load</span>
@@ -26,12 +24,10 @@
 <span class=go>      --log-level string                Set log level (default &quot;INFO&quot;)</span>
 <span class=go>      --monitored-nics strings          Comma separated list of nics to monitor (default, empty list, is to monitor all)</span>
 <span class=go>      --version                         Show version information</span>
+<span class=go>      --web-config-file string          [EXPERIMENTAL] Path to configuration file that can enable TLS or authentication.</span>
 <span class=go>      --web-listen-address string       The address to listen on for HTTP requests (default &quot;:9137&quot;)</span>
 <span class=go>      --web-telemetry-path string       Path the metrics will be exposed under (default &quot;/metrics&quot;)</span>
-<span class=go>      --web-config-file string          [EXPERIMENTAL] Path to configuration file that can enable TLS or authentication.</span>
-<span class=go>pflag: help requested</span>
-<span class=go>exit status 2</span>
-</code></pre></div></td></tr></table></div> <p>The <code>--web-config-file</code> instructs the exporter to load a separate YAML config file that provides the following abilities:<br> - HTTPS<br> - TLS cert authentication<br> - HTTP2<br> - Basic Authentication<br> - TLS versions and cipher suites<br> - Headers like <code>Strict-Transport-Security</code>, <code>X-XSS-Protection</code>, <code>X-Frame-Options</code>, etc.</p> <p>The exact format of the file and all its options can be found <a href=https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md>here</a>.</p> <h2 id=environment-variables>Environment Variables<a class=headerlink href=#environment-variables title="Permanent link">&para;</a></h2> <p>For the description of the env vars, see the above equivalent flags (and their defaults).</p> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 1</span>
+</code></pre></div></td></tr></table></div> <p>The <code>--web-config-file</code> instructs the exporter to load a separate YAML config file that provides the following abilities:</p> <ul> <li>HTTPS</li> <li>TLS cert authentication</li> <li>HTTP2</li> <li>Basic Authentication</li> <li>TLS versions and cipher suites</li> <li>Headers like <code>Strict-Transport-Security</code>, <code>X-XSS-Protection</code>, <code>X-Frame-Options</code>, etc.</li> </ul> <p>The exact format of the file and all its options can be found <a href=https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md>here</a>.</p> <h2 id=environment-variables>Environment Variables<a class=headerlink href=#environment-variables title="Permanent link">&para;</a></h2> <p>For the description of the env vars, see the above equivalent flags (and their defaults).</p> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 1</span>
 <span class=normal> 2</span>
 <span class=normal> 3</span>
 <span class=normal> 4</span>
