@@ -1,3 +1,8 @@
+## 2.0.0-rc.3 / 2025-09-24
+
+* [ENHANCEMENT] Added `--collectors-check` flag to check the specified collectors, currently only `chassis_batteries` is "supported" on the system. This is [due to the removal of CMOS battery sensor data in newer firmwares (Dell Support page)](https://www.dell.com/support/kbdoc/en-uk/000227413/14g-intel-poweredge-coin-cell-battery-changes-in-august-2024-firmware). Thanks to [@lewispb](https://github.com/lewispb) for bringing this up!
+* [CHORE] Updated dependencies and Golang version to 1.25.1
+
 ## 2.0.0-rc.2 / 2025-07-17
 
 * [ENHANCEMENT] Exporter Toolkit: Allows you to easily use TLS and basic auth for the exporter, click here for more details. Thanks to [@AlexandarY](https://github.com/AlexandarY) for implementing this!
