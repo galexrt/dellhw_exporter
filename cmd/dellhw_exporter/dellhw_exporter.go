@@ -250,7 +250,8 @@ func init() {
 	flags.StringSliceVar(&opts.monitoredNics, "monitored-nics", []string{}, "Comma separated list of nics to monitor (default, empty list, is to monitor all)")
 	flags.StringVar(&opts.omReportExecutable, "collectors-omreport", getDefaultOmReportPath(), "Path to the omreport executable (based on the OS (linux or windows) default paths are used if unset)")
 	flags.Int64Var(&opts.cmdTimeout, "collectors-cmd-timeout", 15, "Command execution timeout for omreport")
-	flag.StringSliceVar(&opts.checkCollectors, "collectors-check", []string{}, "Check if the specified collectors are applicable to the system and disable it otherwise. E.g., chassis_batteries ")
+	flags.StringSliceVar(&opts.checkCollectors, "collectors-check", []string{}, "Check if the specified collectors are applicable to the system and disable it otherwise. E.g., chassis_batteries ")
+	flags.MarkDeprecated("check-collectors", "Please use collectors-check instead")
 
 	flags.StringVar(&opts.metricsAddr, "web-listen-address", ":9137", "The address to listen on for HTTP requests")
 	flags.StringVar(&opts.metricsPath, "web-telemetry-path", "/metrics", "Path the metrics will be exposed under")

@@ -9,6 +9,7 @@ Usage of dellhw_exporter:
       --cache-duration int              Cache duration in seconds (default 20)
       --cache-enabled                   Enable metrics caching to reduce load
       --collectors-additional strings   Comma separated list of collectors to enable additionally to the collectors-enabled list
+      --collectors-check strings        Check if the specified collectors are applicable to the system and disable it otherwise. E.g., chassis_batteries
       --collectors-cmd-timeout int      Command execution timeout for omreport (default 15)
       --collectors-enabled strings      Comma separated list of active collectors (default [chassis,chassis_batteries,fans,firmwares,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,version,volts])
       --collectors-omreport string      Path to the omreport executable (based on the OS (linux or windows) default paths are used if unset) (default "/opt/dell/srvadmin/bin/omreport")
@@ -40,6 +41,7 @@ For the description of the env vars, see the above equivalent flags (and their d
 DELLHW_EXPORTER_CACHE_DURATION
 DELLHW_EXPORTER_CACHE_ENABLED
 DELLHW_EXPORTER_COLLECTORS_ADDITIONAL
+DELLHW_EXPORTER_COLLECTORS_CHECK
 DELLHW_EXPORTER_COLLECTORS_CMD_TIMEOUT
 DELLHW_EXPORTER_COLLECTORS_ENABLED
 DELLHW_EXPORTER_COLLECTORS_OMREPORT
