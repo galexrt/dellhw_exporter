@@ -114,12 +114,15 @@ prometheusRule:
   rules: []
 
 # -- Additional environments to be added to the dellhw_exporter container, use this to configure the exporter (see https://github.com/galexrt/dellhw_exporter/blob/main/docs/configuration.md#environment-variables)
-additionalEnv: []
-  # Uncomment to set the hostname to the node's name in the exporter.
-  #- name: HOSTNAME
-  #  valueFrom:
-  #    fieldRef:
-  #      fieldPath: spec.nodeName
+additionalEnv:
+  - name: HOSTNAME
+    valueFrom:
+      fieldRef:
+        fieldPath: spec.nodeName
+  # To have the exporter check if certain collectors are available before enabling them,
+  # you can use the following env var. Currently only the `chassis_batteries` collector.
+  #- name: DELLHW_EXPORTER_COLLECTORS_CHECK
+  #  value: "chassis_batteries"
   # E.g., to enable the `chassis_info` collector you can add this env var
   #- name: DELLHW_EXPORTER_COLLECTORS_ADDITIONAL
   #  value: "chassis_info"

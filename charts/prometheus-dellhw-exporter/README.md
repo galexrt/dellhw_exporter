@@ -2,7 +2,7 @@
 
 A Helm chart for the dellhw_exporter
 
-![Version: 1.1.4](https://img.shields.io/badge/Version-1.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.3](https://img.shields.io/badge/AppVersion-v2.0.0--rc.3-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0-rc.3](https://img.shields.io/badge/AppVersion-v2.0.0--rc.3-informational?style=flat-square)
 
 ## Get Repo Info
 
@@ -52,7 +52,7 @@ _See [helm uninstall](https://helm.sh/docs/helm/helm_uninstall/) for command doc
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| additionalEnv | list | `[]` | Additional environments to be added to the dellhw_exporter container, use this to configure the exporter (see https://github.com/galexrt/dellhw_exporter/blob/main/docs/configuration.md#environment-variables) |
+| additionalEnv | list | `[{"name":"HOSTNAME","valueFrom":{"fieldRef":{"fieldPath":"spec.nodeName"}}}]` | Additional environments to be added to the dellhw_exporter container, use this to configure the exporter (see https://github.com/galexrt/dellhw_exporter/blob/main/docs/configuration.md#environment-variables) |
 | additionalVolumeMounts | list | `[]` | Additional volume mounts for the dellhw_exporter container. |
 | additionalVolumes | list | `[]` | Additional volumes to be mounted in the dellhw_exporter container. |
 | affinity | object | `{}` | Affinity for the DaemonSet |
