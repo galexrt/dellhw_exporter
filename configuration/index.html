@@ -12,11 +12,13 @@
 <span class=normal>12</span>
 <span class=normal>13</span>
 <span class=normal>14</span>
-<span class=normal>15</span></pre></div></td><td class=code><div><pre><span></span><code><span class=gp>$ </span>dellhw_exporter<span class=w> </span>--help
+<span class=normal>15</span>
+<span class=normal>16</span></pre></div></td><td class=code><div><pre><span></span><code><span class=gp>$ </span>dellhw_exporter<span class=w> </span>--help
 <span class=go>Usage of dellhw_exporter:</span>
 <span class=go>      --cache-duration int              Cache duration in seconds (default 20)</span>
 <span class=go>      --cache-enabled                   Enable metrics caching to reduce load</span>
 <span class=go>      --collectors-additional strings   Comma separated list of collectors to enable additionally to the collectors-enabled list</span>
+<span class=go>      --collectors-check strings        Check if the specified collectors are applicable to the system and disable it otherwise. E.g., chassis_batteries</span>
 <span class=go>      --collectors-cmd-timeout int      Command execution timeout for omreport (default 15)</span>
 <span class=go>      --collectors-enabled strings      Comma separated list of active collectors (default [chassis,chassis_batteries,fans,firmwares,memory,nics,processors,ps,ps_amps_sysboard_pwr,storage_battery,storage_controller,storage_enclosure,storage_pdisk,storage_vdisk,system,temps,version,volts])</span>
 <span class=go>      --collectors-omreport string      Path to the omreport executable (based on the OS (linux or windows) default paths are used if unset) (default &quot;/opt/dell/srvadmin/bin/omreport&quot;)</span>
@@ -37,9 +39,11 @@
 <span class=normal> 8</span>
 <span class=normal> 9</span>
 <span class=normal>10</span>
-<span class=normal>11</span></pre></div></td><td class=code><div><pre><span></span><code><span class=go>DELLHW_EXPORTER_CACHE_DURATION</span>
+<span class=normal>11</span>
+<span class=normal>12</span></pre></div></td><td class=code><div><pre><span></span><code><span class=go>DELLHW_EXPORTER_CACHE_DURATION</span>
 <span class=go>DELLHW_EXPORTER_CACHE_ENABLED</span>
 <span class=go>DELLHW_EXPORTER_COLLECTORS_ADDITIONAL</span>
+<span class=go>DELLHW_EXPORTER_COLLECTORS_CHECK</span>
 <span class=go>DELLHW_EXPORTER_COLLECTORS_CMD_TIMEOUT</span>
 <span class=go>DELLHW_EXPORTER_COLLECTORS_ENABLED</span>
 <span class=go>DELLHW_EXPORTER_COLLECTORS_OMREPORT</span>
