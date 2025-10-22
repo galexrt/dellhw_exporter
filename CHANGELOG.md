@@ -1,3 +1,8 @@
+## 2.0.0-rc.4 / 2025-10-24
+
+* [FIX] Helm Chart Statefulset marshal issues
+* [FIX] Negative Waitgroup causing panic during metrics collection
+
 ## 2.0.0-rc.3 / 2025-09-24
 
 * [ENHANCEMENT] Added `--collectors-check` flag to check the specified collectors, currently only `chassis_batteries` is "supported" on the system. This is [due to the removal of CMOS battery sensor data in newer firmwares (Dell Support page)](https://www.dell.com/support/kbdoc/en-uk/000227413/14g-intel-poweredge-coin-cell-battery-changes-in-august-2024-firmware). Thanks to [@lewispb](https://github.com/lewispb) for bringing this up!
