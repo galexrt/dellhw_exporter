@@ -356,7 +356,6 @@ func (n *DellHWCollector) Collect(outgoingCh chan<- prometheus.Metric) {
 	for name, coll := range n.collectors {
 		wgCollection.Go(func() {
 			execute(name, coll, metricsCh)
-			wgCollection.Done()
 		})
 	}
 
