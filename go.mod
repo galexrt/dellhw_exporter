@@ -6,7 +6,7 @@ require (
 	github.com/kardianos/service v1.2.4
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.1
-	github.com/prometheus/exporter-toolkit v0.14.1
+	github.com/prometheus/exporter-toolkit v0.15.0
 	github.com/spf13/pflag v1.0.10
 	github.com/stretchr/testify v1.11.1
 )
@@ -25,12 +25,13 @@ require (
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
-	golang.org/x/crypto v0.42.0 // indirect
-	golang.org/x/net v0.44.0 // indirect
+	golang.org/x/crypto v0.43.0 // indirect
+	golang.org/x/net v0.45.0 // indirect
 	golang.org/x/oauth2 v0.31.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
-	golang.org/x/sys v0.36.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
+	golang.org/x/sys v0.37.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
+	golang.org/x/time v0.13.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
