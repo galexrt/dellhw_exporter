@@ -213,7 +213,13 @@ func (p *program) Start(s service.Service) error {
 		logger.Error("couldn't load collectors", "error", err.Error())
 		os.Exit(1)
 	}
-	logger.Info("enabled collectors", "collectors", enabledCollectors)
+
+	// Get list of actually enabled collectors (after "loading" them)
+	cs := make([]string, 0, len(collectors))
+	for name := range collectors {
+		cs = append(cs, name)
+	}
+	logger.Info("enabled collectors", "collectors", cs)
 
 	if err = prometheus.Register(NewDellHWCollector(collectors, opts.cachingEnabled, opts.cacheDuration)); err != nil {
 		logger.Error("couldn't register collector", "error", err.Error())
