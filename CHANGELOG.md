@@ -1,3 +1,7 @@
+## 2.0.0-rc.5 / 2026-02-09
+
+* [FIX] Only log actually enabled collectors at startup (after the "is collector available on this system" check).
+
 ## 2.0.0-rc.4 / 2025-10-24
 
 * [FIX] Helm Chart Statefulset marshal issues
