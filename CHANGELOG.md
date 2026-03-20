@@ -1,3 +1,8 @@
+## 2.0.0 / 2026-03-20
+
+* [CHORE] release 2.0.0
+* [CHORE] update mkdocs theme to latest version
+
 ## 2.0.0-rc.5 / 2026-02-09
 
 * [FIX] Only log actually enabled collectors at startup (after the "is collector available on this system" check).
