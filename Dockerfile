@@ -1,4 +1,5 @@
-FROM docker.io/rockylinux/rockylinux:10.2.20260525.0
+# Rocky Linux 9 accepts Dell's legacy repository key; Rocky Linux 10 rejects it.
+FROM docker.io/rockylinux/rockylinux:9.8.20260525.0-ubi
 
 ARG BUILD_DATE="N/A"
 ARG REVISION="N/A"
