@@ -37,4 +37,6 @@ jobs:
 
       - name: Build container image
         run: |
+          make promu
+          promu crossbuild
           make docker

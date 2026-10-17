@@ -190,4 +190,4 @@ helm-docs-binary:
 helm-docs: helm-docs-binary
 	helm-docs
 
-.PHONY: all build crossbuild docker format package promu waybill sbom sbom-image style tarball test vet docs-serve docs-build helm-docs docs
+.PHONY: all build docker format package promu waybill sbom sbom-image style tarball test vet docs-serve docs-build helm-docs docs
