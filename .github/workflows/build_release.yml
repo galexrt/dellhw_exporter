@@ -26,6 +26,11 @@ jobs:
           make promu
           make check_license
 
+      - name: Generate source SBOM
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: make sbom
+
       - name: Build and release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,6 +48,27 @@ jobs:
           username: galexrt
           password: ${{ secrets.GITHUB_TOKEN }}
           tag_names: true
+
+      - name: Login to GHCR.io for image SBOM generation
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate and upload SBOMs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMAGE: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+          GITHUB_RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          docker pull "$IMAGE"
+          make sbom-image IMAGE="$IMAGE"
+          gh release upload "$GITHUB_RELEASE_TAG" \
+            dellhw_exporter.sbom.spdx.json \
+            dellhw_exporter.image.sbom.spdx.json \
+            --repo "$GITHUB_REPOSITORY" \
+            --clobber
 
       - name: Build and push to Quay.io
         uses: elgohr/Publish-Docker-Github-Action@v5

@@ -18,6 +18,7 @@ tarball:
     files:
         - LICENSE
         - NOTICE
+        - dellhw_exporter.sbom.spdx.json
         - systemd/dellhw_exporter.service
         - systemd/sysconfig.dellhw_exporter
 crossbuild:

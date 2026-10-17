@@ -31,6 +31,7 @@ _testmain.go
 /.bin/
 /.build/
 /.tarball/
+*.sbom.spdx.json
 
 # RPM
 dellhw_exporter.spec
