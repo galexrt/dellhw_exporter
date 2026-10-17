@@ -1,3 +1,7 @@
+## 2.3.0 / 2026-10-17
+
+* [CHORE] update base image to use Rocky Linux 9.8
+
 ## 2.2.0 / 2026-10-17
 
 * [FEATURE] generate source and container image SBOMs with Waybill, include the source SBOM in release tarballs, and upload both SBOMs to GitHub releases
