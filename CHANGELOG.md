@@ -1,3 +1,7 @@
+## 2.1.1 / 2026-10-07
+
+* [CHORE] update go deps/libs
+
 ## 2.1.0 / 2026-10-07
 
 * [FIX] use storage controller reports for physical disk collection on controllers without standalone pdisk reports
