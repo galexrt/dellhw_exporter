@@ -1,6 +1,7 @@
 ## Documentation
 
-[`mkdocs`](https://www.mkdocs.org/) is used to generate documentation.
+- [`mkdocs`](https://www.mkdocs.org/) is used to generate documentation.
+- [`waybill`](https://github.com/kusari-oss/waybill) is used to generate SBOMs.
 
 ## Code
 

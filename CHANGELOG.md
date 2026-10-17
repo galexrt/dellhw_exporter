@@ -1,3 +1,7 @@
+## 2.2.0 / 2026-10-17
+
+* [FEATURE] generate source and container image SBOMs with Waybill, include the source SBOM in release tarballs, and upload both SBOMs to GitHub releases
+
 ## 2.1.1 / 2026-10-07
 
 * [CHORE] update go deps/libs
