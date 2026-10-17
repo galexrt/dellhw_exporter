@@ -129,6 +129,9 @@ promu:
 	cp $(PROMU_TMP)/promu-$(PROMU_VERSION).$(GO_BUILD_PLATFORM)/promu $(FIRST_GOPATH)/bin/promu
 	rm -r $(PROMU_TMP)
 
+crossbuild: promu
+	$(PROMU) crossbuild
+
 $(WAYBILL):
 	@mkdir -p $(BIN_DIR)
 	@WAYBILL_TMP=$$(mktemp -d); \
@@ -190,4 +193,4 @@ helm-docs-binary:
 helm-docs: helm-docs-binary
 	helm-docs
 
-.PHONY: all build docker format package promu waybill sbom sbom-image style tarball test vet docs-serve docs-build helm-docs docs
+.PHONY: all build crossbuild docker format package promu waybill sbom sbom-image style tarball test vet docs-serve docs-build helm-docs docs
