@@ -73,6 +73,16 @@ entries:
     version: 0.2.10
   prometheus-dellhw-exporter:
   - apiVersion: v2
+    appVersion: v2.1.1
+    created: "2026-10-17T11:03:20.909449858Z"
+    description: A Helm chart for the dellhw_exporter
+    digest: 3cb8af8b5bb2c23f5fe482745adf03555c2b75b83f8245d22b57e402a822e005
+    name: prometheus-dellhw-exporter
+    type: application
+    urls:
+    - https://github.com/galexrt/dellhw_exporter/releases/download/prometheus-dellhw-exporter-1.4.1/prometheus-dellhw-exporter-1.4.1.tgz
+    version: 1.4.1
+  - apiVersion: v2
     appVersion: v2.1.0
     created: "2026-10-17T11:00:35.254317839Z"
     description: A Helm chart for the dellhw_exporter
@@ -202,4 +212,4 @@ entries:
     urls:
     - https://github.com/galexrt/dellhw_exporter/releases/download/prometheus-dellhw-exporter-1.0.1/prometheus-dellhw-exporter-1.0.1.tgz
     version: 1.0.1
-generated: "2026-10-17T11:00:35.254440649Z"
+generated: "2026-10-17T11:03:20.912041976Z"
