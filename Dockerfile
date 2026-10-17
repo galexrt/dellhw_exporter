@@ -23,7 +23,7 @@ ENV PATH="$PATH:/opt/dell/srvadmin/bin:/opt/dell/srvadmin/sbin" \
 
 # Do overall update and install missing packages needed for OpenManage
 RUN yum -y update && \
-    yum -y install wget perl passwd gcc which tar glibc.i686 make && \
+    yum -y install wget perl passwd gcc which tar glibc make && \
     curl -sS --retry 3 --fail -L -o bootstrap.cgi "https://linux.dell.com/repo/hardware/dsu/bootstrap.cgi" && \
     yes | bash bootstrap.cgi && \
     rm bootstrap.cgi && \
