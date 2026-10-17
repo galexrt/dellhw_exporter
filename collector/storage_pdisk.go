@@ -18,6 +18,7 @@ package collector
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -41,11 +42,12 @@ func (c *storagePdiskCollector) Update(ch chan<- prometheus.Metric) error {
 	if err != nil {
 		return err
 	}
-	for cid := range controllers {
+	for _, controller := range controllers {
+		cid := strings.ReplaceAll(controller.Labels["id"], "_", ":")
 		logger := logger.With("controller", cid)
 		logger.Debug("collecting pdisks from controller")
 
-		storagePdisk, err := or.StoragePdisk(strconv.Itoa(cid))
+		storagePdisk, err := or.StoragePdisk(cid)
 		if err != nil {
 			return err
 		}

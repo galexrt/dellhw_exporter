@@ -62,6 +62,19 @@ type Value struct {
 	Labels map[string]string
 }
 
+func storageControllerName(names ...string) string {
+	for _, name := range names {
+		if strings.HasPrefix(name, storageControllerNamePrefix) {
+			return strings.TrimPrefix(name, storageControllerNamePrefix)
+		}
+		if i := strings.Index(name, " on "+storageControllerNamePrefix); i >= 0 {
+			return name[i+len(" on "+storageControllerNamePrefix):]
+		}
+	}
+
+	return ""
+}
+
 func (v Value) String() string {
 	labels := []string{}
 	for k, v := range v.Labels {
@@ -239,13 +252,11 @@ func (or *OMReport) StorageBattery() ([]Value, error) {
 	controllerName := "N/A"
 	err := or.readReport(func(outputs Output) {
 		for _, output := range outputs {
-			for _, fields := range output.Lines {
-				if strings.HasPrefix(output.Title, storageControllerNamePrefix) {
-					controllerName = strings.TrimPrefix(output.Title, storageControllerNamePrefix)
-				} else if strings.HasPrefix(output.Description, storageControllerNamePrefix) {
-					controllerName = strings.TrimPrefix(output.Description, storageControllerNamePrefix)
-				}
+			if name := storageControllerName(output.Title, output.Description); name != "" {
+				controllerName = name
+			}
 
+			for _, fields := range output.Lines {
 				if len(fields) < 3 {
 					continue
 				}
@@ -276,7 +287,6 @@ func (or *OMReport) StorageController() ([]Value, error) {
 				}
 
 				controllerName = fmt.Sprintf("%s (Slot %s)", fields["name"], fields["slot_id"])
-				or.StoragePdisk(fields["id"])
 				id := strings.Replace(fields["id"], ":", "_", -1)
 				values = append(values, Value{
 					Name:  "storage_controller_status",
@@ -324,20 +334,21 @@ func (or *OMReport) StorageEnclosure() ([]Value, error) {
 	return values, err
 }
 
-// StoragePdisk is called from the controller func, since it needs the encapsulating IDs.
+// StoragePdisk returns physical disks reported by the storage controller.
 func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 	values := []Value{}
 	controllerName := "N/A"
 	err := or.readReport(func(outputs Output) {
 		for _, output := range outputs {
-			for _, fields := range output.Lines {
-				if strings.HasPrefix(output.Title, storageControllerNamePrefix) {
-					controllerName = strings.TrimPrefix(output.Title, storageControllerNamePrefix)
-				} else if strings.HasPrefix(output.Description, storageControllerNamePrefix) {
-					controllerName = strings.TrimPrefix(output.Description, storageControllerNamePrefix)
-				}
+			if name := storageControllerName(output.Title, output.Description); name != "" {
+				controllerName = name
+			}
 
-				if len(fields) < 3 {
+			for _, fields := range output.Lines {
+				// Controller reports contain controller rows as well as physical disk
+				// rows. Require fields specific to physical disks to avoid exporting
+				// the controller itself as a disk.
+				if !hasKeys(fields, "id", "status", "state", "power_status", "bus_protocol", "media") {
 					continue
 				}
 				// Need to find out what the various ID formats might be
@@ -398,7 +409,7 @@ func (or *OMReport) StoragePdisk(cid string) ([]Value, error) {
 				}
 			}
 		}
-	}, DynamicReaderMode, or.getOMReportExecutable(), "storage", "pdisk", "controller="+cid)
+	}, DynamicReaderMode, or.getOMReportExecutable(), "storage", "controller", "controller="+cid, "info=pdslotreport")
 	return values, err
 }
 
@@ -408,13 +419,11 @@ func (or *OMReport) StorageVdisk() ([]Value, error) {
 	controllerName := "N/A"
 	err := or.readReport(func(outputs Output) {
 		for _, output := range outputs {
-			for _, fields := range output.Lines {
-				if strings.HasPrefix(output.Title, storageControllerNamePrefix) {
-					controllerName = strings.TrimPrefix(output.Title, storageControllerNamePrefix)
-				} else if strings.HasPrefix(output.Description, storageControllerNamePrefix) {
-					controllerName = strings.TrimPrefix(output.Description, storageControllerNamePrefix)
-				}
+			if name := storageControllerName(output.Title, output.Description); name != "" {
+				controllerName = name
+			}
 
+			for _, fields := range output.Lines {
 				if len(fields) < 3 {
 					continue
 				}

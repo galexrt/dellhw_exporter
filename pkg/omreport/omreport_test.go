@@ -635,6 +635,69 @@ ID;Status;Name;State;Power Status;Bus Protocol;Media;Part of Cache Pool;Remainin
 			},
 		},
 	},
+	{
+		// The controller info report contains the physical disks and also works
+		// for controllers where the standalone pdisk report is unsupported.
+		Input: `Details of Enclosure BP_EXP on Controller PERC H355 Front
+
+ID;Slot Count;Occupied Slot Count;Empty Slot Count;Occupied Slots;Empty Slots
+0:1;24;1;23;0;1,2,3
+
+Occupied Physical Disk Details
+
+ID;Status;Name;State;Power Status;Bus Protocol;Media;Remaining Rated Write Endurance;Failure Predicted
+0:1:0;Ok;Physical Disk 0:1:0;Ready;Not Applicable;SATA;SSD;100%;No
+`,
+		Values: []Value{
+			{
+				Name:  "storage_pdisk_status",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H355 Front",
+				},
+			},
+			{
+				Name:  "storage_pdisk_state",
+				Value: "1",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H355 Front",
+				},
+			},
+			{
+				Name:  "storage_pdisk_failure_predicted",
+				Value: "0",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H355 Front",
+				},
+			},
+			{
+				Name:  "storage_pdisk_remaining_rated_write_endurance",
+				Value: "100",
+				Labels: map[string]string{
+					"controller":        "0",
+					"disk":              "0_1_0",
+					controllerNameLabel: "PERC H355 Front",
+				},
+			},
+		},
+	},
+	{
+		// A controller without disks is a valid empty result.
+		Input: `Details of Enclosure Backplane1 on Controller PCIe SSD Subsystem
+
+ID;Slot Count;Occupied Slot Count;Empty Slot Count;Occupied Slots;Empty Slots
+0:1;8;0;8;Not Available;16,17,18,19,20,21,22,23
+
+ID;Status;Name;State;Power Status;Bus Protocol;Media;Remaining Rated Write Endurance;Failure Predicted
+`,
+		Values: []Value{},
+	},
 }
 
 func TestStoragePdisk(t *testing.T) {
@@ -645,6 +708,24 @@ func TestStoragePdisk(t *testing.T) {
 		values, _ := report.StoragePdisk("0")
 		assert.Equal(t, result.Values, values)
 	}
+}
+
+func TestStoragePdiskCommand(t *testing.T) {
+	var command string
+	var args []string
+	report := &OMReport{
+		Reader: func(f func(Output), _ ReaderMode, cmd string, commandArgs ...string) error {
+			command = cmd
+			args = commandArgs
+			f(Output{})
+			return nil
+		},
+	}
+
+	_, err := report.StoragePdisk("2")
+	assert.NoError(t, err)
+	assert.Equal(t, DefaultOMReportExecutable, command)
+	assert.Equal(t, []string{"storage", "controller", "controller=2", "info=pdslotreport"}, args)
 }
 
 var storageVdiskTests = []testResultOMReport{
