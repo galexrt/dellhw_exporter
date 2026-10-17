@@ -1,7 +1,8 @@
-## Unreleased
+## 2.1.0 / 2026-10-07
 
 * [FIX] use storage controller reports for physical disk collection on controllers without standalone pdisk reports
 * [FIX] keep collectors enabled when availability checks pass
+* [CHORE] update golang to 1.26.8
 
 ## 2.0.0 / 2026-03-20
 
