@@ -423,10 +423,10 @@ func loadCollectors(list []string, check []string) (map[string]collector.Collect
 			if cc, ok := c.(collector.IsAvailable); ok {
 				if !cc.IsAvailable() {
 					logger.Warn("disabling collector because it is not applicable to the system", "collector", name)
+					continue
 				}
-				continue
+				logger.Debug("collector is applicable to the system", "collector", name)
 			}
-			logger.Debug("collector is applicable to the system", "collector", name)
 		}
 
 		collectors[name] = c

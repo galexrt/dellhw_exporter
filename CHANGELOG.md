@@ -1,3 +1,8 @@
+## Unreleased
+
+* [FIX] use storage controller reports for physical disk collection on controllers without standalone pdisk reports
+* [FIX] keep collectors enabled when availability checks pass
+
 ## 2.0.0 / 2026-03-20
 
 * [CHORE] release 2.0.0
