@@ -30,8 +30,6 @@ plugins:
       htmlmin_opts:
         remove_comments: true
       #js_files: []
-  - redirects:
-      redirect_maps: {}
 markdown_extensions:
   - attr_list
   - meta
