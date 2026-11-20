@@ -9,7 +9,7 @@
   outputs = { self, nixpkgs }:
     let
       goMajorVersion = 1;
-      goMinorVersion = 26; # Change this to update the whole stack
+      goMinorVersion = 27; # Change this to update the whole stack
 
       lib = nixpkgs.lib;
 
